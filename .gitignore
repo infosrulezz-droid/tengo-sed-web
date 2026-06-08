@@ -1,0 +1,13 @@
+# Secrets
+.env
+.env.local
+
+# Backups (don't need in git)
+backups/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/

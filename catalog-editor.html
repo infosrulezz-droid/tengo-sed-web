@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tengo-Sed — Editor de Catálogo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --wa:#25D366;--wa2:#128C7E;
+  --navy:#0F172A;--surface:#1E293B;--card:#fff;
+  --bg:#F1F5F9;--border:#E2E8F0;--border2:#CBD5E1;
+  --text:#1E293B;--muted:#64748B;--dim:#94A3B8;
+  --green:#10B981;--blue:#3B82F6;--orange:#F97316;
+  --red:#EF4444;--purple:#8B5CF6;
+  --radius:14px;--radius-sm:8px;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+  --sh-lg:0 8px 32px rgba(0,0,0,.12);
+}
+
+html,body{min-height:100%;background:var(--bg);font-family:'Inter',sans-serif;color:var(--text)}
+
+/* ── PREMIUM BANNER (editor) ────────────────────────────────────── */
+.ed-banner{
+  background:linear-gradient(135deg,#023E8A 0%,#0096C7 40%,#00B4D8 65%,#0077B6 100%);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;
+  padding:0 32px 0 0;min-height:160px;
+}
+.ed-banner::after{
+  content:'';position:absolute;left:0;bottom:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7) 30%,rgba(0,230,255,.9) 65%,transparent);
+}
+.ed-glow{position:absolute;pointer-events:none;border-radius:50%}
+.ed-glow-amber{
+  width:600px;height:340px;left:35%;top:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse,rgba(255,255,255,.18) 0%,transparent 65%);z-index:1;
+}
+.ed-glow-green{
+  width:300px;height:200px;right:80px;top:50%;transform:translateY(-50%);
+  background:radial-gradient(ellipse,rgba(0,230,255,.18) 0%,transparent 65%);z-index:1;
+}
+.ed-grain{
+  position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+.ed-logo-col{flex-shrink:0;position:relative;z-index:2;padding:0 8px 0 0}
+.ed-logo{
+  height:180px;width:auto;display:block;
+  mix-blend-mode:multiply;filter:contrast(1.05) saturate(1.1);
+}
+.ed-center-col{
+  flex:1;color:#fff;position:relative;z-index:2;
+  padding:28px 32px 28px 24px;
+  border-left:1px solid rgba(255,255,255,.07);
+}
+.ed-headline{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(28px,4vw,46px);font-weight:900;
+  line-height:1.05;letter-spacing:-1.5px;color:#fff;margin:0 0 10px;
+}
+.ed-gold{
+  background:linear-gradient(135deg,#F59E0B,#FCD34D,#F59E0B);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.ed-sub{font-size:16px;font-weight:800;color:rgba(255,255,255,.8);letter-spacing:3px;text-transform:uppercase;margin:0;text-shadow:0 0 20px rgba(251,191,36,.4)}
+.ed-branches-col{flex-shrink:0;position:relative;z-index:2;padding:20px 32px;border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1)}
+.ed-branch-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.75);margin:0 0 12px}
+.ed-branch-list{display:flex;flex-direction:column;gap:10px}
+.ed-branch-item{display:flex;flex-direction:column;gap:2px}
+.ed-branch-name{color:#fff;font-weight:800;font-size:15px;white-space:nowrap}
+.ed-branch-addr{font-size:13px;color:rgba(255,255,255,.55);white-space:nowrap}
+.ed-right-col{
+  flex-shrink:0;display:flex;flex-direction:column;
+  align-items:center;gap:12px;position:relative;z-index:2;
+  padding-left:32px;border-left:1px solid rgba(255,255,255,.07);
+}
+.ed-cta{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;font-weight:800;font-size:17px;letter-spacing:.3px;
+  text-decoration:none;border-radius:99px;padding:16px 32px;
+  display:inline-flex;align-items:center;gap:10px;white-space:nowrap;
+  box-shadow:0 6px 32px rgba(34,197,94,.5),0 1px 0 rgba(255,255,255,.2) inset;
+  transition:all .2s;
+}
+.ed-cta:hover{background:linear-gradient(135deg,#16a34a,#15803d);transform:translateY(-2px);box-shadow:0 8px 32px rgba(34,197,94,.5)}
+.ed-hours{display:flex;flex-direction:column;gap:3px;text-align:center}
+.ed-hours span{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap}
+.ed-delivery-zone{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:rgba(251,191,36,.1);border:1.5px solid rgba(251,191,36,.3);
+  border-radius:12px;padding:10px 18px;margin-top:4px;
+}
+.ed-dz-icon{font-size:26px;line-height:1}
+.ed-dz-label{font-size:11px;font-weight:900;letter-spacing:2.5px;color:rgba(251,191,36,.95);text-transform:uppercase}
+
+/* ── TOPBAR ─────────────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:300;
+  background:var(--navy);color:#fff;
+  height:56px;display:flex;align-items:center;gap:12px;padding:0 20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.3);
+}
+.topbar-logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:18px;letter-spacing:-.5px;margin-right:4px}
+.topbar-logo .c{color:#00BCD4}.topbar-logo .o{color:var(--orange)}
+.topbar-sep{flex:1}
+.save-status{font-size:12px;font-weight:700;padding:5px 14px;border-radius:99px;transition:all .3s}
+.save-status.idle{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.save-status.dirty{background:rgba(249,115,22,.2);color:var(--orange);animation:blink 1.5s infinite}
+.save-status.saving{background:rgba(59,130,246,.2);color:#60A5FA}
+.save-status.saved{background:rgba(16,185,129,.2);color:#34D399}
+.save-status.error{background:rgba(239,68,68,.2);color:#F87171}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── SEARCH + FILTER BAR ────────────────────────────────────────── */
+.toolbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  position:sticky;top:56px;z-index:200;box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:320px}
+.search-wrap input{
+  width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border);
+  border-radius:99px;font-size:13px;outline:none;font-family:inherit;
+  transition:border-color .2s;background:var(--bg)
+}
+.search-wrap input:focus{border-color:var(--wa);background:#fff}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--muted)}
+.cat-pills{display:flex;gap:6px;flex-wrap:wrap}
+.cat-pill{
+  font-size:12px;font-weight:700;padding:8px 16px;border-radius:99px;
+  border:1.5px solid #E2E8F0;background:#F8FAFC;color:#64748B;
+  cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);white-space:nowrap;
+}
+.cat-pill:hover{
+  border-color:#D97706;color:#92400E;background:#FFFBEB;
+  transform:translateY(-1px);
+}
+.cat-pill.active{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(34,197,94,.4);
+  transform:translateY(-1px);
+}
+.count-badge{font-size:11px;color:var(--muted);margin-left:4px;white-space:nowrap}
+
+/* ── ADD PRODUCT BTN ────────────────────────────────────────────── */
+.btn-add{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--wa);color:#fff;border:none;border-radius:99px;
+  padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .2s;box-shadow:0 2px 8px rgba(37,211,102,.35);white-space:nowrap
+}
+.btn-add:hover{background:var(--wa2);transform:translateY(-1px)}
+
+/* ── GRID ───────────────────────────────────────────────────────── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:16px;max-width:1200px;margin:24px auto;padding:0 20px 80px;
+}
+@media(max-width:500px){.grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:0 10px 80px}}
+
+/* ── CARD ───────────────────────────────────────────────────────── */
+.card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:var(--sh);transition:all .2s;position:relative;
+}
+.card:hover{box-shadow:var(--sh-lg);transform:translateY(-2px)}
+.card.agotado{opacity:.55;filter:grayscale(.6)}
+.card.editing{border-color:var(--blue);box-shadow:0 0 0 2px rgba(59,130,246,.2)}
+
+/* ── IMAGE ZONE ─────────────────────────────────────────────────── */
+.card-img-wrap{
+  position:relative;height:140px;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;cursor:pointer;
+}
+.card-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;padding:8px;transition:opacity .2s}
+.card-img-wrap .img-overlay{
+  position:absolute;inset:0;background:rgba(15,23,42,.7);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s;color:#fff;font-size:11px;font-weight:700;gap:4px
+}
+.card-img-wrap:hover .img-overlay{opacity:1}
+.img-overlay-icon{font-size:26px}
+.no-img-placeholder{font-size:42px;color:var(--dim)}
+.card-img-wrap input[type=file]{display:none}
+
+/* ── CARD BODY ──────────────────────────────────────────────────── */
+.card-body{padding:11px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+
+/* Category badge — clickable dropdown */
+.cat-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;
+  cursor:pointer;border:1.5px solid transparent;transition:all .15s;width:fit-content;
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.cat-badge:hover{filter:brightness(1.1);border-color:rgba(0,0,0,.1)}
+
+/* Editable name */
+.card-name{
+  font-size:12.5px;font-weight:700;line-height:1.35;color:var(--text);
+  cursor:text;border-radius:4px;padding:2px 4px;margin:-2px -4px;
+  transition:background .15s;min-height:18px;
+}
+.card-name:hover{background:var(--bg)}
+.card-name:focus{background:#EFF6FF;outline:2px solid var(--blue);border-radius:4px}
+
+/* Editable price */
+.price-row{display:flex;align-items:center;gap:6px}
+.price-prefix{font-size:13px;font-weight:700;color:var(--muted)}
+.card-price{
+  font-size:16px;font-weight:800;color:var(--navy);
+  cursor:text;border-radius:4px;padding:2px 5px;margin:-2px -5px;
+  transition:background .15s;min-width:40px;
+}
+.card-price:hover{background:var(--bg)}
+.card-price:focus{background:#EFF6FF;outline:2px solid var(--blue);border-radius:4px}
+
+/* Editable description */
+.card-desc{
+  font-size:11px;color:var(--muted);line-height:1.4;
+  cursor:pointer;border-radius:4px;padding:4px 6px;margin:-2px -4px;
+  transition:background .15s;min-height:22px;
+  border:1px dashed transparent;
+}
+.card-desc:hover{background:#F0F9FF;border-color:#BAE6FD}
+.card-desc.empty-desc::before{content:'✏️ Agregar nota...';color:var(--dim);font-style:italic;font-size:10.5px}
+
+/* ── DESC POPUP MODAL ────────────────────────────────────────────── */
+#descModal{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:16px;
+}
+#descModal.open{display:flex}
+.desc-modal-box{
+  background:#fff;border-radius:16px;width:100%;max-width:480px;
+  box-shadow:0 24px 64px rgba(0,0,0,.25);overflow:hidden;
+}
+.desc-modal-head{
+  display:flex;align-items:center;gap:10px;padding:16px 20px;
+  border-bottom:1px solid #E2E8F0;
+}
+.desc-modal-title{font-weight:700;font-size:14px;color:#0F172A;flex:1;line-height:1.3}
+.desc-modal-subtitle{font-size:11px;color:#94A3B8;margin-top:2px}
+.desc-modal-close{
+  background:none;border:none;font-size:20px;cursor:pointer;
+  color:#94A3B8;padding:4px;line-height:1;border-radius:6px;
+}
+.desc-modal-close:hover{background:#F1F5F9;color:#475569}
+.desc-modal-body{padding:16px 20px}
+#descTextarea{
+  width:100%;box-sizing:border-box;
+  border:1.5px solid #E2E8F0;border-radius:10px;
+  padding:12px 14px;font-size:13px;line-height:1.6;
+  font-family:'Inter',sans-serif;color:#1E293B;
+  resize:vertical;min-height:100px;max-height:260px;
+  outline:none;transition:border-color .15s;
+}
+#descTextarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+#descTextarea::placeholder{color:#94A3B8;font-style:italic}
+.desc-modal-hint{font-size:10.5px;color:#94A3B8;margin-top:7px}
+.desc-modal-foot{
+  display:flex;gap:8px;justify-content:flex-end;
+  padding:12px 20px;border-top:1px solid #E2E8F0;background:#F8FAFC;
+}
+.desc-btn-cancel{
+  background:#F1F5F9;color:#475569;border:none;border-radius:8px;
+  padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;
+}
+.desc-btn-cancel:hover{background:#E2E8F0}
+.desc-btn-save{
+  background:var(--blue);color:#fff;border:none;border-radius:8px;
+  padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 8px rgba(59,130,246,.35);
+}
+.desc-btn-save:hover{background:#1D4ED8}
+
+/* Card footer */
+.card-footer{
+  padding:8px 12px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;background:#FAFAFA;
+}
+.agotado-toggle{
+  display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;
+  color:var(--muted);cursor:pointer;user-select:none;flex:1
+}
+.agotado-toggle input{display:none}
+.toggle-dot{
+  width:28px;height:15px;background:var(--border);border-radius:99px;
+  position:relative;transition:background .2s;flex-shrink:0
+}
+.toggle-dot::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:11px;height:11px;background:#fff;border-radius:50%;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s
+}
+input:checked ~ .toggle-dot{background:var(--red)}
+input:checked ~ .toggle-dot::after{transform:translateX(13px)}
+.btn-delete{
+  background:none;border:none;font-size:15px;cursor:pointer;
+  color:var(--dim);padding:2px;border-radius:4px;transition:all .15s;line-height:1
+}
+.btn-delete:hover{color:var(--red);background:rgba(239,68,68,.1)}
+
+/* ── CATEGORY DROPDOWN ──────────────────────────────────────────── */
+.cat-dropdown{
+  position:fixed;z-index:9999;
+  background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  box-shadow:var(--sh-lg);min-width:170px;
+  max-height:280px;overflow-y:auto;
+}
+.cat-dropdown-item{
+  padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:8px;transition:background .1s;
+}
+.cat-dropdown-item:hover{background:var(--bg)}
+.cat-dropdown-item.selected{background:#EFF6FF;color:var(--blue)}
+
+/* ── SELECTION ANNOTATION ───────────────────────────────────────── */
+#selPopup{
+  position:fixed;z-index:9100;display:none;
+  background:#fff;border-radius:14px;
+  box-shadow:0 8px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.1);
+  width:300px;overflow:hidden;
+  animation:selPop .15s cubic-bezier(.34,1.56,.64,1);
+}
+#selPopup.show{display:block}
+@keyframes selPop{from{opacity:0;transform:scale(.92) translateY(4px)}to{opacity:1;transform:none}}
+.sel-pop-head{
+  background:linear-gradient(135deg,#1E293B,#0F172A);
+  color:#fff;padding:11px 14px;
+  display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+}
+.sel-pop-quote{
+  background:#F8FAFC;border-left:3px solid var(--blue);
+  color:#475569;font-size:11px;font-style:italic;
+  padding:8px 12px;line-height:1.5;max-height:52px;overflow:hidden;
+}
+#selTextarea{
+  display:block;width:100%;box-sizing:border-box;
+  border:none;border-top:1px solid #E2E8F0;
+  padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;
+  color:#1E293B;resize:none;height:80px;outline:none;
+}
+#selTextarea::placeholder{color:#94A3B8;font-style:italic}
+.sel-pop-foot{
+  display:flex;gap:6px;padding:8px 10px;
+  border-top:1px solid #F1F5F9;background:#FAFAFA;
+}
+.sel-pop-cancel{
+  flex:1;background:#F1F5F9;color:#64748B;border:none;
+  border-radius:8px;padding:8px;font-size:12px;font-weight:600;cursor:pointer;
+}
+.sel-pop-cancel:hover{background:#E2E8F0}
+.sel-pop-save{
+  flex:2;background:var(--blue);color:#fff;border:none;
+  border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 8px rgba(59,130,246,.3);
+}
+.sel-pop-save:hover{background:#1D4ED8}
+
+/* Notes panel */
+#notesPanel{
+  position:fixed;right:0;top:0;bottom:0;width:320px;
+  background:#fff;box-shadow:-4px 0 32px rgba(0,0,0,.15);
+  z-index:9050;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+#notesPanel.open{transform:none}
+.notes-panel-head{
+  background:linear-gradient(135deg,#1E293B,#0F172A);
+  color:#fff;padding:16px 18px;
+  display:flex;align-items:center;gap:10px;
+}
+.notes-panel-title{font-weight:800;font-size:15px;flex:1}
+.notes-panel-close{
+  background:rgba(255,255,255,.1);border:none;color:#fff;
+  border-radius:8px;padding:6px 10px;font-size:16px;cursor:pointer;
+}
+.notes-panel-close:hover{background:rgba(255,255,255,.2)}
+.notes-list{flex:1;overflow-y:auto;padding:12px}
+.note-item{
+  background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;
+  padding:12px;margin-bottom:10px;
+}
+.note-quote{
+  font-size:10.5px;color:#64748B;font-style:italic;
+  border-left:2px solid #CBD5E1;padding-left:8px;margin-bottom:7px;
+  line-height:1.5;
+}
+.note-text{font-size:12.5px;color:#1E293B;line-height:1.5;margin-bottom:8px;font-weight:500}
+.note-meta{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.note-time{font-size:10px;color:#94A3B8}
+.note-del{
+  background:none;border:none;cursor:pointer;color:#FDA4AF;
+  font-size:13px;padding:2px 6px;border-radius:6px;
+}
+.note-del:hover{background:#FFF1F2;color:#E11D48}
+.notes-empty{
+  text-align:center;color:#94A3B8;font-size:13px;
+  padding:40px 20px;
+}
+.notes-panel-foot{
+  padding:12px;border-top:1px solid #E2E8F0;
+}
+.notes-clear{
+  width:100%;background:#FFF1F2;color:#E11D48;border:1px solid #FECDD3;
+  border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;
+}
+.notes-clear:hover{background:#FFE4E6}
+
+/* Notes badge in topbar */
+#notesBadgeBtn{
+  position:relative;background:rgba(255,255,255,.1);color:#fff;
+  border:1px solid rgba(255,255,255,.2);border-radius:99px;
+  padding:7px 15px;font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  transition:background .15s;
+}
+#notesBadgeBtn:hover{background:rgba(255,255,255,.2)}
+#notesBadgeCount{
+  background:#FBBF24;color:#1E293B;border-radius:99px;
+  font-size:10px;font-weight:800;padding:1px 6px;
+  display:none;
+}
+#notesBadgeCount.show{display:inline}
+
+/* ── ADD PRODUCT MODAL ──────────────────────────────────────────── */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(15,23,42,.6);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal{
+  background:#fff;border-radius:20px;padding:28px;width:90%;max-width:440px;
+  box-shadow:var(--sh-lg);transform:translateY(20px);transition:transform .25s;
+  max-height:90vh;overflow-y:auto
+}
+.modal-backdrop.open .modal{transform:translateY(0)}
+.modal-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.field input,.field select,.field textarea{
+  width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;color:var(--text)
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
+.field textarea{height:64px;resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-img-drop{
+  border:2px dashed var(--border2);border-radius:var(--radius-sm);padding:24px;
+  text-align:center;cursor:pointer;transition:all .2s;margin-bottom:4px
+}
+.modal-img-drop:hover,.modal-img-drop.drag{border-color:var(--blue);background:#EFF6FF}
+.modal-img-drop img{max-height:90px;max-width:100%;object-fit:contain}
+.modal-img-drop .drop-icon{font-size:32px;margin-bottom:6px}
+.modal-img-drop p{font-size:11px;color:var(--muted)}
+.modal-footer{display:flex;gap:10px;margin-top:20px}
+.btn-save{
+  flex:1;background:var(--wa);color:#fff;border:none;border-radius:99px;
+  padding:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s
+}
+.btn-save:hover{background:var(--wa2)}
+.btn-cancel{
+  background:var(--bg);color:var(--text);border:1.5px solid var(--border);
+  border-radius:99px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer
+}
+
+/* ── TOAST ──────────────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--surface);color:#fff;padding:11px 22px;border-radius:99px;
+  font-size:13px;font-weight:600;pointer-events:none;
+  opacity:0;transition:all .3s;z-index:9999;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.3)
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── CATEGORY COLORS ────────────────────────────────────────────── */
+.cat-promos{background:#FFF0F0;color:#B91C1C}
+.cat-whisky{background:#FEF3C7;color:#92400E}
+.cat-gin{background:#EDE9FE;color:#5B21B6}
+.cat-cerveza{background:#FEF9C3;color:#713F12}
+.cat-ron{background:#ECFDF5;color:#065F46}
+.cat-vino{background:#FCE7F3;color:#9D174D}
+.cat-fernet{background:#FFE4E6;color:#9F1239}
+.cat-pisco{background:#FFF7ED;color:#9A3412}
+.cat-vodka{background:#EFF6FF;color:#1E40AF}
+.cat-tequila{background:#F0FDF4;color:#14532D}
+.cat-bebidas{background:#E0F2FE;color:#075985}
+.cat-zero{background:#F1F5F9;color:#334155}
+.cat-licores{background:#F5F3FF;color:#4C1D95}
+.cat-confites{background:#FFF1F2;color:#881337}
+.cat-otro{background:#F8FAFC;color:#475569}
+
+/* ── SCROLLBAR ──────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── PREVIEW TOGGLE ─────────────────────────────────────────────── */
+.fab{
+  position:fixed;bottom:24px;right:24px;z-index:400;
+  background:var(--navy);color:#fff;border:none;border-radius:99px;
+  padding:13px 22px;font-size:13px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:8px;
+  transition:all .2s
+}
+.fab:hover{background:#1E3A5F;transform:translateY(-2px)}
+
+/* ── LOADING ────────────────────────────────────────────────────── */
+.loading-screen{
+  position:fixed;inset:0;background:var(--navy);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff
+}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.2);
+  border-top-color:#00BCD4;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- Global category dropdown (portal — lives at body level to avoid CSS transform issues) -->
+<div class="cat-dropdown" id="globalCatDropdown" style="display:none"></div>
+
+<!-- Loading screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px">Cargando catálogo...</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <span class="topbar-logo">🥤 Tengo-<span class="c">Sed</span><span class="o">.cl</span></span>
+  <span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:600">Editor de Catálogo</span>
+  <div class="topbar-sep"></div>
+  <div class="save-status idle" id="saveStatus">✓ Sin cambios</div>
+  <button id="notesBadgeBtn" onclick="openNotesPanel()">
+    📝 Notas <span id="notesBadgeCount">0</span>
+  </button>
+  <button id="manualSaveBtn" onclick="manualSave()" style="
+    background:var(--green);color:#fff;border:none;border-radius:99px;
+    padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;gap:6px;transition:all .2s;
+    box-shadow:0 2px 8px rgba(16,185,129,.4);white-space:nowrap
+  ">💾 Guardar</button>
+</div>
+
+<!-- ── PREMIUM BANNER ──────────────────────────────────────────────── -->
+<div class="ed-banner">
+  <div class="ed-glow ed-glow-amber"></div>
+  <div class="ed-glow ed-glow-green"></div>
+  <div class="ed-grain"></div>
+  <div class="ed-logo-col">
+    <img id="bannerLogoImg" class="ed-logo" src="/logo.png" onerror="this.src='/logo.jpg'" alt="Tengo Sed"/>
+  </div>
+  <div class="ed-center-col">
+    <div class="ed-headline">Tu sed,<br><span class="ed-gold">Nuestro Plan.</span></div>
+    <p class="ed-sub">tengo-sed.cl</p>
+  </div>
+
+  <!-- Branches column -->
+  <div class="ed-branches-col">
+    <p class="ed-branch-label">📍 Nuestras Sucursales</p>
+    <div class="ed-branch-list">
+      <div class="ed-branch-item">
+        <span class="ed-branch-name">Tengo Sed</span>
+        <span class="ed-branch-addr">Genaro Gallo 2836A</span>
+      </div>
+      <div class="ed-branch-item">
+        <span class="ed-branch-name">Los Negros</span>
+        <span class="ed-branch-addr">Genaro Gallo 2243</span>
+      </div>
+      <div class="ed-branch-item">
+        <span class="ed-branch-name">Red &amp; White</span>
+        <span class="ed-branch-addr">18 de Sept 1578</span>
+      </div>
+    </div>
+  </div>
+  <div class="ed-right-col">
+    <a href="https://wa.me/56992380324" target="_blank" class="ed-cta">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Pedir Ahora
+    </a>
+    <div class="ed-hours">
+      <span>🕐 Dom–Jue: 12pm – 1am</span>
+      <span>Vie–Sáb: 12pm – 3am</span>
+      <span>🚚 Delivery Rápido</span>
+    </div>
+    <div class="ed-delivery-zone">
+      <span class="ed-dz-icon">🛵</span>
+      <span class="ed-dz-label">Solo IQQ</span>
+    </div>
+  </div>
+</div>
+
+<!-- Logo admin bar -->
+<div style="background:#1E293B;color:#fff;display:flex;align-items:center;gap:14px;padding:8px 16px;font-size:12px;flex-wrap:wrap">
+  <span style="font-weight:700;font-size:13px">🖼️ Logo del banner</span>
+  <span id="bannerInfo" style="color:rgba(255,255,255,.5);flex:1">Cargando...</span>
+  <label style="background:#2563EB;color:#fff;border-radius:99px;padding:6px 16px;
+    font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap">
+    📁 Cambiar logo
+    <input type="file" id="bannerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp"
+      style="display:none" onchange="uploadLogo(this)"/>
+  </label>
+</div>
+
+<script>
+function loadLogoInfo() {
+  const img = new Image();
+  img.onload = function() {
+    const el = document.getElementById('bannerInfo');
+    if (el) el.textContent = img.naturalWidth + ' × ' + img.naturalHeight + 'px · logo.png';
+  };
+  img.onerror = function() {
+    const el = document.getElementById('bannerInfo');
+    if (el) el.textContent = 'usando logo.jpg';
+  };
+  img.src = '/logo.png?t=' + Date.now();
+}
+loadLogoInfo();
+
+async function uploadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const info = document.getElementById('bannerInfo');
+  if (info) info.textContent = '⏳ Subiendo ' + file.name + '...';
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const imageData = e.target.result;
+    document.getElementById('bannerLogoImg').src = imageData;
+    try {
+      const res = await fetch('/api/upload-logo', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ imageData })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error);
+      document.getElementById('bannerLogoImg').src = '/logo.png?t=' + Date.now();
+      toast('✅ Logo actualizado');
+      setTimeout(loadLogoInfo, 500);
+    } catch(err) {
+      toast('❌ Error: ' + err.message);
+    }
+    input.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+</script>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar producto..." oninput="filterProducts()"/>
+  </div>
+  <div class="cat-pills" id="catPills"></div>
+  <span class="count-badge" id="countBadge"></span>
+  <div style="flex:1"></div>
+  <button class="btn-add" onclick="openAddModal()">＋ Agregar Producto</button>
+</div>
+
+<!-- Product grid -->
+<div class="grid" id="grid"></div>
+
+<!-- FAB: open catalog preview -->
+<button class="fab" onclick="window.open('/catalog.html','_blank')">👁 Ver Catálogo</button>
+
+<!-- ── DESCRIPTION POPUP MODAL ──────────────────────────────────── -->
+<div id="descModal" onclick="if(event.target===this)closeDescModal()">
+  <div class="desc-modal-box">
+    <div class="desc-modal-head">
+      <div style="flex:1">
+        <div class="desc-modal-title" id="descModalTitle">Nota del producto</div>
+        <div class="desc-modal-subtitle" id="descModalSub"></div>
+      </div>
+      <button class="desc-modal-close" onclick="closeDescModal()">✕</button>
+    </div>
+    <div class="desc-modal-body">
+      <textarea id="descTextarea" placeholder="Escribe la nota o descripción del producto aquí..." rows="4"></textarea>
+      <p class="desc-modal-hint">Esta nota se muestra en el catálogo bajo el nombre del producto.</p>
+    </div>
+    <div class="desc-modal-foot">
+      <button class="desc-btn-cancel" onclick="closeDescModal()">Cancelar</button>
+      <button class="desc-btn-save" onclick="saveDescModal()">Guardar nota</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div class="modal-backdrop" id="addModal" onclick="handleModalBackdrop(event)">
+  <div class="modal">
+    <div class="modal-title">➕ Nuevo Producto</div>
+
+    <div class="modal-img-drop" id="modalImgDrop" onclick="document.getElementById('modalImgInput').click()">
+      <input type="file" id="modalImgInput" accept="image/*" onchange="handleModalImg(this)"/>
+      <div class="drop-icon">📷</div>
+      <p>Clic o arrastra una imagen</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Nombre del Producto</label>
+        <input type="text" id="newName" placeholder="Ej: Coca-Cola 1.5lt"/>
+      </div>
+      <div class="field">
+        <label>Precio (CLP)</label>
+        <input type="number" id="newPrice" placeholder="1500" min="0"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Categoría</label>
+      <select id="newCat"></select>
+    </div>
+
+    <div class="field">
+      <label>Descripción (opcional)</label>
+      <textarea id="newDesc" placeholder="Detalle, variantes, presentación..."></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn-save" onclick="addProduct()">✅ Agregar al Catálogo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+const BASE = 'http://localhost:8000';
+let products  = [];
+let imgMap    = {};
+let newImages = {};   // productName → base64 data URL (pending save)
+let dirty     = false;
+let saveTimer = null;
+let activeCat = 'all';
+let newProductImg = null; // for add modal
+
+const CATS = {
+  promos:   { label:'Promos',    emoji:'🏷️' },
+  bebidas:  { label:'Bebidas',   emoji:'🥤' },
+  cerveza:  { label:'Cerveza',   emoji:'🍺' },
+  ron:      { label:'Ron',       emoji:'🧊' },
+  whisky:   { label:'Whisky',    emoji:'🥃' },
+  vodka:    { label:'Vodka',     emoji:'🫗' },
+  gin:      { label:'Gin',       emoji:'🍸' },
+  pisco:    { label:'Pisco',     emoji:'🌵' },
+  tequila:  { label:'Tequila',   emoji:'🥂' },
+  vino:     { label:'Vino',      emoji:'🍷' },
+  fernet:   { label:'Cócteles',  emoji:'🫙' },
+  licores:  { label:'Licores',   emoji:'🍾' },
+  zero:     { label:'Sin Alcohol',emoji:'0️⃣' },
+  confites: { label:'Confites',  emoji:'🍟' },
+  otro:     { label:'Otros',     emoji:'🍶' },
+};
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+(async () => {
+  try {
+    const [pRes, mRes] = await Promise.all([
+      fetch(BASE + '/products_inventory.json?t=' + Date.now()),
+      fetch(BASE + '/product_img_map.json?t=' + Date.now())
+    ]);
+    products = await pRes.json();
+    imgMap   = await mRes.json();
+    buildCatPills();
+    renderGrid();
+    document.getElementById('loadingScreen').style.display = 'none';
+
+    // Populate modal category select
+    const sel = document.getElementById('newCat');
+    Object.entries(CATS).forEach(([k,v]) => {
+      const o = document.createElement('option'); o.value = k; o.textContent = v.emoji + ' ' + v.label; sel.appendChild(o);
+    });
+  } catch(e) {
+    document.getElementById('loadingScreen').innerHTML =
+      `<div style="text-align:center;padding:32px"><div style="font-size:40px">⚠️</div>
+       <div style="font-size:16px;font-weight:700;margin:12px 0">No se pudo conectar al servidor</div>
+       <div style="font-size:13px;color:rgba(255,255,255,.6)">Asegúrate que el servidor corra en puerto 8000</div>
+       <code style="font-size:12px;color:#00BCD4;margin-top:12px;display:block">node server.js</code></div>`;
+  }
+})();
+
+// ── Category pills ────────────────────────────────────────────────────────────
+function buildCatPills() {
+  const used = new Set(products.map(p => p.cat));
+  const el = document.getElementById('catPills');
+  el.innerHTML = `<button class="cat-pill active" data-cat="all" onclick="setCat('all',this)">Todos</button>`;
+  Object.entries(CATS).forEach(([k,v]) => {
+    if (k !== 'promos' && !used.has(k)) return;
+    const count = products.filter(p => p.cat === k).length;
+    const countLabel = count > 0 ? ` <span style="opacity:.6">${count}</span>` : '';
+    el.innerHTML += `<button class="cat-pill" data-cat="${k}" onclick="setCat('${k}',this)">${v.emoji} ${v.label}${countLabel}</button>`;
+  });
+}
+
+function setCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+// ── Filtering + rendering ─────────────────────────────────────────────────────
+function filterProducts() { renderGrid(); }
+
+function getVisible() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  return products.filter(p => {
+    if (activeCat !== 'all' && p.cat !== activeCat) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !(p.desc||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderGrid() {
+  const visible = getVisible();
+  document.getElementById('countBadge').textContent = `${visible.length} productos`;
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  visible.forEach(p => grid.appendChild(buildCard(p)));
+}
+
+// ── Build card ────────────────────────────────────────────────────────────────
+function buildCard(p) {
+  const div = document.createElement('div');
+  div.className = 'card' + (p.agotado ? ' agotado' : '');
+  div.dataset.name = p.name;
+
+  const cat     = CATS[p.cat] || { label: p.cat, emoji:'🍶' };
+  const imgFile = imgMap[p.name];
+  const imgUrl  = newImages[p.name]
+    || (imgFile ? `${BASE}/products/${imgFile.split('?')[0]}?t=${Date.now()}` : '');
+
+  div.innerHTML = `
+    <!-- Image zone -->
+    <div class="card-img-wrap" onclick="triggerImgUpload('${esc(p.name)}')">
+      ${imgUrl
+        ? `<img src="${imgUrl}" alt="${esc(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+           <div class="no-img-placeholder" style="display:none">📷</div>`
+        : `<div class="no-img-placeholder">📷</div>`}
+      <div class="img-overlay">
+        <div class="img-overlay-icon">📷</div>
+        <div>Cambiar imagen</div>
+      </div>
+      <input type="file" accept="image/*" id="fi-${slugify(p.name)}" onchange="handleImgChange('${esc(p.name)}',this)"/>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+      <!-- Category badge -->
+      <div class="cat-badge cat-${p.cat}" id="badge-${slugify(p.name)}"
+        onclick="toggleCatDropdown('${esc(p.name)}',event)">
+        ${cat.emoji} ${cat.label} ▾
+      </div>
+
+      <!-- Editable name -->
+      <div class="card-name" contenteditable="true" spellcheck="false"
+        data-field="name" data-product="${esc(p.name)}"
+        onblur="handleEdit('${esc(p.name)}','name',this)"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}">${esc(p.name)}</div>
+
+      <!-- Price -->
+      <div class="price-row">
+        <span class="price-prefix">$</span>
+        <div class="card-price" contenteditable="true" spellcheck="false"
+          data-field="price" data-product="${esc(p.name)}"
+          onfocus="this.textContent=this.textContent.replace(/[^0-9]/g,'');selectAll(this)"
+          onblur="handleEdit('${esc(p.name)}','price',this)"
+          onkeydown="priceKeydown(event)"
+          >${p.price.toLocaleString('es-CL')}</div>
+      </div>
+
+      <!-- Description — click to open textarea popup -->
+      <div class="card-desc ${p.desc?'':'empty-desc'}"
+        onclick="openDescModal('${esc(p.name)}')"
+        id="desc-${esc(p.name)}"
+        title="Clic para agregar nota"
+        >${esc(p.desc||'')}</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <label class="agotado-toggle">
+        <input type="checkbox" ${p.agotado?'checked':''} onchange="toggleAgotado('${esc(p.name)}',this)"/>
+        <div class="toggle-dot"></div>
+        <span>Agotado</span>
+      </label>
+      <button class="btn-delete" onclick="deleteProduct('${esc(p.name)}')" title="Eliminar producto">🗑</button>
+    </div>`;
+
+  return div;
+}
+
+// ── Image upload ──────────────────────────────────────────────────────────────
+function triggerImgUpload(name) {
+  document.getElementById('fi-' + slugify(name))?.click();
+}
+
+function handleImgChange(name, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    newImages[name] = dataUrl;
+
+    // Update card image immediately
+    const card = document.querySelector(`.card[data-name="${name}"]`);
+    if (card) {
+      const wrap = card.querySelector('.card-img-wrap');
+      let img = wrap.querySelector('img');
+      if (!img) {
+        img = document.createElement('img');
+        wrap.prepend(img);
+        const placeholder = wrap.querySelector('.no-img-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+      }
+      img.src = dataUrl;
+    }
+
+    markDirty();
+    scheduleSave(); // Save immediately on image change
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Price key filter — only digits, nav keys, Enter ──────────────────────────
+function priceKeydown(e) {
+  const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','Home','End','Tab'];
+  if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); return; }
+  if (allowed.includes(e.key)) return;
+  if (/^[0-9]$/.test(e.key)) return;
+  e.preventDefault(); // block everything else (letters, dots, commas, etc.)
+}
+
+function selectAll(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+// ── Inline editing ────────────────────────────────────────────────────────────
+function handleEdit(name, field, el) {
+  const p = products.find(x => x.name === name);
+  if (!p) return;
+
+  if (field === 'name') {
+    const newName = el.textContent.trim();
+    if (!newName || newName === p.name) return;
+
+    // Rename in imgMap and newImages
+    if (imgMap[p.name]) { imgMap[newName] = imgMap[p.name]; delete imgMap[p.name]; }
+    if (newImages[p.name]) { newImages[newName] = newImages[p.name]; delete newImages[p.name]; }
+
+    p.name = newName;
+    el.dataset.product = newName;
+    el.closest('.card').dataset.name = newName;
+  }
+  else if (field === 'price') {
+    const raw = el.textContent.replace(/\D/g,'');
+    const num = parseInt(raw, 10);
+    if (!isNaN(num) && num >= 0) {
+      p.price = num;
+      el.textContent = num.toLocaleString('es-CL');
+    } else {
+      el.textContent = p.price.toLocaleString('es-CL');
+    }
+  }
+  markDirty();
+  scheduleSave();
+}
+
+// ── Description popup modal ───────────────────────────────────────────────────
+let _descActiveProduct = null;
+
+function openDescModal(name) {
+  const p = products.find(x => x.name === name);
+  if (!p) return;
+  _descActiveProduct = name;
+  document.getElementById('descModalTitle').textContent = '✏️ Nota del producto';
+  document.getElementById('descModalSub').textContent = name;
+  document.getElementById('descTextarea').value = p.desc || '';
+  const modal = document.getElementById('descModal');
+  modal.classList.add('open');
+  setTimeout(() => document.getElementById('descTextarea').focus(), 50);
+}
+
+function closeDescModal() {
+  document.getElementById('descModal').classList.remove('open');
+  _descActiveProduct = null;
+}
+
+function saveDescModal() {
+  if (!_descActiveProduct) return;
+  const p = products.find(x => x.name === _descActiveProduct);
+  if (!p) return;
+  const text = document.getElementById('descTextarea').value.trim();
+  p.desc = text;
+
+  // Update the card's description div live
+  const descEl = document.getElementById('desc-' + _descActiveProduct);
+  if (descEl) {
+    descEl.textContent = text;
+    if (text) descEl.classList.remove('empty-desc');
+    else descEl.classList.add('empty-desc');
+  }
+
+  closeDescModal();
+  markDirty();
+  scheduleSave();
+  toast(text ? '✅ Nota guardada' : '🗑 Nota eliminada');
+}
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('descModal').classList.contains('open')) {
+    closeDescModal();
+  }
+});
+
+// ── Category dropdown (global portal — avoids CSS transform offset bug) ───────
+let _ddActiveProduct = null;
+
+// Single delegated listener on the global dropdown — no inline onclick needed
+document.getElementById('globalCatDropdown').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const item = e.target.closest('.cat-dropdown-item');
+  if (!item || !_ddActiveProduct) return;
+  changeCategory(_ddActiveProduct, item.dataset.cat);
+});
+
+function toggleCatDropdown(name, e) {
+  e.stopPropagation();
+  const dd    = document.getElementById('globalCatDropdown');
+  const badge = document.getElementById('badge-' + slugify(name));
+
+  // If already open for this product, close it
+  if (dd.style.display !== 'none' && _ddActiveProduct === name) {
+    dd.style.display = 'none';
+    _ddActiveProduct = null;
+    return;
+  }
+
+  // Build items using data-cat — no string-in-attribute escaping issues
+  const p = products.find(x => x.name === name);
+  dd.innerHTML = Object.entries(CATS).map(([k,v]) => `
+    <div class="cat-dropdown-item ${p && k === p.cat ? 'selected' : ''}" data-cat="${k}">
+      <span>${v.emoji}</span><span>${v.label}</span>
+    </div>`).join('');
+
+  // Position below badge; flip up if near bottom of viewport
+  const rect      = badge.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const ddHeight  = Math.min(280, Object.keys(CATS).length * 36);
+  const top = spaceBelow > ddHeight + 8 ? rect.bottom + 4 : rect.top - 4 - ddHeight;
+  dd.style.top  = Math.max(8, top) + 'px';
+  dd.style.left = Math.min(rect.left, window.innerWidth - 185) + 'px';
+  dd.style.display = 'block';
+  _ddActiveProduct = name;
+}
+
+document.addEventListener('click', () => {
+  const dd = document.getElementById('globalCatDropdown');
+  if (dd) dd.style.display = 'none';
+  _ddActiveProduct = null;
+});
+
+function changeCategory(name, newCat) {
+  const p = products.find(x => x.name === name);
+  if (!p) return;
+  p.cat = newCat;
+
+  // Update badge
+  const badge = document.getElementById('badge-' + slugify(name));
+  const cat   = CATS[newCat] || { label: newCat, emoji:'🍶' };
+  if (badge) {
+    badge.className = `cat-badge cat-${newCat}`;
+    badge.innerHTML = `${cat.emoji} ${cat.label} ▾`;
+  }
+
+  // Update card agotado class
+  const card = document.querySelector(`.card[data-name="${name}"]`);
+  if (card) card.className = 'card' + (p.agotado ? ' agotado' : '');
+
+  // Close global dropdown
+  const dd = document.getElementById('globalCatDropdown');
+  if (dd) dd.style.display = 'none';
+  _ddActiveProduct = null;
+
+  markDirty();
+  scheduleSave();
+}
+
+// ── Agotado toggle ────────────────────────────────────────────────────────────
+function toggleAgotado(name, input) {
+  const p = products.find(x => x.name === name);
+  if (!p) return;
+  p.agotado = input.checked;
+
+  const card = document.querySelector(`.card[data-name="${name}"]`);
+  if (card) card.className = 'card' + (p.agotado ? ' agotado' : '');
+
+  markDirty();
+  scheduleSave();
+}
+
+// ── Delete product ────────────────────────────────────────────────────────────
+function deleteProduct(name) {
+  if (!confirm(`¿Eliminar "${name}"?`)) return;
+  const idx = products.findIndex(x => x.name === name);
+  if (idx !== -1) products.splice(idx, 1);
+  delete imgMap[name];
+  delete newImages[name];
+  renderGrid();
+  buildCatPills();
+  markDirty();
+  scheduleSave();
+}
+
+// ── ADD PRODUCT MODAL ─────────────────────────────────────────────────────────
+function openAddModal() {
+  newProductImg = null;
+  document.getElementById('newName').value   = '';
+  document.getElementById('newPrice').value  = '';
+  document.getElementById('newDesc').value   = '';
+  document.getElementById('newCat').value    = 'bebidas';
+  resetModalImgDrop();
+  document.getElementById('addModal').classList.add('open');
+  setTimeout(() => document.getElementById('newName').focus(), 100);
+}
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+function handleModalBackdrop(e) { if (e.target === e.currentTarget) closeAddModal(); }
+
+function resetModalImgDrop() {
+  document.getElementById('modalImgDrop').innerHTML = `
+    <input type="file" id="modalImgInput" accept="image/*" onchange="handleModalImg(this)"/>
+    <div class="drop-icon">📷</div><p>Clic o arrastra una imagen</p>`;
+}
+function handleModalImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    newProductImg = e.target.result;
+    const drop = document.getElementById('modalImgDrop');
+    drop.innerHTML = `<img src="${e.target.result}" style="max-height:90px;border-radius:8px"/>
+      <p style="margin-top:6px;font-size:11px;color:var(--muted)">✅ Imagen lista</p>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Drag & drop on modal
+document.addEventListener('DOMContentLoaded', () => {
+  const drop = document.getElementById('modalImgDrop');
+  if (drop) {
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
+    drop.addEventListener('drop', e => {
+      e.preventDefault(); drop.classList.remove('drag');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        const dt = new DataTransfer(); dt.items.add(file);
+        const inp = document.getElementById('modalImgInput');
+        if (inp) { inp.files = dt.files; handleModalImg(inp); }
+      }
+    });
+  }
+});
+
+function addProduct() {
+  const name  = document.getElementById('newName').value.trim();
+  const price = parseInt(document.getElementById('newPrice').value, 10) || 0;
+  const cat   = document.getElementById('newCat').value;
+  const desc  = document.getElementById('newDesc').value.trim();
+
+  if (!name) { toast('❌ El nombre es obligatorio'); return; }
+  if (products.find(p => p.name === name)) { toast('⚠️ Ya existe un producto con ese nombre'); return; }
+
+  const newP = { name, qty: 0, price, cat };
+  if (desc) newP.desc = desc;
+  products.unshift(newP);
+
+  if (newProductImg) newImages[name] = newProductImg;
+
+  buildCatPills();
+  activeCat = 'all';
+  document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+  renderGrid();
+  closeAddModal();
+  markDirty();
+  scheduleSave();
+  toast('✅ Producto agregado');
+}
+
+// ── Dirty / save ──────────────────────────────────────────────────────────────
+function markDirty() {
+  dirty = true;
+  setSaveStatus('dirty', '● Cambios sin guardar');
+}
+
+function scheduleSave(delay = 10000) {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveAll, delay);
+}
+
+function manualSave() {
+  clearTimeout(saveTimer);
+  saveAll();
+}
+
+async function saveAll() {
+  setSaveStatus('saving', '⏳ Guardando...');
+  const btn = document.getElementById('manualSaveBtn');
+  if (btn) { btn.textContent = '⏳ Guardando...'; btn.disabled = true; }
+
+  try {
+    // Build full imgMap: merge current imgMap with any newly uploaded images
+    // (new images get their filename assigned by server after upload)
+    const pendingImages = { ...newImages };
+
+    const payload = {
+      products:   products,
+      imgMap:     imgMap,
+      newImages:  pendingImages
+    };
+
+    console.log('[SAVE] Products:', products.length, '| imgMap keys:', Object.keys(imgMap).length, '| new images:', Object.keys(pendingImages).length);
+
+    const res = await fetch(BASE + '/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Server returned not ok');
+
+    // Server saved new images → reload imgMap so URLs stay fresh
+    if (Object.keys(pendingImages).length > 0) {
+      try {
+        const fresh = await fetch(BASE + '/product_img_map.json?t=' + Date.now());
+        imgMap = await fresh.json();
+      } catch { /* keep old */ }
+    }
+
+    newImages = {};
+    dirty = false;
+    setSaveStatus('saved', '✓ Guardado ' + new Date().toLocaleTimeString('es-CL'));
+    if (btn) { btn.textContent = '✓ Guardado'; btn.style.background = 'var(--green)'; }
+    setTimeout(() => {
+      if (!dirty) setSaveStatus('idle', '✓ Sin cambios');
+      if (btn) { btn.textContent = '💾 Guardar'; btn.disabled = false; }
+    }, 3000);
+    toast('💾 Cambios guardados en catálogo');
+  } catch(e) {
+    setSaveStatus('error', '✕ Error: ' + e.message);
+    if (btn) { btn.textContent = '💾 Guardar'; btn.disabled = false; btn.style.background = 'var(--red)';
+      setTimeout(() => { btn.style.background = 'var(--green)'; }, 3000); }
+    toast('❌ Error al guardar: ' + e.message);
+    console.error('[SAVE ERROR]', e);
+  }
+}
+
+function setSaveStatus(state, text) {
+  const el = document.getElementById('saveStatus');
+  el.className = 'save-status ' + state;
+  el.textContent = text;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function slugify(s) {
+  return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').slice(0,40);
+}
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Ctrl+S manual save
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    manualSave();
+  }
+});
+</script>
+
+<!-- ── SELECTION ANNOTATION POPUP ──────────────────────────────── -->
+<div id="selPopup">
+  <div class="sel-pop-head">📝 Anotar cambio</div>
+  <div class="sel-pop-quote" id="selQuote"></div>
+  <textarea id="selTextarea" placeholder="Escribe el cambio que quieres hacer aquí..."></textarea>
+  <div class="sel-pop-foot">
+    <button class="sel-pop-cancel" onclick="closeSelPopup()">Cancelar</button>
+    <button class="sel-pop-save" onclick="saveSelNote()">Guardar nota</button>
+  </div>
+</div>
+
+<!-- ── NOTES PANEL ──────────────────────────────────────────────── -->
+<div id="notesPanel">
+  <div class="notes-panel-head">
+    <span class="notes-panel-title">📝 Mis Notas de Cambios</span>
+    <button class="notes-panel-close" onclick="closeNotesPanel()">✕</button>
+  </div>
+  <div class="notes-list" id="notesList"></div>
+  <div class="notes-panel-foot">
+    <button class="notes-clear" onclick="clearAllNotes()">🗑 Borrar todas las notas</button>
+  </div>
+</div>
+
+<script>
+// ── SELECTION ANNOTATION SYSTEM ────────────────────────────────────────────────
+const NOTES_KEY = 'tengosed_editor_notes';
+let _selPopupOpen = false;
+let _pendingNote = null;
+
+// Load notes from localStorage
+function loadNotes() {
+  try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveNotes(notes) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  updateBadge(notes.length);
+}
+function updateBadge(count) {
+  const badge = document.getElementById('notesBadgeCount');
+  badge.textContent = count;
+  if (count > 0) badge.classList.add('show');
+  else badge.classList.remove('show');
+}
+
+// Show popup near selection
+document.addEventListener('mouseup', function(e) {
+  // Don't trigger inside the popup/panel itself
+  if (e.target.closest('#selPopup') || e.target.closest('#notesPanel')) return;
+
+  setTimeout(() => {
+    const sel = window.getSelection();
+    const text = sel ? sel.toString().trim() : '';
+    if (!text || text.length < 2) { closeSelPopup(); return; }
+
+    // Get position of selection
+    const range = sel.getRangeAt(0);
+    const rect  = range.getBoundingClientRect();
+
+    _pendingNote = { quote: text };
+
+    const popup = document.getElementById('selPopup');
+    document.getElementById('selQuote').textContent = '"' + text.slice(0, 120) + (text.length > 120 ? '…' : '') + '"';
+    document.getElementById('selTextarea').value = '';
+
+    // Position: above the selection, centered
+    const pw = 300;
+    let left = rect.left + rect.width / 2 - pw / 2;
+    let top  = rect.top + window.scrollY - 8; // above selection
+
+    // Keep within viewport
+    left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+    if (top < window.scrollY + 60) top = rect.bottom + window.scrollY + 8; // flip below
+
+    popup.style.left = left + 'px';
+    popup.style.top  = top + 'px';
+    popup.classList.add('show');
+    _selPopupOpen = true;
+    setTimeout(() => document.getElementById('selTextarea').focus(), 80);
+  }, 10);
+});
+
+// Close popup if clicking outside
+document.addEventListener('mousedown', function(e) {
+  if (_selPopupOpen && !e.target.closest('#selPopup')) {
+    closeSelPopup();
+  }
+});
+
+function closeSelPopup() {
+  document.getElementById('selPopup').classList.remove('show');
+  _selPopupOpen = false;
+  _pendingNote = null;
+  window.getSelection && window.getSelection().removeAllRanges();
+}
+
+function saveSelNote() {
+  const text = document.getElementById('selTextarea').value.trim();
+  if (!text || !_pendingNote) { closeSelPopup(); return; }
+
+  const notes = loadNotes();
+  notes.unshift({
+    id: Date.now(),
+    quote: _pendingNote.quote,
+    note: text,
+    time: new Date().toLocaleString('es-CL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' })
+  });
+  saveNotes(notes);
+  closeSelPopup();
+  toast('✅ Nota guardada');
+  // Refresh panel if open
+  if (document.getElementById('notesPanel').classList.contains('open')) renderNotesList();
+}
+
+// Notes panel
+function openNotesPanel() {
+  renderNotesList();
+  document.getElementById('notesPanel').classList.add('open');
+}
+function closeNotesPanel() {
+  document.getElementById('notesPanel').classList.remove('open');
+}
+function renderNotesList() {
+  const notes = loadNotes();
+  const list = document.getElementById('notesList');
+  if (!notes.length) {
+    list.innerHTML = '<div class="notes-empty">Sin notas todavía.<br><br>Selecciona texto en la página<br>para anotar un cambio.</div>';
+    return;
+  }
+  list.innerHTML = notes.map(n => `
+    <div class="note-item" id="note-${n.id}">
+      <div class="note-quote">${escNotes(n.quote)}</div>
+      <div class="note-text">${escNotes(n.note)}</div>
+      <div class="note-meta">
+        <span class="note-time">🕐 ${n.time}</span>
+        <button class="note-del" onclick="deleteNote(${n.id})" title="Borrar">🗑</button>
+      </div>
+    </div>`).join('');
+}
+function deleteNote(id) {
+  const notes = loadNotes().filter(n => n.id !== id);
+  saveNotes(notes);
+  renderNotesList();
+}
+function clearAllNotes() {
+  if (!confirm('¿Borrar todas las notas?')) return;
+  saveNotes([]);
+  renderNotesList();
+}
+function escNotes(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Close notes panel on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeSelPopup();
+    closeNotesPanel();
+  }
+});
+
+// Init badge on load
+updateBadge(loadNotes().length);
+</script>
+
+</body>
+</html>

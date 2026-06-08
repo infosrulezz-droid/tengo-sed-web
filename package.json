@@ -1,0 +1,12 @@
+{
+  "name": "tengo-sed-catalog",
+  "version": "1.0.0",
+  "description": "Tengo Sed — catálogo de licores con delivery en Iquique",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
