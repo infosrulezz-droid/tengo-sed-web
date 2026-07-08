@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tengo Sed — Licores Premium. Iquique.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ─── APPLE-STYLE TOKENS ───────────────────────────── */
+:root{
+  --bg:        #ffffff;
+  --bg-alt:    #f5f5f7;
+  --text:      #1d1d1f;
+  --muted:     #86868b;
+  --blue:      #0071e3;
+  --blue-dark: #0066CC;
+  --green:     #25D366;
+  --border:    #d2d2d7;
+  --radius:    18px;
+  --nav-h:     48px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Inter',Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+::selection{background:rgba(0,113,227,.2)}
+
+.container{max-width:980px;margin:0 auto;padding:0 22px}
+.wide{max-width:1200px}
+
+/* Apple link with chevron */
+.link{
+  color:var(--blue-dark);font-size:17px;font-weight:400;
+  display:inline-flex;align-items:center;gap:2px;transition:.2s;
+}
+.link::after{content:'›';font-size:19px;margin-left:2px;transition:.2s}
+.link:hover{text-decoration:underline}
+
+/* Pill buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--blue);color:#fff;border:none;border-radius:980px;
+  padding:12px 26px;font-size:16px;font-weight:500;transition:.25s;
+}
+.btn:hover{background:#0077ED;transform:scale(1.02)}
+.btn-lg{padding:16px 34px;font-size:18px}
+.btn-ghost{
+  background:transparent;color:var(--blue-dark);
+  border:1.5px solid var(--blue-dark);
+}
+.btn-ghost:hover{background:var(--blue-dark);color:#fff}
+.btn-wa{background:var(--green)}
+.btn-wa:hover{background:#1ebe5d}
+
+/* Section typography */
+.eyebrow{
+  font-size:14px;font-weight:600;letter-spacing:.5px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:10px;
+}
+.headline{
+  font-size:clamp(40px,7vw,72px);font-weight:700;
+  letter-spacing:-.022em;line-height:1.05;
+}
+.headline-md{
+  font-size:clamp(30px,5vw,48px);font-weight:700;
+  letter-spacing:-.02em;line-height:1.08;
+}
+.sub{
+  font-size:clamp(18px,2.4vw,24px);font-weight:400;
+  color:var(--muted);line-height:1.45;letter-spacing:-.01em;
+}
+section{padding:110px 0}
+
+/* ─── AGE GATE ─────────────────────────────────────── */
+#ageGate{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(30px) saturate(1.4);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.age-box{
+  background:#fff;border-radius:24px;max-width:400px;width:100%;
+  padding:48px 36px;text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.18);
+}
+.age-icon{font-size:44px;margin-bottom:18px}
+.age-title{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px}
+.age-sub{font-size:15px;color:var(--muted);line-height:1.5;margin-bottom:30px}
+.age-yes{width:100%;margin-bottom:12px}
+.age-no{
+  background:none;border:none;color:var(--blue-dark);
+  font-size:15px;padding:8px;
+}
+.age-no:hover{text-decoration:underline}
+
+/* ─── NAV ──────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:500;height:var(--nav-h);
+  background:rgba(251,251,253,.8);backdrop-filter:blur(20px) saturate(1.8);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.nav-inner{
+  max-width:980px;margin:0 auto;height:100%;padding:0 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.nav-brand{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:13px;color:rgba(0,0,0,.72);transition:.2s}
+.nav-links a:hover{color:#000}
+.nav-cta{
+  background:var(--blue);color:#fff;border-radius:980px;
+  font-size:12.5px;font-weight:500;padding:6px 14px;transition:.2s;border:none;
+}
+.nav-cta:hover{background:#0077ED}
+@media(max-width:740px){.nav-links{display:none}}
+
+/* ─── HERO ─────────────────────────────────────────── */
+.hero{
+  padding:130px 0 0;text-align:center;
+  background:linear-gradient(180deg,#fbfbfd 0%,#fff 100%);
+}
+.hero .headline{margin-bottom:14px}
+.hero .sub{max-width:560px;margin:0 auto 28px}
+.hero-links{display:flex;gap:34px;justify-content:center;flex-wrap:wrap;margin-bottom:70px}
+.hero-visual{
+  max-width:880px;margin:0 auto;
+  border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;
+  box-shadow:0 -20px 70px rgba(0,0,0,.10);
+}
+.hero-visual img{width:100%;object-fit:cover;aspect-ratio:21/9}
+.hero-visual-fallback{
+  width:100%;aspect-ratio:21/9;
+  background:linear-gradient(135deg,#0a84ff 0%,#5e5ce6 50%,#bf5af2 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(60px,10vw,120px);
+}
+
+/* ─── PROMO TILES (bento) ──────────────────────────── */
+.tiles{background:var(--bg-alt)}
+.tiles-head{text-align:center;margin-bottom:56px}
+.tile-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
+  max-width:1100px;margin:0 auto;padding:0 22px;
+}
+.tile{
+  background:#fff;border-radius:var(--radius);overflow:hidden;
+  text-align:center;padding:48px 28px 0;
+  display:flex;flex-direction:column;align-items:center;
+  transition:.3s;min-height:480px;
+}
+.tile:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.08)}
+.tile.dark{background:#1d1d1f;color:#fff}
+.tile.dark .tile-sub{color:rgba(255,255,255,.6)}
+.tile.dark .link{color:#2997ff}
+.tile-name{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.tile-price{font-size:17px;font-weight:500;color:var(--blue-dark);margin-bottom:4px}
+.tile.dark .tile-price{color:#2997ff}
+.tile-sub{font-size:14px;color:var(--muted);margin-bottom:18px}
+.tile-links{display:flex;gap:24px;margin-bottom:28px}
+.tile-img{
+  margin-top:auto;height:240px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 12px 30px rgba(0,0,0,.15));
+  transition:.4s;
+}
+.tile:hover .tile-img{transform:scale(1.04)}
+.tile-img-fallback{margin-top:auto;font-size:120px;padding-bottom:30px}
+@media(max-width:740px){.tile-grid{grid-template-columns:1fr}.tile{min-height:420px}}
+
+/* ─── CATALOG ──────────────────────────────────────── */
+.catalog{background:#fff}
+.cat-head{text-align:center;margin-bottom:44px}
+.cat-head .sub{max-width:520px;margin:12px auto 0}
+.search-wrap{
+  max-width:560px;margin:0 auto 28px;position:relative;
+}
+.search-input{
+  width:100%;border:none;outline:none;
+  background:var(--bg-alt);border-radius:980px;
+  font-size:16px;font-family:inherit;color:var(--text);
+  padding:14px 48px;transition:.25s;
+}
+.search-input:focus{background:#ebebf0;box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.search-input::placeholder{color:var(--muted)}
+.search-ico{
+  position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  color:var(--muted);pointer-events:none;
+}
+.pills{
+  display:flex;gap:8px;overflow-x:auto;padding:4px 22px 22px;
+  scrollbar-width:none;justify-content:flex-start;
+  max-width:1100px;margin:0 auto;
+}
+.pills::-webkit-scrollbar{display:none}
+@media(min-width:900px){.pills{justify-content:center;flex-wrap:wrap}}
+.pill{
+  flex-shrink:0;background:var(--bg-alt);border:none;border-radius:980px;
+  color:var(--text);font-size:14px;font-weight:500;
+  padding:9px 18px;transition:.2s;
+}
+.pill:hover{background:#e8e8ed}
+.pill.active{background:var(--text);color:#fff}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;max-width:1100px;margin:0 auto;padding:0 22px;
+}
+.card{
+  background:var(--bg-alt);border-radius:var(--radius);
+  padding:26px 18px 20px;text-align:center;
+  transition:.25s;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,.09);background:#fff}
+.card-img{height:130px;width:auto;object-fit:contain;margin-bottom:16px}
+.card-noimg{height:130px;display:flex;align-items:center;justify-content:center;font-size:54px;margin-bottom:16px}
+.card-name{
+  font-size:13.5px;font-weight:600;line-height:1.35;margin-bottom:6px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:36px;
+}
+.card-price{font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px}
+.card-price.locked{filter:blur(8px);user-select:none}
+.card-buy{
+  background:var(--blue);color:#fff;border:none;border-radius:980px;
+  font-size:12.5px;font-weight:500;padding:7px 16px;transition:.2s;
+}
+.card-buy:hover{background:#0077ED}
+.grid-empty{grid-column:1/-1;text-align:center;color:var(--muted);font-size:17px;padding:60px 20px}
+.unlock-strip{
+  text-align:center;margin:0 auto 32px;max-width:560px;
+}
+.unlock-strip button{font-size:14px}
+
+/* ─── HOW (express) ────────────────────────────────── */
+.how{background:var(--bg-alt);text-align:center}
+.how-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  max-width:980px;margin:56px auto 44px;padding:0 22px;
+}
+.step{
+  background:#fff;border-radius:var(--radius);padding:44px 28px;
+  transition:.25s;
+}
+.step:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.07)}
+.step-n{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--text);color:#fff;font-size:15px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 18px;
+}
+.step h3{font-size:19px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+.step p{font-size:14px;color:var(--muted);line-height:1.55}
+@media(max-width:740px){.how-steps{grid-template-columns:1fr}}
+
+/* ─── SUCURSALES ───────────────────────────────────── */
+.stores{background:#fff;text-align:center}
+.store-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  max-width:980px;margin:56px auto 0;padding:0 22px;
+}
+.store{
+  background:var(--bg-alt);border-radius:var(--radius);
+  padding:40px 26px;text-align:left;transition:.25s;
+}
+.store:hover{background:#ebebf0}
+.store-tag{font-size:12px;font-weight:600;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.store h3{font-size:20px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+.store p{font-size:14px;color:var(--muted);line-height:1.55;margin-bottom:14px}
+.store-hours{font-size:13px;font-weight:600;color:var(--text)}
+@media(max-width:740px){.store-grid{grid-template-columns:1fr}}
+
+/* ─── DELIVERY BAND ────────────────────────────────── */
+.delivery{
+  background:#1d1d1f;color:#fff;text-align:center;
+}
+.delivery .sub{color:rgba(255,255,255,.6);max-width:520px;margin:14px auto 30px}
+.areas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:36px}
+.area{
+  background:rgba(255,255,255,.1);border-radius:980px;
+  font-size:13px;font-weight:500;padding:7px 16px;color:rgba(255,255,255,.85);
+}
+
+/* ─── INSTAGRAM ────────────────────────────────────── */
+.insta{background:var(--bg-alt);text-align:center}
+.insta .sub{max-width:460px;margin:12px auto 36px}
+
+/* ─── FOOTER ───────────────────────────────────────── */
+footer{
+  background:var(--bg-alt);border-top:1px solid var(--border);
+  padding:36px 0 44px;font-size:12px;color:var(--muted);
+}
+.foot-inner{max-width:980px;margin:0 auto;padding:0 22px}
+.foot-note{padding-bottom:18px;border-bottom:1px solid var(--border);line-height:1.6}
+.foot-row{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:10px;padding-top:18px;
+}
+.foot-links{display:flex;gap:22px}
+.foot-links a{color:var(--muted);transition:.2s}
+.foot-links a:hover{color:var(--text)}
+
+/* ─── PHONE MODAL ──────────────────────────────────── */
+#phoneModal{
+  position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(20px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#phoneModal.open{display:flex}
+.pm-box{
+  background:#fff;border-radius:24px;max-width:380px;width:100%;
+  padding:40px 32px;text-align:center;position:relative;
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+}
+.pm-close{
+  position:absolute;top:14px;right:14px;
+  background:var(--bg-alt);border:none;color:var(--muted);
+  width:30px;height:30px;border-radius:50%;font-size:14px;
+}
+.pm-title{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.pm-sub{font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:24px}
+.pm-input{
+  width:100%;border:none;outline:none;
+  background:var(--bg-alt);border-radius:14px;
+  font-size:16px;font-family:inherit;text-align:center;
+  padding:14px;margin-bottom:12px;transition:.2s;
+}
+.pm-input:focus{box-shadow:0 0 0 4px rgba(0,113,227,.18)}
+.pm-submit{width:100%}
+.pm-skip{display:block;margin-top:14px;font-size:13px;color:var(--muted);cursor:pointer}
+.pm-skip:hover{text-decoration:underline}
+
+/* ─── PRODUCT MODAL ────────────────────────────────── */
+#prodModal{
+  position:fixed;inset:0;z-index:9997;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(20px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#prodModal.open{display:flex}
+.pd-box{
+  background:#fff;border-radius:24px;max-width:420px;width:100%;
+  overflow:hidden;position:relative;max-height:90vh;overflow-y:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+}
+.pd-close{
+  position:absolute;top:14px;right:14px;z-index:2;
+  background:rgba(0,0,0,.06);border:none;color:var(--muted);
+  width:32px;height:32px;border-radius:50%;font-size:15px;
+}
+.pd-img-wrap{
+  background:var(--bg-alt);padding:44px 24px;
+  display:flex;align-items:center;justify-content:center;min-height:260px;
+}
+.pd-img-wrap img{max-height:220px;object-fit:contain}
+.pd-noimg{font-size:90px}
+.pd-body{padding:28px 30px 32px;text-align:center}
+.pd-name{font-size:20px;font-weight:700;letter-spacing:-.015em;margin-bottom:6px}
+.pd-price{font-size:26px;font-weight:600;color:var(--text);margin-bottom:10px}
+.pd-desc{font-size:14px;color:var(--muted);line-height:1.55;margin-bottom:24px}
+
+/* ─── WA FAB ───────────────────────────────────────── */
+.fab{
+  position:fixed;bottom:22px;right:22px;z-index:400;
+  width:54px;height:54px;border-radius:50%;
+  background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 28px rgba(37,211,102,.45);transition:.25s;
+}
+.fab:hover{transform:scale(1.08)}
+
+/* ─── REVEAL ANIMATION ─────────────────────────────── */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<!-- AGE GATE -->
+<div id="ageGate">
+  <div class="age-box">
+    <div class="age-icon">🍺</div>
+    <div class="age-title">¿Eres mayor de 18?</div>
+    <div class="age-sub">Para entrar a Tengo Sed debes ser mayor de edad. Bebe con responsabilidad.</div>
+    <button class="btn age-yes" onclick="confirmAge()">Sí, soy mayor de 18</button>
+    <button class="age-no" onclick="denyAge()">No, salir</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">Tengo Sed</a>
+    <div class="nav-links">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#como">Cómo funciona</a>
+      <a href="#sucursales">Sucursales</a>
+      <a href="#instagram">Instagram</a>
+    </div>
+    <a class="nav-cta" href="https://wa.me/56994832066?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" rel="noopener">Pedir</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow reveal">Botillería · Iquique</div>
+    <h1 class="headline reveal">Tu sed,<br>nuestro plan.</h1>
+    <p class="sub reveal">Licores premium con delivery en 30–60 minutos, solo en Iquique. Pide por WhatsApp y listo.</p>
+    <div class="hero-links reveal">
+      <a class="link" href="https://wa.me/56994832066?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+      <a class="link" href="#catalogo">Ver catálogo</a>
+    </div>
+  </div>
+  <div class="hero-visual reveal">
+    <img src="hero_banner.jpg" alt="Tengo Sed" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'hero-visual-fallback',textContent:'🍺'}))"/>
+  </div>
+</header>
+
+<!-- PROMO TILES -->
+<section class="tiles" id="promos">
+  <div class="tiles-head reveal">
+    <h2 class="headline-md">Promos de la semana.</h2>
+    <p class="sub" style="margin-top:10px">Combos listos para el carrete.</p>
+  </div>
+  <div class="tile-grid">
+    <div class="tile reveal">
+      <div class="tile-name">Promo Ramazoti</div>
+      <div class="tile-price">$19.990</div>
+      <div class="tile-sub">Ramazoti + Bebida + Hielo</div>
+      <div class="tile-links">
+        <a class="link" href="https://wa.me/56994832066?text=Hola!%20Quiero%20la%20Promo%20Ramazoti%20%2419.990" target="_blank" rel="noopener">Pedir</a>
+      </div>
+      <img class="tile-img" src="products/promo_ramazoti_custom.webp" alt="Promo Ramazoti" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'tile-img-fallback',textContent:'🥃'}))"/>
+    </div>
+    <div class="tile dark reveal">
+      <div class="tile-name">Jack Honey + Mr. Big</div>
+      <div class="tile-price">$26.990</div>
+      <div class="tile-sub">Jack Daniel's Honey + Mr. Big</div>
+      <div class="tile-links">
+        <a class="link" href="https://wa.me/56994832066?text=Hola!%20Quiero%20la%20Promo%20Jack%20Honey%20%2426.990" target="_blank" rel="noopener">Pedir</a>
+      </div>
+      <img class="tile-img" src="products/promo_jack_honey_mr_big_custom.jpg" alt="Promo Jack Honey" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'tile-img-fallback',textContent:'🥃'}))"/>
+    </div>
+    <div class="tile reveal">
+      <div class="tile-name">Promo Ballentine's</div>
+      <div class="tile-price">$14.990</div>
+      <div class="tile-sub">Ballentine's + Bebida + Hielo</div>
+      <div class="tile-links">
+        <a class="link" href="https://wa.me/56994832066?text=Hola!%20Quiero%20la%20Promo%20Ballentine%20%2414.990" target="_blank" rel="noopener">Pedir</a>
+      </div>
+      <img class="tile-img" src="products/promo_ballentine_custom.png" alt="Promo Ballentine" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'tile-img-fallback',textContent:'🥃'}))"/>
+    </div>
+    <div class="tile reveal">
+      <div class="tile-name">Promo Mistral 35°</div>
+      <div class="tile-price">$10.990</div>
+      <div class="tile-sub">Mistral 35° + Bebida + Hielo</div>
+      <div class="tile-links">
+        <a class="link" href="https://wa.me/56994832066?text=Hola!%20Quiero%20la%20Promo%20Mistral%20%2410.990" target="_blank" rel="noopener">Pedir</a>
+      </div>
+      <img class="tile-img" src="products/promo_mistral_35_custom.png" alt="Promo Mistral" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'tile-img-fallback',textContent:'🌵'}))"/>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<section class="catalog" id="catalogo">
+  <div class="cat-head reveal">
+    <h2 class="headline-md">El catálogo completo.</h2>
+    <p class="sub">Más de 220 productos. Cervezas, piscos, whiskys y todo lo demás.</p>
+  </div>
+  <div class="search-wrap reveal">
+    <svg class="search-ico" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" class="search-input" id="searchInput" placeholder="Buscar producto" oninput="filterSearch(this.value)" autocomplete="off"/>
+  </div>
+  <div class="unlock-strip reveal" id="unlockStrip" style="display:none">
+    <button class="btn btn-ghost" onclick="openPhoneModal()">Desbloquear precios</button>
+  </div>
+  <div class="pills" id="pills">
+    <button class="pill active" data-cat="all" onclick="filterCat('all',this)">Todos</button>
+    <button class="pill" data-cat="promos" onclick="filterCat('promos',this)">Promos</button>
+    <button class="pill" data-cat="cerveza" onclick="filterCat('cerveza',this)">Cerveza</button>
+    <button class="pill" data-cat="whisky" onclick="filterCat('whisky',this)">Whisky</button>
+    <button class="pill" data-cat="vino" onclick="filterCat('vino',this)">Vino</button>
+    <button class="pill" data-cat="pisco" onclick="filterCat('pisco',this)">Pisco</button>
+    <button class="pill" data-cat="ron" onclick="filterCat('ron',this)">Ron</button>
+    <button class="pill" data-cat="tequila" onclick="filterCat('tequila',this)">Tequila</button>
+    <button class="pill" data-cat="gin" onclick="filterCat('gin',this)">Gin</button>
+    <button class="pill" data-cat="vodka" onclick="filterCat('vodka',this)">Vodka</button>
+    <button class="pill" data-cat="bebidas" onclick="filterCat('bebidas',this)">Bebidas</button>
+    <button class="pill" data-cat="fernet" onclick="filterCat('fernet',this)">Cócteles</button>
+    <button class="pill" data-cat="confites" onclick="filterCat('confites',this)">Confites</button>
+    <button class="pill" data-cat="otro" onclick="filterCat('otro',this)">Otros</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como">
+  <div class="container">
+    <div class="reveal">
+      <h2 class="headline-md">Así de fácil.</h2>
+      <p class="sub" style="margin-top:10px">Tres pasos. Cero complicaciones.</p>
+    </div>
+  </div>
+  <div class="how-steps">
+    <div class="step reveal" onclick="document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})" style="cursor:pointer">
+      <div class="step-n">1</div>
+      <h3>Elige</h3>
+      <p>Navega el catálogo y encuentra lo tuyo. Promos, cervezas, licores y más.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-n">2</div>
+      <h3>Escribe</h3>
+      <p>Mándanos tu pedido por WhatsApp. Confirmamos al toque.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-n">3</div>
+      <h3>Recibe</h3>
+      <p>En 30–60 minutos llega a tu puerta, donde estés en Iquique.</p>
+    </div>
+  </div>
+  <a class="btn btn-lg btn-wa reveal" href="https://wa.me/56994832066?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" rel="noopener">Hacer pedido ahora</a>
+</section>
+
+<!-- SUCURSALES -->
+<section class="stores" id="sucursales">
+  <div class="container reveal">
+    <h2 class="headline-md">Tres sucursales.<br>Una sola sed.</h2>
+  </div>
+  <div class="store-grid">
+    <div class="store reveal">
+      <div class="store-tag">Principal</div>
+      <h3>Boti Tengo Sed</h3>
+      <p>Genaro Gallo #2836A, Iquique.<br>Sector Centro — fácil acceso.</p>
+      <div class="store-hours">Lun–Dom · 12:00 – 01:00</div>
+    </div>
+    <div class="store reveal">
+      <div class="store-tag">Los Negros</div>
+      <h3>Boti Los Negros</h3>
+      <p>Genaro Gallo #2243, Iquique.<br>A pasos de la avenida principal.</p>
+      <div class="store-hours">Lun–Dom · 12:00 – 01:00</div>
+    </div>
+    <div class="store reveal">
+      <div class="store-tag">Cavancha · hasta las 3 AM</div>
+      <h3>Boti Red and White</h3>
+      <p>18 de Septiembre #1578, Iquique.<br>El más tardío de Iquique.</p>
+      <div class="store-hours">Lun–Dom · 12:00 – 03:00</div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section class="delivery">
+  <div class="container">
+    <h2 class="headline-md reveal">Delivery solo IQQ.</h2>
+    <p class="sub reveal">Todos los sectores de Iquique, en 30–60 minutos. Sin excusas.</p>
+    <div class="areas reveal">
+      <span class="area">Cavancha</span>
+      <span class="area">Playa Brava</span>
+      <span class="area">Centro</span>
+      <span class="area">Sur</span>
+      <span class="area">Alto Hospicio</span>
+      <span class="area">Balmaceda</span>
+    </div>
+    <a class="btn reveal" href="https://wa.me/56994832066?text=Hola!%20Quiero%20delivery" target="_blank" rel="noopener">Pedir delivery</a>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="insta" id="instagram">
+  <div class="container reveal">
+    <h2 class="headline-md">@tengosed.iqq</h2>
+    <p class="sub">Ofertas exclusivas, sorteos y el mejor ambiente nocturno de Iquique.</p>
+    <a class="btn" href="https://www.instagram.com/tengosed.iqq" target="_blank" rel="noopener">Seguir en Instagram</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-note">
+      Delivery de licores en Iquique con más de 500 clientes satisfechos. Pedidos por WhatsApp, entrega en 30–60 min y garantía de producto original. Venta solo a mayores de 18 años.
+    </div>
+    <div class="foot-row">
+      <span>© 2026 Tengo-Sed.cl — Iquique, Chile</span>
+      <div class="foot-links">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#sucursales">Sucursales</a>
+        <a href="https://www.instagram.com/tengosed.iqq" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://wa.me/56994832066" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- PHONE MODAL -->
+<div id="phoneModal" onclick="if(event.target===this)closePhoneModal()">
+  <div class="pm-box">
+    <button class="pm-close" onclick="closePhoneModal()" aria-label="Cerrar">✕</button>
+    <div class="pm-title">Desbloquea los precios</div>
+    <div class="pm-sub">Déjanos tu número y mira todos los precios del catálogo.</div>
+    <input type="tel" class="pm-input" id="phoneInput" placeholder="+56 9 1234 5678" autocomplete="tel"/>
+    <button class="btn pm-submit" onclick="unlockPrices()">Ver precios</button>
+    <span class="pm-skip" onclick="closePhoneModal()">Ahora no</span>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="prodModal" role="dialog" aria-modal="true" onclick="if(event.target===this)closeProdModal()">
+  <div class="pd-box">
+    <button class="pd-close" onclick="closeProdModal()" aria-label="Cerrar">✕</button>
+    <div class="pd-img-wrap" id="pdImgWrap"></div>
+    <div class="pd-body">
+      <div class="pd-name" id="pdName"></div>
+      <div class="pd-price" id="pdPrice"></div>
+      <div class="pd-desc" id="pdDesc"></div>
+      <a class="btn btn-wa" id="pdWa" href="#" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- WA FAB -->
+<a href="https://wa.me/56994832066" target="_blank" rel="noopener" class="fab" aria-label="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
+<script>
+const BASE = location.protocol === 'file:' ? 'http://localhost:8000' : location.origin;
+const WA   = '56994832066';
+let pricesUnlocked = false;
+let allProducts = [];
+let imgMap = {};
+let activeCat = 'all';
+let searchQuery = '';
+
+const CATS={
+  promos:'🏷️',bebidas:'🥤',cerveza:'🍺',whisky:'🥃',vodka:'🫗',gin:'🍸',
+  pisco:'🌵',ron:'🧊',tequila:'🥂',vino:'🍷',fernet:'🫙',licores:'🍾',
+  zero:'🫧',confites:'🍟',otro:'🍶'
+};
+
+function fmt(n){ return '$'+Number(n).toLocaleString('es-CL') }
+function esc(s){ const d=document.createElement('div');d.textContent=s;return d.innerHTML }
+
+/* ── AGE GATE ── */
+function confirmAge(){
+  sessionStorage.setItem('ageOk','1');
+  document.getElementById('ageGate').style.display='none';
+  if(!pricesUnlocked) setTimeout(openPhoneModal,700);
+}
+function denyAge(){
+  document.querySelector('.age-box').innerHTML=
+    '<div class="age-icon">🚫</div><div class="age-title">Acceso denegado</div><div class="age-sub">Debes ser mayor de 18 años para entrar.</div>';
+}
+
+/* ── PHONE GATE ── */
+function openPhoneModal(){ document.getElementById('phoneModal').classList.add('open') }
+function closePhoneModal(){ document.getElementById('phoneModal').classList.remove('open') }
+function unlockPrices(){
+  const v=document.getElementById('phoneInput').value.trim();
+  if(v.length<8){ document.getElementById('phoneInput').focus(); return; }
+  pricesUnlocked=true;
+  sessionStorage.setItem('phoneUnlocked','1');
+  closePhoneModal();
+  document.getElementById('unlockStrip').style.display='none';
+  applyFilters();
+}
+
+/* ── RENDER ── */
+function renderProducts(list){
+  const g=document.getElementById('grid');
+  if(!list.length){
+    g.innerHTML='<div class="grid-empty">Sin resultados. Intenta otra búsqueda.</div>';
+    return;
+  }
+  g.innerHTML=list.map(p=>{
+    const img=imgMap[p.name];
+    const imgEl=img
+      ? `<img class="card-img" src="${BASE}/products/${img}" alt="${esc(p.name)}" loading="lazy"/>`
+      : `<div class="card-noimg">${CATS[p.cat]||'🍶'}</div>`;
+    const priceCls=pricesUnlocked?'card-price':'card-price locked';
+    return `<div class="card" onclick="openProdModal(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+      ${imgEl}
+      <div class="card-name">${esc(p.name)}</div>
+      <div class="${priceCls}">${fmt(p.price)}</div>
+      <button class="card-buy" onclick="event.stopPropagation();window.open('https://wa.me/${WA}?text=Hola!%20Quiero%20${encodeURIComponent(p.name)}','_blank')">Pedir</button>
+    </div>`;
+  }).join('');
+}
+
+function applyFilters(){
+  let base=activeCat==='all'?allProducts:allProducts.filter(p=>p.cat===activeCat);
+  if(searchQuery){
+    base=base.filter(p=>
+      p.name.toLowerCase().includes(searchQuery)||
+      (p.cat&&p.cat.toLowerCase().includes(searchQuery))||
+      (p.desc&&p.desc.toLowerCase().includes(searchQuery))
+    );
+  }
+  renderProducts(base);
+}
+
+function filterCat(cat,btn){
+  activeCat=cat;
+  document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  applyFilters();
+}
+
+function filterSearch(q){
+  searchQuery=q.trim().toLowerCase();
+  applyFilters();
+}
+
+/* ── PRODUCT MODAL ── */
+function openProdModal(p){
+  if(!pricesUnlocked){ openPhoneModal(); return; }
+  const img=imgMap[p.name];
+  document.getElementById('pdImgWrap').innerHTML=img
+    ? `<img src="${BASE}/products/${img}" alt="${esc(p.name)}"/>`
+    : `<div class="pd-noimg">${CATS[p.cat]||'🍶'}</div>`;
+  document.getElementById('pdName').textContent=p.name;
+  document.getElementById('pdPrice').textContent=fmt(p.price);
+  document.getElementById('pdDesc').textContent=p.desc||'Producto Tengo Sed — calidad garantizada.';
+  document.getElementById('pdWa').href=
+    `https://wa.me/${WA}?text=Hola!%20Quiero%20${encodeURIComponent(p.name)}%20(${encodeURIComponent(fmt(p.price))})`;
+  document.getElementById('prodModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeProdModal(){
+  document.getElementById('prodModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeProdModal();closePhoneModal();} });
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ── BOOT ── */
+(async()=>{
+  if(sessionStorage.getItem('phoneUnlocked')) pricesUnlocked=true;
+  if(sessionStorage.getItem('ageOk')){
+    document.getElementById('ageGate').style.display='none';
+  }
+  if(!pricesUnlocked) document.getElementById('unlockStrip').style.display='block';
+
+  try{
+    const[pRes,mRes]=await Promise.all([
+      fetch(BASE+'/products_inventory.json?t='+Date.now()),
+      fetch(BASE+'/product_img_map.json?t='+Date.now())
+    ]);
+    allProducts=await pRes.json();
+    imgMap=await mRes.json();
+    renderProducts(allProducts);
+  }catch(e){
+    document.getElementById('grid').innerHTML=
+      '<div class="grid-empty">No se pudo cargar el catálogo. Asegúrate que el servidor esté corriendo.</div>';
+  }
+})();
+</script>
+</body>
+</html>

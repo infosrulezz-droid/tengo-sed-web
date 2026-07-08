@@ -63,6 +63,32 @@
     }
     .toast.show{opacity:1}
 
+    /* ── BANNER KEYFRAMES ────────────────────────────────────── */
+    @keyframes logoFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-7px)}
+    }
+    @keyframes logoEntrance{
+      from{opacity:0;transform:translateX(-30px) scale(.92)}
+      to{opacity:1;transform:translateX(0) scale(1)}
+    }
+    @keyframes headlineIn{
+      from{opacity:0;transform:translateX(-24px)}
+      to{opacity:1;transform:translateX(0)}
+    }
+    @keyframes branchesIn{
+      from{opacity:0;transform:translateY(12px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes ctaIn{
+      from{opacity:0;transform:scale(.9)}
+      to{opacity:1;transform:scale(1)}
+    }
+    @keyframes shimmer{
+      0%{background-position:200% center}
+      100%{background-position:-200% center}
+    }
+
     /* ── PREMIUM BANNER ─────────────────────────────────────── */
     .site-banner{width:100%;overflow:hidden}
     .ts-banner{
@@ -70,15 +96,13 @@
       position:relative;overflow:hidden;
       display:flex;align-items:center;
       padding:0 32px 0 0;
-      min-height:160px;
+      min-height:180px;
     }
-    /* Grain texture overlay */
     .ts-bg-grain{
       position:absolute;inset:0;pointer-events:none;z-index:1;
       opacity:.04;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     }
-    /* Amber glow — center left */
     .ts-bg-glow{position:absolute;pointer-events:none;border-radius:50%}
     .ts-glow-amber{
       width:600px;height:340px;left:35%;top:50%;transform:translate(-50%,-50%);
@@ -90,67 +114,74 @@
       background:radial-gradient(ellipse,rgba(0,230,255,.18) 0%,transparent 65%);
       z-index:1;
     }
-    /* Separator line accent */
     .ts-banner::after{
       content:'';position:absolute;left:0;bottom:0;right:0;height:3px;
       background:linear-gradient(90deg,transparent,rgba(255,255,255,.7) 30%,rgba(0,230,255,.9) 65%,transparent);
     }
-    /* Logo column */
+
+    /* LOGO — entrance + continuous float */
     .ts-logo-col{
       flex-shrink:0;position:relative;z-index:2;
       padding:0 8px 0 0;
     }
     .ts-logo{
-      height:180px;width:auto;display:block;
+      height:190px;width:auto;display:block;
       mix-blend-mode:multiply;
       filter:contrast(1.05) saturate(1.1);
+      animation:logoEntrance .7s cubic-bezier(.16,1,.3,1) both,
+                logoFloat 3.5s ease-in-out 0.7s infinite;
     }
-    /* Center column */
+
+    /* CENTER — headline slides in */
     .ts-center-col{
       flex:1;color:#fff;position:relative;z-index:2;
-      padding:28px 32px 28px 24px;
+      padding:24px 32px 24px 24px;
       border-left:1px solid rgba(255,255,255,.07);
+      animation:headlineIn .7s cubic-bezier(.16,1,.3,1) .15s both;
     }
     .ts-headline{
       font-family:'Plus Jakarta Sans',sans-serif;
-      font-size:clamp(28px,4vw,46px);font-weight:900;
-      line-height:1.05;letter-spacing:-1.5px;
+      font-size:clamp(34px,4.5vw,58px);font-weight:900;
+      line-height:1.0;letter-spacing:-2px;
       color:#fff;margin:0 0 10px;
     }
     .ts-gold{
-      background:linear-gradient(135deg,#F59E0B,#FCD34D,#F59E0B);
+      background:linear-gradient(90deg,#F59E0B,#FCD34D,#F8B942,#FCD34D,#F59E0B);
+      background-size:200% auto;
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      animation:shimmer 4s linear 1s infinite;
     }
     .ts-sub{
-      font-size:16px;font-weight:800;
+      font-size:15px;font-weight:800;
       color:rgba(255,255,255,.8);
       letter-spacing:3px;text-transform:uppercase;margin:0;
       text-shadow:0 0 20px rgba(251,191,36,.4);
     }
-    /* Branches — own column between center and right */
+
+    /* BRANCHES — bigger, fade up */
     .ts-branches-col{
       flex-shrink:0;position:relative;z-index:2;
-      padding:20px 32px;
+      padding:20px 36px;
       border-left:1px solid rgba(255,255,255,.1);
       border-right:1px solid rgba(255,255,255,.1);
+      animation:branchesIn .7s cubic-bezier(.16,1,.3,1) .3s both;
     }
     .ts-branch-label{
-      font-size:11px;font-weight:700;letter-spacing:2px;
-      text-transform:uppercase;color:rgba(255,255,255,.75);
-      margin:0 0 12px;
+      font-size:13px;font-weight:700;letter-spacing:2px;
+      text-transform:uppercase;color:rgba(255,255,255,.85);
+      margin:0 0 14px;
     }
-    .ts-branch-list{display:flex;flex-direction:column;gap:10px}
+    .ts-branch-list{display:flex;flex-direction:column;gap:13px}
     .ts-branch-item{display:flex;flex-direction:column;gap:2px}
-    .ts-branch-name{
-      color:#fff;font-weight:800;
-      font-size:15px;white-space:nowrap;
-    }
-    .ts-branch-addr{font-size:13px;color:rgba(255,255,255,.55);white-space:nowrap}
-    /* Right CTA column */
+    .ts-branch-name{color:#fff;font-weight:800;font-size:18px;white-space:nowrap}
+    .ts-branch-addr{font-size:14px;color:rgba(255,255,255,.6);white-space:nowrap}
+
+    /* CTA — pops in */
     .ts-right-col{
       flex-shrink:0;display:flex;flex-direction:column;
       align-items:center;gap:12px;position:relative;z-index:2;
       padding-left:32px;border-left:1px solid rgba(255,255,255,.07);
+      animation:ctaIn .6s cubic-bezier(.16,1,.3,1) .45s both;
     }
     .ts-cta{
       background:linear-gradient(135deg,#22c55e,#16a34a);
@@ -166,14 +197,8 @@
       transform:translateY(-2px);
       box-shadow:0 8px 32px rgba(34,197,94,.5);
     }
-    .ts-hours-box{
-      display:flex;flex-direction:column;gap:3px;
-      text-align:center;
-    }
-    .ts-hours-box span{
-      font-size:13px;font-weight:600;color:rgba(255,255,255,.7);
-      white-space:nowrap;
-    }
+    .ts-hours-box{display:flex;flex-direction:column;gap:3px;text-align:center}
+    .ts-hours-box span{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap}
     .ts-delivery-zone{
       display:flex;flex-direction:column;align-items:center;gap:4px;
       background:rgba(251,191,36,.1);
@@ -187,12 +212,12 @@
     }
     @media(max-width:700px){
       .ts-banner{flex-wrap:wrap;padding:16px;min-height:auto}
-      .ts-logo{height:100px;mix-blend-mode:multiply}
+      .ts-logo{height:110px;mix-blend-mode:multiply;animation:logoEntrance .7s both,logoFloat 3.5s ease-in-out .7s infinite}
       .ts-logo-col{padding:0}
       .ts-center-col{border-left:none;border-top:1px solid rgba(255,255,255,.07);padding:16px 0}
       .ts-right-col{border-left:none;padding:0;width:100%}
       .ts-cta{width:100%;justify-content:center}
-      .ts-headline{font-size:28px}
+      .ts-headline{font-size:32px}
     }
 
     /* ── HEADER (fallback if banner.png missing) ─────────── */
@@ -461,23 +486,19 @@
   <!-- Banner principal -->
   <div class="site-banner">
     <div class="ts-banner">
-      <!-- background layers -->
       <div class="ts-bg-glow ts-glow-amber"></div>
       <div class="ts-bg-glow ts-glow-green"></div>
       <div class="ts-bg-grain"></div>
 
-      <!-- Logo — mix-blend-mode:multiply removes the white bg -->
       <div class="ts-logo-col">
         <img class="ts-logo" src="/logo.png" onerror="this.src='/logo.jpg'" alt="Tengo Sed"/>
       </div>
 
-      <!-- Center tagline -->
       <div class="ts-center-col">
         <h1 class="ts-headline">Tu sed,<br><span class="ts-gold">Nuestro Plan.</span></h1>
         <p class="ts-sub">tengo-sed.cl</p>
       </div>
 
-      <!-- Branches column -->
       <div class="ts-branches-col">
         <p class="ts-branch-label">📍 Nuestras Sucursales</p>
         <div class="ts-branch-list">
@@ -496,7 +517,6 @@
         </div>
       </div>
 
-      <!-- Right CTA -->
       <div class="ts-right-col">
         <a href="https://wa.me/56992380324?text=Hola!%20Quiero%20hacer%20un%20pedido%20%F0%9F%8D%BA" class="ts-cta" target="_blank">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -1181,329 +1201,144 @@
     }
   </script>
 
-<!-- ── AI CATALOG CHAT PANEL ──────────────────────────────────────────── -->
+<!-- ── NOTES WIDGET ──────────────────────────────────────────────────────── -->
 <style>
-  #aiBar{
-    position:fixed;bottom:0;left:0;right:0;z-index:500;
-    background:#fff;
-    box-shadow:0 -4px 32px rgba(0,0,0,.15);
-    display:flex;flex-direction:column;
-    height:370px;
-    transition:height .3s cubic-bezier(.4,0,.2,1);
-    border-radius:20px 20px 0 0;
-    overflow:hidden;
+  #noteBox{
+    position:fixed;z-index:9000;
+    background:#fff;border:2px solid #0096C7;border-radius:14px;
+    padding:14px;width:300px;
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+    display:none;
   }
-  #aiBar.collapsed{height:52px}
-  .ai-head{
-    background:linear-gradient(135deg,#023E8A 0%,#0096C7 100%);
-    padding:0 20px;height:52px;flex-shrink:0;
-    display:flex;align-items:center;gap:12px;
-    cursor:pointer;
-    border-radius:20px 20px 0 0;
-    user-select:none;
+  #noteBox .nb-label{
+    font-size:11px;font-weight:700;color:#64748B;
+    text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;
   }
-  .ai-head-avatar{font-size:22px}
-  .ai-head-text{flex:1}
-  .ai-head-name{font-weight:800;font-size:14px;color:#fff;letter-spacing:-.2px}
-  .ai-head-status{font-size:11px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:5px;margin-top:1px}
-  .ai-head-dot{width:7px;height:7px;background:#22c55e;border-radius:50%;flex-shrink:0}
-  .ai-head-toggle{color:rgba(255,255,255,.8);font-size:14px;transition:transform .3s;flex-shrink:0}
-  #aiBar.collapsed .ai-head-toggle{transform:rotate(180deg)}
-  .ai-msgs{
-    flex:1;overflow-y:auto;padding:14px 18px;
-    display:flex;flex-direction:column;gap:9px;
-    background:#F8FAFC;min-height:0;
+  #noteBox .nb-sel{
+    font-size:11px;color:#0096C7;font-style:italic;
+    background:#EFF6FF;border-radius:6px;padding:4px 8px;
+    margin-bottom:8px;max-height:36px;overflow:hidden;
+    white-space:nowrap;text-overflow:ellipsis;
   }
-  .ai-msgs::-webkit-scrollbar{width:4px}
-  .ai-msgs::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:99px}
-  .ai-m{max-width:84%;font-size:13px;line-height:1.5;padding:9px 13px;border-radius:14px;word-break:break-word;white-space:pre-wrap}
-  .ai-m-bot{background:#fff;color:#1E293B;align-self:flex-start;box-shadow:0 1px 4px rgba(0,0,0,.08);border-bottom-left-radius:4px}
-  .ai-m-user{background:linear-gradient(135deg,#0096C7,#023E8A);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
-  .ai-m-typing{background:#fff;color:#94A3B8;font-style:italic;font-size:12px;align-self:flex-start;box-shadow:0 1px 4px rgba(0,0,0,.08);border-bottom-left-radius:4px}
-  .ai-badge{display:inline-block;background:rgba(0,150,199,.1);color:#0369A1;font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;margin:4px 3px 0 0}
-  .ai-chips{
-    padding:8px 14px;display:flex;gap:6px;overflow-x:auto;
-    background:#fff;border-top:1px solid #F1F5F9;flex-shrink:0;
-  }
-  .ai-chips::-webkit-scrollbar{display:none}
-  .ai-chip{
-    background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:99px;
-    padding:5px 12px;font-size:12px;font-weight:600;color:#475569;
-    cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;
-  }
-  .ai-chip:hover{background:#EFF6FF;border-color:#0096C7;color:#0096C7}
-  .ai-foot{
-    padding:10px 12px;border-top:1px solid #E2E8F0;
-    display:flex;gap:8px;align-items:center;
-    background:#fff;flex-shrink:0;
-  }
-  #aiInput{
-    flex:1;border:1.5px solid #E2E8F0;border-radius:99px;
-    padding:10px 16px;font-size:13px;font-family:'Inter',sans-serif;
+  #noteInput{
+    width:100%;box-sizing:border-box;
+    border:1.5px solid #E2E8F0;border-radius:8px;
+    padding:9px 11px;font-size:13px;
+    font-family:inherit;resize:vertical;min-height:72px;
     outline:none;transition:border-color .15s;
   }
-  #aiInput:focus{border-color:#0096C7}
-  #aiSend{
-    background:linear-gradient(135deg,#0096C7,#023E8A);
-    border:none;border-radius:50%;width:40px;height:40px;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;flex-shrink:0;transition:transform .15s;
+  #noteInput:focus{border-color:#0096C7}
+  #noteBox .nb-btns{display:flex;gap:8px;margin-top:10px}
+  #noteSaveBtn{
+    flex:1;background:linear-gradient(135deg,#023E8A,#0096C7);
+    color:#fff;border:none;border-radius:8px;
+    padding:9px;font-size:13px;font-weight:700;cursor:pointer;
+    transition:opacity .15s;
   }
-  #aiSend:hover{transform:scale(1.08)}
-  #aiSend svg{width:16px;height:16px;fill:#fff}
-  @media(max-width:600px){
-    #aiBar{height:320px}
-    #aiBar.collapsed{height:52px}
+  #noteSaveBtn:hover{opacity:.88}
+  #noteCloseBtn{
+    background:#F1F5F9;color:#64748B;border:none;border-radius:8px;
+    padding:9px 14px;font-size:13px;cursor:pointer;
+  }
+  #noteSavedToast{
+    position:fixed;bottom:24px;right:24px;z-index:9001;
+    background:#0f4c2e;color:#fff;
+    padding:12px 18px;border-radius:12px;
+    font-size:13px;font-weight:700;
+    box-shadow:0 6px 24px rgba(0,0,0,.3);
+    display:none;
   }
 </style>
 
-<div id="aiBar">
-  <div class="ai-head" onclick="toggleAiBar()">
-    <div class="ai-head-avatar">🤖</div>
-    <div class="ai-head-text">
-      <div class="ai-head-name">Asistente IA — Tengo Sed</div>
-      <div class="ai-head-status"><span class="ai-head-dot"></span>Ve el catálogo completo · puede hacer cambios</div>
-    </div>
-    <span class="ai-head-toggle">▼</span>
-  </div>
-
-  <div class="ai-msgs" id="aiMsgs"></div>
-
-  <div class="ai-chips">
-    <button class="ai-chip" onclick="sendAiQuick('¿Qué cervezas tienen disponibles?')">🍺 Cervezas</button>
-    <button class="ai-chip" onclick="sendAiQuick('Muéstrame los whiskys')">🥃 Whiskys</button>
-    <button class="ai-chip" onclick="sendAiQuick('Muestra los vinos')">🍷 Vinos</button>
-    <button class="ai-chip" onclick="sendAiQuick('¿Cuáles son los horarios y sucursales?')">🕐 Horarios</button>
-    <button class="ai-chip" onclick="sendAiQuick('Muestra todos los productos')">📦 Todo</button>
-    <button class="ai-chip" onclick="sendAiQuick('¿Qué productos están agotados?')">❌ Agotados</button>
-  </div>
-
-  <div class="ai-foot">
-    <input id="aiInput" type="text"
-      placeholder="Pregunta algo o pide un cambio al catálogo..."
-      maxlength="400"
-      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiChat()}"/>
-    <button id="aiSend" onclick="sendAiChat()">
-      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
+<div id="noteBox">
+  <div class="nb-label">📝 Nota para Claude</div>
+  <div class="nb-sel" id="nbSel"></div>
+  <textarea id="noteInput" placeholder="Escribe el cambio que quieres hacer..."></textarea>
+  <div class="nb-btns">
+    <button id="noteSaveBtn">💾 Guardar Nota</button>
+    <button id="noteCloseBtn">✕</button>
   </div>
 </div>
+<div id="noteSavedToast">✅ Nota guardada</div>
 
 <script>
 (function(){
-  var aiHistory = [];
-  var aiOpen = true;
+  var box      = document.getElementById('noteBox');
+  var input    = document.getElementById('noteInput');
+  var selLabel = document.getElementById('nbSel');
+  var toast    = document.getElementById('noteSavedToast');
+  var selText  = '';
+  var toastTimer = null;
 
-  addAiMsg('bot', '¡Hola! 👋 Soy el asistente IA de Tengo Sed.\n\nVeo todos tus ' + (typeof products !== 'undefined' ? products.length : '') + ' productos en tiempo real y puedo hacer cambios directamente:\n• Filtrar por categoría\n• Buscar productos\n• Editar precios\n• Marcar agotados\n• Añadir descripciones\n\n¿En qué te ayudo?');
-
-  window.toggleAiBar = function() {
-    aiOpen = !aiOpen;
-    document.getElementById('aiBar').classList.toggle('collapsed', !aiOpen);
-    if (aiOpen) document.getElementById('aiInput').focus();
-  };
-
-  function addAiMsg(role, text, badges) {
-    var el = document.getElementById('aiMsgs');
-    var div = document.createElement('div');
-    div.className = 'ai-m ' + (role === 'bot' ? 'ai-m-bot' : 'ai-m-user');
-    div.textContent = text;
-    if (badges && badges.length) {
-      badges.forEach(function(b) {
-        var span = document.createElement('span');
-        span.className = 'ai-badge';
-        span.textContent = '⚡ ' + b;
-        div.appendChild(span);
-      });
-    }
-    el.appendChild(div);
-    el.scrollTop = el.scrollHeight;
-    return div;
+  function showToast() {
+    clearTimeout(toastTimer);
+    toast.style.display = 'block';
+    toastTimer = setTimeout(function(){ toast.style.display = 'none'; }, 3000);
   }
 
-  window.sendAiQuick = function(text) {
-    document.getElementById('aiInput').value = text;
-    sendAiChat();
-  };
-
-  function getPageContext() {
-    var prods = (typeof products !== 'undefined') ? products : [];
-    var cat = (typeof currentCat !== 'undefined') ? currentCat : 'all';
-    var sq = (typeof searchQuery !== 'undefined') ? searchQuery : '';
-    var visible = prods.filter(function(p) {
-      var catOk = cat === 'all' || p.cat === cat;
-      var sOk = !sq || (p.name||'').toLowerCase().indexOf(sq) !== -1;
-      return catOk && sOk;
-    }).length;
-    return {
-      activeCategory: cat,
-      searchQuery: sq,
-      totalProducts: prods.length,
-      visibleCount: visible,
-      products: prods.map(function(p) {
-        return { name: p.name, price: p.price, cat: p.cat, agotado: !!p.agotado, desc: p.desc || '', qty: p.qty };
-      })
-    };
-  }
-
-  function filterCatAI(cat) {
-    document.querySelectorAll('.category-btn').forEach(function(b) {
-      var oc = b.getAttribute('onclick') || '';
-      var m = oc.match(/setCategory\('([^']+)'/);
-      if (m && m[1] === cat) setCategory(cat, b);
-      if (cat === 'all' && m && m[1] === 'all') setCategory('all', b);
-    });
-  }
-
-  function scrollToProductAI(name) {
-    var nameLow = name.toLowerCase();
-    var found = null;
-    document.querySelectorAll('.product-card, .card').forEach(function(card) {
-      if (found) return;
-      var txt = card.textContent.toLowerCase();
-      if (txt.indexOf(nameLow) !== -1) found = card;
-    });
-    if (!found) {
-      document.querySelectorAll('h3,h4,.product-name,.card-name').forEach(function(el) {
-        if (found) return;
-        if (el.textContent.toLowerCase().indexOf(nameLow) !== -1)
-          found = el.closest('[class*="card"]') || el.parentElement;
-      });
-    }
-    if (found) {
-      found.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      var prev = found.style.outline;
-      found.style.outline = '3px solid #0096C7';
-      found.style.borderRadius = '12px';
-      setTimeout(function() { found.style.outline = prev; }, 2500);
-    }
-  }
-
-  function editPriceAI(name, price) {
-    if (typeof products === 'undefined') return null;
-    var nameLow = name.toLowerCase();
-    var p = null;
-    products.forEach(function(x) { if (!p && x.name.toLowerCase().indexOf(nameLow) !== -1) p = x; });
-    if (!p) return null;
-    p.price = parseInt(price, 10);
-    if (typeof dirty !== 'undefined') dirty = true;
-    if (typeof renderProducts === 'function') renderProducts();
-    if (typeof scheduleSave === 'function') scheduleSave();
-    return p.name;
-  }
-
-  function markAgotadoAI(name, val) {
-    if (typeof products === 'undefined') return null;
-    var nameLow = name.toLowerCase();
-    var p = null;
-    products.forEach(function(x) { if (!p && x.name.toLowerCase().indexOf(nameLow) !== -1) p = x; });
-    if (!p) return null;
-    p.agotado = val;
-    if (typeof dirty !== 'undefined') dirty = true;
-    if (typeof renderProducts === 'function') renderProducts();
-    if (typeof scheduleSave === 'function') scheduleSave();
-    return p.name;
-  }
-
-  function addDescAI(name, desc) {
-    if (typeof products === 'undefined') return null;
-    var nameLow = name.toLowerCase();
-    var p = null;
-    products.forEach(function(x) { if (!p && x.name.toLowerCase().indexOf(nameLow) !== -1) p = x; });
-    if (!p) return null;
-    p.desc = desc;
-    if (typeof dirty !== 'undefined') dirty = true;
-    if (typeof renderProducts === 'function') renderProducts();
-    if (typeof scheduleSave === 'function') scheduleSave();
-    return p.name;
-  }
-
-  function executeActions(raw) {
-    var re = /\[ACTION:([^\]]+)\]/g, m, done = [];
-    while ((m = re.exec(raw)) !== null) {
-      var parts = m[1].split(':');
-      var type = parts[0], rest = parts.slice(1).join(':');
-      switch (type) {
-        case 'filterCategory':
-          filterCatAI(rest);
-          done.push('Filtrar → ' + rest);
-          break;
-        case 'setSearch':
-          var si = document.getElementById('searchInput');
-          if (si) {
-            si.value = rest;
-            if (typeof searchQuery !== 'undefined') { searchQuery = rest.toLowerCase(); currentPage = 1; }
-            si.dispatchEvent(new Event('input'));
-          }
-          done.push('Buscar "' + rest + '"');
-          break;
-        case 'scrollTo':
-          scrollToProductAI(rest);
-          done.push('Ir a: ' + rest);
-          break;
-        case 'editPrice': {
-          var pi = rest.lastIndexOf(':'), pName = rest.slice(0, pi), pPrice = rest.slice(pi + 1);
-          var changed = editPriceAI(pName, pPrice);
-          if (changed) done.push('Precio: ' + changed + ' → $' + parseInt(pPrice).toLocaleString('es-CL'));
-          break;
-        }
-        case 'markAgotado': {
-          var ai2 = rest.lastIndexOf(':'), aName = rest.slice(0, ai2), aVal = rest.slice(ai2 + 1) === 'true';
-          var aChanged = markAgotadoAI(aName, aVal);
-          if (aChanged) done.push((aVal ? 'Agotado: ' : 'Disponible: ') + aChanged);
-          break;
-        }
-        case 'addDescription': {
-          var di = rest.indexOf(':'), dName = rest.slice(0, di), dDesc = rest.slice(di + 1);
-          var dChanged = addDescAI(dName, dDesc);
-          if (dChanged) done.push('Descripción: ' + dName);
-          break;
-        }
-      }
-    }
-    return done;
-  }
-
-  window.sendAiChat = function() {
-    var input = document.getElementById('aiInput');
-    var text = input.value.trim();
-    if (!text) return;
+  function closeBox() {
+    box.style.display = 'none';
     input.value = '';
+    selText = '';
+    window.getSelection().removeAllRanges();
+  }
 
-    if (!aiOpen) { aiOpen = true; document.getElementById('aiBar').classList.remove('collapsed'); }
+  document.getElementById('noteCloseBtn').onclick = closeBox;
 
-    addAiMsg('user', text);
-    aiHistory.push({ role: 'user', content: text });
+  document.getElementById('noteSaveBtn').onclick = function() {
+    var note = input.value.trim();
+    if (!note) { input.focus(); return; }
 
-    var el = document.getElementById('aiMsgs');
-    var typing = document.createElement('div');
-    typing.className = 'ai-m ai-m-typing';
-    typing.textContent = '✦ Analizando catálogo…';
-    el.appendChild(typing);
-    el.scrollTop = el.scrollHeight;
+    var entry = {
+      timestamp: new Date().toISOString(),
+      selection: selText,
+      note: note
+    };
 
-    fetch('/api/chat', {
+    fetch('/api/save-note', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: aiHistory, context: getPageContext() })
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(entry)
     })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      typing.remove();
-      if (data.ok) {
-        var raw = data.reply;
-        var display = raw.replace(/\[ACTION:[^\]]+\]/g, '').replace(/\n{3,}/g, '\n\n').trim();
-        var badges = executeActions(raw);
-        aiHistory.push({ role: 'assistant', content: raw });
-        addAiMsg('bot', display, badges);
-      } else {
-        addAiMsg('bot', '😅 Error al procesar. Inténtalo de nuevo.\nWhatsApp: +56 9 9238 0324');
-      }
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.ok) { closeBox(); showToast(); }
     })
-    .catch(function() {
-      typing.remove();
-      addAiMsg('bot', '😅 Sin conexión con el servidor.\nVerifica que esté activo con: pm2 list');
+    .catch(function(){
+      // Fallback: still close + show toast even if server unreachable
+      closeBox(); showToast();
     });
   };
+
+  // Show note box on any text selection
+  document.addEventListener('mouseup', function(e) {
+    // Don't trigger inside the note box itself
+    if (box.contains(e.target)) return;
+
+    var sel = window.getSelection();
+    var text = sel ? sel.toString().trim() : '';
+    if (text.length < 2) { return; }
+
+    selText = text;
+    selLabel.textContent = text.length > 60 ? text.slice(0, 60) + '…' : text;
+
+    // Position near mouse, keep inside viewport
+    var x = Math.min(e.clientX + 8, window.innerWidth - 320);
+    var y = e.clientY + 12;
+    if (y + 220 > window.innerHeight) y = e.clientY - 230;
+
+    box.style.left = Math.max(8, x) + 'px';
+    box.style.top  = Math.max(8, y) + 'px';
+    box.style.display = 'block';
+    setTimeout(function(){ input.focus(); }, 50);
+  });
+
+  // Close if clicking outside
+  document.addEventListener('mousedown', function(e) {
+    if (box.style.display === 'block' && !box.contains(e.target)) {
+      closeBox();
+    }
+  });
 })();
 </script>
 </body>

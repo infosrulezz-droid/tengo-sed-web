@@ -1,0 +1,91 @@
+[
+  {
+    "timestamp": "2026-06-15T04:23:58.665Z",
+    "selection": "📍 NUESTRAS SUCURSALES\n\nTengo Sed\nGenaro Gallo 2836A\nLos Negros\nGenaro Gallo 2243\nRed & White\n18 de Sept 1578",
+    "note": "make the font bigger",
+    "status": "done",
+    "result": "Footer sucursales font increased: title 11→13px, li 12.5→15px, small 10.5→13px",
+    "resolved": "2026-06-22T19:05:00.000Z"
+  },
+  {
+    "timestamp": "2026-06-15T04:24:25.665Z",
+    "selection": "🏷️ PROMOS (5 PRODUCTOS)\n\nPROMOS\nPromo Ramazoti\n$19.990\n➕ AGREGAR",
+    "note": "add a hero carusal with 5 sildes and tat stays for 10 seconds",
+    "status": "done",
+    "result": "Added 5th hero slide (Whiskys & Rones, amber gradient) + timer changed 5.5s→10s",
+    "resolved": "2026-06-22T19:05:00.000Z"
+  },
+  {
+    "timestamp": "2026-06-15T04:24:49.918Z",
+    "selection": "Tu sed,\nNuestro Plan.\nTENGO-SED.CL\n\n📍 NUESTRAS SUCURSALES...",
+    "note": "when u press todo there are no products to show in catalogo",
+    "status": "done",
+    "result": "Fixed: setFilter now guards against empty prods array and retries after 400ms",
+    "resolved": "2026-06-22T19:05:00.000Z"
+  },
+  {
+    "id": 1782169150469,
+    "status": "done",
+    "created": "2026-06-22T22:59:10.469Z",
+    "element": {
+      "tag": "div",
+      "text": "🔍 🛒 Carrito ⚙ Admin",
+      "selector": "header.navbar:nth-child(5) > div.nav-row1:nth-child(1)"
+    },
+    "instruction": "make logo bigger",
+    "result": "make logo bigger",
+    "resolved": "2026-06-22T22:59:10.971Z"
+  },
+  {
+    "id": 1782169171885,
+    "status": "done",
+    "created": "2026-06-22T22:59:31.885Z",
+    "element": {
+      "tag": "div",
+      "text": "TODOS 🍺 CERVEZAS 🍷 VINOS 🌵 PISCOS 🧊 RONES 🥃 WHISKYS 🍸 GIN 🫗 VODKA 🥂 TEQU",
+      "selector": "#navCats"
+    },
+    "instruction": "font size make it 1 size bigger",
+    "result": "font size make it 1 size bigger",
+    "resolved": "2026-06-22T22:59:32.202Z"
+  },
+  {
+    "id": 1782169212556,
+    "status": "done",
+    "created": "2026-06-22T23:00:12.556Z",
+    "element": {
+      "tag": "div",
+      "text": "LO MÁS PEDIDO Cervezas bien frías Nacionales e importadas. El sabor que buscas, ",
+      "selector": "section.hero:nth-child(6) > div.hero-track:nth-child(1) > div.hslide:nth-child(3)"
+    },
+    "instruction": "fotos in hero carusal of the products is very small make it big to fit the size of banners",
+    "result": "fotos in hero carusal of the products is very small make it ",
+    "resolved": "2026-06-22T23:00:12.876Z"
+  },
+  {
+    "id": 1782173718647,
+    "status": "done",
+    "created": "2026-06-23T00:15:18.647Z",
+    "element": {
+      "tag": "button",
+      "text": "🍷 VINOS",
+      "selector": "header.navbar:nth-child(5) > div.nav-row2:nth-child(2) > div.nav-cats:nth-child(1) > button.nc:nth-child(3)"
+    },
+    "instruction": "fix the barr its not working when i click vinos it should show vinos",
+    "result": "fix the barr its not working when i click vinos it should sh",
+    "resolved": "2026-06-23T00:15:19.351Z"
+  },
+  {
+    "id": 1782173739652,
+    "status": "done",
+    "created": "2026-06-23T00:15:39.652Z",
+    "element": {
+      "tag": "div",
+      "text": "PISCOS & DESTILADOS El mejor Pisco Alto del Carmen, Mistral y más. Pedido simple",
+      "selector": "section.hero:nth-child(6) > div.hero-track:nth-child(1) > div.hslide:nth-child(4)"
+    },
+    "instruction": "images in th fotos are too small make it big",
+    "result": "images in th fotos are too small make it big",
+    "resolved": "2026-06-23T00:15:40.388Z"
+  }
+]

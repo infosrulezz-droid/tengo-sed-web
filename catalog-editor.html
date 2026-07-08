@@ -706,7 +706,7 @@ async function uploadLogo(input) {
     <div class="modal-title">➕ Nuevo Producto</div>
 
     <div class="modal-img-drop" id="modalImgDrop" onclick="document.getElementById('modalImgInput').click()">
-      <input type="file" id="modalImgInput" accept="image/*" onchange="handleModalImg(this)"/>
+      <input type="file" id="modalImgInput" accept="image/*" style="display:none" onchange="handleModalImg(this)"/>
       <div class="drop-icon">📷</div>
       <p>Clic o arrastra una imagen</p>
     </div>
@@ -857,7 +857,7 @@ function buildCard(p) {
         <div class="img-overlay-icon">📷</div>
         <div>Cambiar imagen</div>
       </div>
-      <input type="file" accept="image/*" id="fi-${slugify(p.name)}" onchange="handleImgChange('${esc(p.name)}',this)"/>
+      <input type="file" accept="image/*" id="fi-${slugify(p.name)}" style="display:none" onchange="handleImgChange('${esc(p.name)}',this)"/>
     </div>
 
     <!-- Body -->
@@ -906,6 +906,26 @@ function buildCard(p) {
   return div;
 }
 
+// ── Image resize helper — truly async via createImageBitmap (off main thread) ─
+async function resizeImage(dataUrl, maxPx) {
+  // Convert dataUrl → Blob → ImageBitmap (browser decodes off main thread)
+  const res  = await fetch(dataUrl);
+  const blob = await res.blob();
+  const bmp  = await createImageBitmap(blob);
+
+  const scale = Math.min(1, maxPx / Math.max(bmp.width, bmp.height));
+  const w = Math.round(bmp.width  * scale);
+  const h = Math.round(bmp.height * scale);
+
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  c.getContext('2d').drawImage(bmp, 0, 0, w, h);
+  bmp.close(); // free GPU memory
+
+  // toDataURL is synchronous but fast on a small 400×400 canvas
+  return c.toDataURL('image/webp', 0.82);
+}
+
 // ── Image upload ──────────────────────────────────────────────────────────────
 function triggerImgUpload(name) {
   document.getElementById('fi-' + slugify(name))?.click();
@@ -915,8 +935,8 @@ function handleImgChange(name, input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    const dataUrl = e.target.result;
+  reader.onload = async e => {
+    const dataUrl = await resizeImage(e.target.result, 400);
     newImages[name] = dataUrl;
 
     // Update card image immediately
@@ -1150,18 +1170,26 @@ function handleModalBackdrop(e) { if (e.target === e.currentTarget) closeAddModa
 
 function resetModalImgDrop() {
   document.getElementById('modalImgDrop').innerHTML = `
-    <input type="file" id="modalImgInput" accept="image/*" onchange="handleModalImg(this)"/>
+    <input type="file" id="modalImgInput" accept="image/*" style="display:none" onchange="handleModalImg(this)"/>
     <div class="drop-icon">📷</div><p>Clic o arrastra una imagen</p>`;
 }
 function handleModalImg(input) {
   const file = input.files[0];
   if (!file) return;
+  const drop = document.getElementById('modalImgDrop');
+  drop.innerHTML = `<p style="font-size:13px;color:var(--muted)">⏳ Procesando imagen...</p>`;
   const reader = new FileReader();
-  reader.onload = e => {
-    newProductImg = e.target.result;
-    const drop = document.getElementById('modalImgDrop');
-    drop.innerHTML = `<img src="${e.target.result}" style="max-height:90px;border-radius:8px"/>
-      <p style="margin-top:6px;font-size:11px;color:var(--muted)">✅ Imagen lista</p>`;
+  reader.onload = async e => {
+    try {
+      const dataUrl = await resizeImage(e.target.result, 400);
+      newProductImg = dataUrl;
+      drop.innerHTML = `<img src="${dataUrl}" style="max-height:90px;border-radius:8px"/>
+        <p style="margin-top:6px;font-size:11px;color:var(--muted)">✅ Imagen lista</p>`;
+    } catch(err) {
+      // Fallback: use original without resize
+      newProductImg = e.target.result;
+      drop.innerHTML = `<p style="font-size:11px;color:var(--muted)">✅ Imagen lista</p>`;
+    }
   };
   reader.readAsDataURL(file);
 }
@@ -1199,14 +1227,19 @@ function addProduct() {
 
   if (newProductImg) newImages[name] = newProductImg;
 
-  buildCatPills();
-  activeCat = 'all';
-  document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
-  renderGrid();
+  // Close modal immediately — feels instant to the user
   closeAddModal();
-  markDirty();
-  scheduleSave();
   toast('✅ Producto agregado');
+  markDirty();
+
+  // Defer heavy re-render so UI stays responsive
+  requestAnimationFrame(() => {
+    buildCatPills();
+    activeCat = 'all';
+    document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+    renderGrid();
+    scheduleSave();
+  });
 }
 
 // ── Dirty / save ──────────────────────────────────────────────────────────────

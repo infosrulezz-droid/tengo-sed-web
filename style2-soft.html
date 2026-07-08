@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tengo Sed — Soft & Friendly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#FFFDF8; --card:#fff;
+  --blue:#3B82F6; --blue-soft:#DBEAFE;
+  --sand:#FEF3C7; --peach:#FFE4D6; --mint:#D1FAE5;
+  --text:#1F2937; --muted:#7C8794;
+  --r:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* NAV */
+nav{
+  position:sticky;top:16px;z-index:100;
+  max-width:1080px;margin:16px auto 0;padding:0 20px;
+}
+.nav-pill{
+  background:#fff;border-radius:999px;
+  box-shadow:0 8px 30px rgba(31,41,55,.08);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 12px 12px 26px;
+}
+.brand{font-weight:900;font-size:19px}
+.brand span{color:var(--blue)}
+.nav-links{display:flex;gap:26px}
+.nav-links a{font-size:14px;font-weight:700;color:var(--muted);transition:.2s}
+.nav-links a:hover{color:var(--blue)}
+.nav-cta{
+  background:var(--blue);color:#fff;border-radius:999px;
+  font-size:14px;font-weight:800;padding:11px 24px;transition:.2s;
+}
+.nav-cta:hover{background:#2563EB;transform:scale(1.03)}
+
+/* HERO */
+.hero{max-width:1080px;margin:0 auto;padding:80px 20px 60px;text-align:center;position:relative}
+.hero-badge{
+  display:inline-block;background:var(--sand);color:#B45309;
+  font-size:13px;font-weight:800;border-radius:999px;padding:8px 20px;margin-bottom:24px;
+}
+.hero h1{
+  font-size:clamp(44px,7.5vw,84px);font-weight:900;line-height:1.02;
+  letter-spacing:-2px;margin-bottom:20px;
+}
+.hero h1 .hl{
+  color:var(--blue);position:relative;display:inline-block;
+}
+.hero h1 .hl::after{
+  content:'';position:absolute;left:0;right:0;bottom:6px;height:30%;
+  background:var(--blue-soft);z-index:-1;border-radius:8px;
+}
+.hero p{font-size:19px;font-weight:600;color:var(--muted);max-width:520px;margin:0 auto 32px;line-height:1.6}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border-radius:999px;
+  font-size:16px;font-weight:800;padding:16px 32px;transition:.2s;border:none;cursor:pointer;
+}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 10px 30px rgba(59,130,246,.35)}
+.btn-blue:hover{background:#2563EB;transform:translateY(-3px)}
+.btn-ghost{background:#fff;color:var(--text);box-shadow:0 4px 16px rgba(31,41,55,.08)}
+.btn-ghost:hover{transform:translateY(-3px)}
+.float{position:absolute;font-size:40px;opacity:.85;animation:bob 4s ease-in-out infinite}
+.f1{top:90px;left:6%;animation-delay:0s}
+.f2{top:200px;right:8%;animation-delay:1s}
+.f3{bottom:60px;left:12%;animation-delay:2s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(4deg)}}
+
+/* TRUST BUBBLES */
+.trust{
+  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  max-width:900px;margin:0 auto;padding:0 20px 80px;
+}
+.bubble{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border-radius:999px;padding:12px 22px;
+  box-shadow:0 6px 20px rgba(31,41,55,.07);
+  font-size:14px;font-weight:800;
+}
+.bubble span{font-size:20px}
+
+/* PRODUCTS */
+.prods-sec{max-width:1080px;margin:0 auto;padding:0 20px 90px;text-align:center}
+.prods-sec h2{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-1.5px;margin-bottom:10px}
+.prods-sec .sub{font-size:17px;font-weight:600;color:var(--muted);margin-bottom:44px}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.pcard{
+  background:#fff;border-radius:var(--r);padding:30px 20px 24px;
+  box-shadow:0 6px 24px rgba(31,41,55,.06);transition:.25s;text-align:center;
+}
+.pcard:hover{transform:translateY(-8px);box-shadow:0 20px 44px rgba(31,41,55,.12)}
+.pcard .pimg-wrap{
+  border-radius:18px;padding:18px;margin-bottom:18px;
+  display:flex;align-items:center;justify-content:center;height:190px;
+}
+.pcard:nth-child(1) .pimg-wrap{background:var(--blue-soft)}
+.pcard:nth-child(2) .pimg-wrap{background:var(--peach)}
+.pcard:nth-child(3) .pimg-wrap{background:var(--mint)}
+.pcard:nth-child(4) .pimg-wrap{background:var(--sand)}
+.pcard img{max-height:155px;width:auto;object-fit:contain}
+.pcard h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.pcard .pr{font-size:22px;font-weight:900;color:var(--blue);margin-bottom:14px}
+.pcard .pa{
+  display:inline-block;background:var(--text);color:#fff;border-radius:999px;
+  font-size:13px;font-weight:800;padding:9px 22px;transition:.2s;
+}
+.pcard:hover .pa{background:var(--blue)}
+@media(max-width:860px){.prod-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.prod-grid{grid-template-columns:1fr}}
+
+/* STORES */
+.stores{background:#fff;border-radius:40px 40px 0 0;padding:80px 20px;box-shadow:0 -10px 40px rgba(31,41,55,.05)}
+.stores-in{max-width:1080px;margin:0 auto;text-align:center}
+.stores h2{font-size:clamp(30px,4.6vw,48px);font-weight:900;letter-spacing:-1.5px;margin-bottom:44px}
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.store{
+  border-radius:var(--r);padding:34px 26px;text-align:left;transition:.25s;
+}
+.store:nth-child(1){background:var(--blue-soft)}
+.store:nth-child(2){background:var(--sand)}
+.store:nth-child(3){background:var(--peach)}
+.store:hover{transform:translateY(-6px)}
+.store .ico{font-size:32px;margin-bottom:14px}
+.store h4{font-size:19px;font-weight:900;margin-bottom:6px}
+.store p{font-size:14px;font-weight:600;color:#4B5563;line-height:1.55;margin-bottom:12px}
+.store .hrs{font-size:13px;font-weight:800}
+@media(max-width:760px){.store-grid{grid-template-columns:1fr}}
+
+/* FOOTER */
+footer{background:#fff;padding:40px 20px;text-align:center}
+footer .brand{font-size:24px;display:block;margin-bottom:8px}
+footer p{font-size:13px;font-weight:600;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-pill">
+    <span class="brand">Tengo<span>Sed</span> 🍺</span>
+    <div class="nav-links">
+      <a href="#">Catálogo</a><a href="#">Promos</a><a href="#">Sucursales</a>
+    </div>
+    <a class="nav-cta" href="https://wa.me/56994832066" target="_blank">Pedir 💬</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="float f1">🍺</span>
+  <span class="float f2">🍋</span>
+  <span class="float f3">🧊</span>
+  <span class="hero-badge">📍 Delivery solo en Iquique</span>
+  <h1>Tu sed tiene<br><span class="hl">solución rápida.</span></h1>
+  <p>Licores, cervezas y promos a tu puerta en 30–60 minutos. Pide fácil por WhatsApp. 🛵💨</p>
+  <div class="hero-btns">
+    <a class="btn btn-blue" href="https://wa.me/56994832066" target="_blank">💬 Pedir por WhatsApp</a>
+    <a class="btn btn-ghost" href="#promos">Ver promos 👀</a>
+  </div>
+</header>
+
+<div class="trust">
+  <div class="bubble"><span>🛵</span> 30–60 min</div>
+  <div class="bubble"><span>⭐</span> +500 clientes felices</div>
+  <div class="bubble"><span>🌙</span> Hasta las 3 AM</div>
+  <div class="bubble"><span>✅</span> 100% original</div>
+</div>
+
+<section class="prods-sec" id="promos">
+  <h2>Promos que pegan 🔥</h2>
+  <p class="sub">Combos listos para el carrete de hoy</p>
+  <div class="prod-grid">
+    <div class="pcard">
+      <div class="pimg-wrap"><img src="products/promo_ramazoti_custom.webp" alt="Ramazoti"/></div>
+      <h3>Promo Ramazoti</h3>
+      <div class="pr">$19.990</div>
+      <span class="pa">Lo quiero</span>
+    </div>
+    <div class="pcard">
+      <div class="pimg-wrap"><img src="products/promo_ballentine_custom.png" alt="Ballentine"/></div>
+      <h3>Ballentine's</h3>
+      <div class="pr">$14.990</div>
+      <span class="pa">Lo quiero</span>
+    </div>
+    <div class="pcard">
+      <div class="pimg-wrap"><img src="products/promo_mistral_35_custom.png" alt="Mistral"/></div>
+      <h3>Mistral 35°</h3>
+      <div class="pr">$10.990</div>
+      <span class="pa">Lo quiero</span>
+    </div>
+    <div class="pcard">
+      <div class="pimg-wrap"><img src="products/promo_alto_de_carmen_custom.png" alt="Alto del Carmen"/></div>
+      <h3>Alto del Carmen</h3>
+      <div class="pr">$10.990</div>
+      <span class="pa">Lo quiero</span>
+    </div>
+  </div>
+</section>
+
+<section class="stores">
+  <div class="stores-in">
+    <h2>Nuestras botillerías 📍</h2>
+    <div class="store-grid">
+      <div class="store">
+        <div class="ico">🏪</div>
+        <h4>Boti Tengo Sed</h4>
+        <p>Genaro Gallo #2836A<br>Centro, Iquique</p>
+        <span class="hrs">⏰ 12:00 – 01:00</span>
+      </div>
+      <div class="store">
+        <div class="ico">🍻</div>
+        <h4>Boti Los Negros</h4>
+        <p>Genaro Gallo #2243<br>Centro, Iquique</p>
+        <span class="hrs">⏰ 12:00 – 01:00</span>
+      </div>
+      <div class="store">
+        <div class="ico">🌙</div>
+        <h4>Boti Red and White</h4>
+        <p>18 de Septiembre #1578<br>Cavancha — abre hasta las 3 AM</p>
+        <span class="hrs">⏰ 12:00 – 03:00</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="brand">Tengo<span style="color:var(--blue)">Sed</span> 🍺</span>
+  <p>© 2026 Tengo-Sed.cl · Solo +18 · Iquique, Chile</p>
+</footer>
+
+</body>
+</html>

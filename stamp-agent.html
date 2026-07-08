@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stamp Agent — Tengo Sed</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cyan:#00BCD4; --orange:#F97316; --navy:#0F172A;
+  --bg:#F8FAFC; --card:#fff; --border:#E2E8F0;
+  --text:#1E293B; --muted:#64748B; --red:#FF3B30;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+header{background:var(--navy);padding:14px 28px;display:flex;align-items:center;gap:14px}
+header img{height:46px}
+header h1{color:#fff;font-size:19px;font-weight:800}
+header span{color:var(--cyan)}
+header .badge-agent{margin-left:auto;background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+
+.container{max-width:1280px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start}
+
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
+.panel h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:16px}
+
+/* Drop zone */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--cyan);background:rgba(0,188,212,.05)}
+.drop-zone input{display:none}
+.dz-icon{font-size:36px;margin-bottom:8px}
+.dz-label{font-size:13px;color:var(--muted)}.dz-label strong{color:var(--cyan)}
+
+/* Settings */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.srow:last-child{border-bottom:none}
+.srow label{font-weight:600;color:var(--text)}
+.srow select,.srow input[type=range]{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer}
+.srow input[type=range]{width:90px;padding:0}
+
+/* Buttons */
+.btn{display:block;width:100%;padding:11px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;margin-top:10px;text-align:center}
+.btn:hover{opacity:.88}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn-cyan{background:var(--cyan);color:#fff}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+
+/* Status */
+.status{margin-top:12px;font-size:12px;background:#f1f5f9;border-radius:8px;padding:9px 12px;color:var(--muted);min-height:34px;line-height:1.4}
+
+/* Preview */
+.preview-wrap{background:#111;border-radius:14px;overflow:hidden;min-height:400px;display:flex;align-items:center;justify-content:center;position:relative}
+.preview-wrap canvas{max-width:100%;max-height:680px;display:block}
+.ph{text-align:center;color:#555;padding:60px 20px}
+.ph-icon{font-size:56px;margin-bottom:12px}
+.ph p{font-size:14px}
+
+/* Hero slides grid */
+.slides-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:4px}
+.slide-card{border:2px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.slide-card:hover{border-color:var(--cyan)}
+.slide-card.active{border-color:var(--orange)}
+.slide-card.stamped{border-color:#22c55e}
+.slide-thumb{height:76px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden}
+.slide-thumb img{width:100%;height:100%;object-fit:cover}
+.slide-label{font-size:10px;font-weight:600;color:var(--muted);text-align:center;padding:5px 4px}
+.slide-stamp-badge{font-size:9px;background:#dcfce7;color:#166534;text-align:center;padding:2px 6px;font-weight:700}
+
+/* Aviso preview box */
+.aviso-preview{background:#000;border-radius:10px;overflow:hidden;margin-top:14px}
+.aviso-preview canvas{width:100%;display:block}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:900px){.container{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="/logo.png" alt="Tengo Sed" onerror="this.style.display='none'">
+  <h1>Stamp Agent <span>✦ Aviso Legal</span></h1>
+  <span class="badge-agent">🤖 AUTO-STAMP</span>
+</header>
+
+<div class="container">
+
+  <!-- LEFT PANEL -->
+  <div>
+    <div class="panel" style="margin-bottom:18px">
+      <h2>📂 Subir imagen</h2>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileIn').click()">
+        <input type="file" id="fileIn" accept="image/*">
+        <div class="dz-icon">🖼️</div>
+        <div class="dz-label"><strong>Clic o arrastra</strong> una imagen<br><span style="font-size:11px">JPG · PNG · WebP</span></div>
+      </div>
+
+      <h2>⚙️ Configuración</h2>
+      <div class="srow"><label>Logo posición</label>
+        <select id="logoPos">
+          <option value="tr">Arriba derecha</option>
+          <option value="tl">Arriba izquierda</option>
+          <option value="br">Abajo derecha</option>
+          <option value="bl">Abajo izquierda</option>
+        </select>
+      </div>
+      <div class="srow"><label>Logo tamaño %</label>
+        <input type="range" id="logoSz" min="8" max="28" value="14">
+      </div>
+      <div class="srow"><label>Aviso posición</label>
+        <select id="avisoPos">
+          <option value="bot">Abajo (estándar MINSAL)</option>
+          <option value="top">Arriba</option>
+        </select>
+      </div>
+      <div class="srow"><label>Estilo aviso</label>
+        <select id="avisoStyle">
+          <option value="full">Completo — 3 íconos + texto</option>
+          <option value="compact">Compacto — solo íconos</option>
+          <option value="strip">Tira de texto</option>
+        </select>
+      </div>
+
+      <button class="btn btn-cyan" id="dlBtn" onclick="downloadStamped()" disabled>⬇️ Descargar imagen estampada</button>
+
+      <div class="status" id="status">Cargando logo…</div>
+    </div>
+
+    <!-- Aviso preview -->
+    <div class="panel">
+      <h2>👁 Vista previa del aviso</h2>
+      <div class="aviso-preview"><canvas id="avisoCanvas" width="340" height="80"></canvas></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Este aviso se superpone en la parte inferior de cada imagen</p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div>
+    <div class="panel" style="margin-bottom:18px">
+      <h2>🎨 Vista previa — resultado final</h2>
+      <div class="preview-wrap" id="previewWrap">
+        <div class="ph" id="ph">
+          <div class="ph-icon">🎨</div>
+          <p>Sube una imagen o selecciona un slide del hero</p>
+        </div>
+        <canvas id="mainCanvas" style="display:none"></canvas>
+      </div>
+    </div>
+
+    <!-- Hero Slides -->
+    <div class="panel">
+      <h2>🎠 Hero Carousel — estampado automático</h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Selecciona un slide para previsualizar. Luego usa "Estampar todos" para procesar y guardar en el servidor.</p>
+      <div class="slides-grid" id="slidesGrid">
+        <div class="slide-card" style="opacity:.4"><div class="slide-thumb">⏳</div><div class="slide-label">Cargando…</div></div>
+      </div>
+
+      <button class="btn btn-orange" style="margin-top:14px" onclick="previewAllSlides()">👁 Previsualizar todos los slides</button>
+      <button class="btn btn-navy" onclick="stampAndSaveAll()">💾 Estampar todos y guardar en servidor</button>
+      <button class="btn btn-red" onclick="downloadAllStamped()">⬇️ Descargar todos como PNG</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ── State ────────────────────────────────────────────────
+var logoImg    = null;
+var resultCanvas = null;   // last stamped canvas shown in preview
+var slideCanvases = {};    // idx → canvas
+var currentFile = null;
+var SLIDE_N = 5;
+
+// ── Logo load ────────────────────────────────────────────
+function loadLogo(){
+  return new Promise(function(res){
+    var img = new Image();
+    img.crossOrigin='anonymous';
+    img.onload = function(){ logoImg = img; res(img); };
+    img.onerror = function(){ logoImg = null; res(null); };
+    img.src = '/logo.png?t=' + Date.now();
+  });
+}
+
+// ── Image helpers ────────────────────────────────────────
+function loadImgSrc(src){
+  return new Promise(function(res,rej){
+    var img = new Image();
+    img.crossOrigin='anonymous';
+    img.onload = function(){ res(img); };
+    img.onerror = function(){ rej(new Error('Cannot load: '+src)); };
+    img.src = src;
+  });
+}
+function loadImgFile(file){
+  return new Promise(function(res){
+    var r = new FileReader();
+    r.onload = function(e){ loadImgSrc(e.target.result).then(res); };
+    r.readAsDataURL(file);
+  });
+}
+
+// ── Core stamp ───────────────────────────────────────────
+function stamp(sourceImg){
+  var W = sourceImg.naturalWidth  || sourceImg.width;
+  var H = sourceImg.naturalHeight || sourceImg.height;
+  var cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  var ctx = cv.getContext('2d');
+  ctx.drawImage(sourceImg, 0, 0);
+
+  var logoPos   = document.getElementById('logoPos').value;
+  var logoSzPct = parseInt(document.getElementById('logoSz').value) / 100;
+  var avisoPos  = document.getElementById('avisoPos').value;
+  var avisoStyle= document.getElementById('avisoStyle').value;
+
+  var stripH = Math.max(72, Math.round(H * 0.11));
+  var stripY = avisoPos === 'bot' ? H - stripH : 0;
+
+  // Logo
+  if(logoImg){
+    var lw = Math.round(W * logoSzPct);
+    var lh = Math.round(lw * (logoImg.naturalHeight||logoImg.height) / (logoImg.naturalWidth||logoImg.width));
+    var pd = Math.round(W * 0.022);
+    var lx, ly;
+    if(logoPos==='tr'){ lx=W-lw-pd; ly=pd; }
+    else if(logoPos==='tl'){ lx=pd; ly=pd; }
+    else if(logoPos==='br'){ lx=W-lw-pd; ly=H-lh-pd-(avisoPos==='bot'?stripH:0)-4; }
+    else { lx=pd; ly=H-lh-pd-(avisoPos==='bot'?stripH:0)-4; }
+
+    // White pill background
+    ctx.save();
+    ctx.globalAlpha = 0.90;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    var rx=lx-8, ry=ly-6, rw=lw+16, rh=lh+12, rad=10;
+    ctx.moveTo(rx+rad,ry); ctx.lineTo(rx+rw-rad,ry);
+    ctx.quadraticCurveTo(rx+rw,ry,rx+rw,ry+rad);
+    ctx.lineTo(rx+rw,ry+rh-rad);
+    ctx.quadraticCurveTo(rx+rw,ry+rh,rx+rw-rad,ry+rh);
+    ctx.lineTo(rx+rad,ry+rh);
+    ctx.quadraticCurveTo(rx,ry+rh,rx,ry+rh-rad);
+    ctx.lineTo(rx,ry+rad);
+    ctx.quadraticCurveTo(rx,ry,rx+rad,ry);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.drawImage(logoImg, lx, ly, lw, lh);
+    ctx.restore();
+  }
+
+  // Aviso strip
+  drawAviso(ctx, 0, stripY, W, stripH, avisoStyle);
+
+  return cv;
+}
+
+// ── Aviso drawing ─────────────────────────────────────────
+function drawAviso(ctx, x, y, w, h, style){
+  ctx.save();
+
+  // Strip background
+  ctx.fillStyle = 'rgba(0,0,0,0.90)';
+  ctx.fillRect(x, y, w, h);
+
+  if(style === 'strip'){
+    // Single text line
+    var fs = Math.round(h * 0.22);
+    ctx.fillStyle = '#FF3B30';
+    ctx.font = 'bold ' + Math.round(h*0.28) + 'px Arial';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    ctx.fillText('⚠', x + w*0.015, y + h*0.5);
+    ctx.font = 'bold ' + fs + 'px Arial';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(
+      'ADVERTENCIA: Prohibida venta a menores de 18 años  •  No beba y conduzca  •  Evite el alcohol en el embarazo',
+      x + w*0.045, y + h*0.5
+    );
+    ctx.restore(); return;
+  }
+
+  if(style === 'compact'){
+    // Large icons centered
+    var iconSz = Math.round(h * 0.65);
+    ctx.font = iconSz + 'px Arial';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    var items = ['🔞','🤰🚫','🚗🚫','🍺🚫'];
+    var spacing = w / (items.length + 1);
+    items.forEach(function(ic, i){
+      ctx.fillText(ic, x + spacing*(i+1), y + h*0.5);
+    });
+    // label
+    ctx.font = 'bold ' + Math.round(h*0.18) + 'px Arial';
+    ctx.fillStyle = '#FF3B30';
+    ctx.textAlign = 'center';
+    ctx.fillText('⚠ AVISO LEGAL MINSAL', x + w*0.5, y + h*0.88);
+    ctx.restore(); return;
+  }
+
+  // FULL style ─────────────────────────────────────────
+  var pad = w * 0.012;
+
+  // Red "AVISO" left bar
+  var barW = Math.min(w * 0.10, 70);
+  ctx.fillStyle = '#FF3B30';
+  ctx.fillRect(x, y, barW, h);
+
+  // Rotate "AVISO LEGAL" text
+  ctx.save();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold ' + Math.round(h * 0.19) + 'px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.translate(x + barW*0.5, y + h*0.5);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('AVISO LEGAL', 0, 0);
+  ctx.restore();
+
+  // Three warning sections
+  var secStart = x + barW + pad;
+  var secW = (w - barW - pad*4) / 3;
+
+  drawWarnSection(ctx, secStart,           y, secW, h, '18+',  'PROHIBIDA VENTA\nA MENORES DE 18');
+  drawWarnSection(ctx, secStart+secW+pad,  y, secW, h, 'preg', 'EVITE EL ALCOHOL\nEN EL EMBARAZO');
+  drawWarnSection(ctx, secStart+secW*2+pad*2, y, secW, h, 'car', 'NO BEBA\nY CONDUZCA');
+
+  ctx.restore();
+}
+
+function drawWarnSection(ctx, x, y, w, h, type, text){
+  var iconR  = Math.round(Math.min(w*0.18, h*0.36));
+  var iconCX = x + w*0.22;
+  var iconCY = y + h*0.5;
+
+  if(type === '18+'){
+    ctx.beginPath();
+    ctx.arc(iconCX, iconCY, iconR, 0, Math.PI*2);
+    ctx.fillStyle = '#FF3B30';
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold ' + Math.round(iconR*1.0) + 'px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('18+', iconCX, iconCY);
+
+  } else if(type === 'preg'){
+    // Pregnant emoji + no circle
+    ctx.font = Math.round(iconR*1.8) + 'px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🤰', iconCX, iconCY);
+    drawNoCross(ctx, iconCX, iconCY, iconR+4, '#FF3B30', Math.max(2, iconR*0.18));
+
+  } else {
+    ctx.font = Math.round(iconR*1.8) + 'px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🚗', iconCX, iconCY);
+    drawNoCross(ctx, iconCX, iconCY, iconR+4, '#FF3B30', Math.max(2, iconR*0.18));
+  }
+
+  // Text
+  var lines = text.split('\n');
+  var fs = Math.round(h * 0.155);
+  ctx.font = 'bold ' + fs + 'px Arial';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  var lh = fs * 1.35;
+  var ty = iconCY - (lines.length-1)*lh/2;
+  lines.forEach(function(l,i){ ctx.fillText(l, x+w*0.42, ty+i*lh); });
+}
+
+function drawNoCross(ctx, cx, cy, r, color, lw){
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + r*Math.cos(2.36), cy + r*Math.sin(2.36));
+  ctx.lineTo(cx + r*Math.cos(-0.79), cy + r*Math.sin(-0.79));
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ── Aviso preview ─────────────────────────────────────────
+function renderAvisoPreview(){
+  var cv = document.getElementById('avisoCanvas');
+  cv.width = 340; cv.height = 80;
+  var ctx = cv.getContext('2d');
+  drawAviso(ctx, 0, 0, 340, 80, document.getElementById('avisoStyle').value);
+}
+
+// ── Drop zone ─────────────────────────────────────────────
+var dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', function(){ dz.classList.remove('drag-over'); });
+dz.addEventListener('drop', function(e){
+  e.preventDefault(); dz.classList.remove('drag-over');
+  if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+document.getElementById('fileIn').addEventListener('change', function(){
+  if(this.files[0]) handleFile(this.files[0]);
+});
+
+async function handleFile(file){
+  currentFile = file;
+  setStatus('Procesando imagen…');
+  var img = await loadImgFile(file);
+  var cv  = stamp(img);
+  showCanvas(cv);
+  document.getElementById('dlBtn').disabled = false;
+  setStatus('✅ ' + file.name + ' — ' + cv.width + '×' + cv.height + 'px estampado');
+}
+
+// ── Show canvas in preview ────────────────────────────────
+function showCanvas(cv){
+  resultCanvas = cv;
+  var ph = document.getElementById('ph');
+  var mc = document.getElementById('mainCanvas');
+  ph.style.display = 'none';
+  mc.style.display = 'block';
+  mc.width = cv.width; mc.height = cv.height;
+  mc.getContext('2d').drawImage(cv, 0, 0);
+}
+
+// ── Download ──────────────────────────────────────────────
+function downloadStamped(){
+  if(!resultCanvas) return;
+  var name = currentFile ? currentFile.name.replace(/\.[^.]+$/,'')+'_stamped.png' : 'stamped.png';
+  triggerDownload(resultCanvas, name);
+  toast('⬇️ Descargado: ' + name);
+}
+
+function triggerDownload(cv, name){
+  var a = document.createElement('a');
+  a.download = name;
+  a.href = cv.toDataURL('image/png');
+  a.click();
+}
+
+// ── Load hero slides ──────────────────────────────────────
+async function loadHeroSlides(){
+  var grid = document.getElementById('slidesGrid');
+  grid.innerHTML = '';
+  for(var i=1; i<=SLIDE_N; i++){
+    (function(idx){
+      var card = document.createElement('div');
+      card.className = 'slide-card';
+      card.id = 'sc-'+idx;
+
+      var thumb = document.createElement('div');
+      thumb.className = 'slide-thumb';
+      thumb.textContent = 'Slide '+idx;
+      thumb.style.fontSize = '12px';
+      thumb.style.color = '#94a3b8';
+
+      var exts = ['jpg','jpeg','png','webp'];
+      (function tryExt(j){
+        if(j >= exts.length) return;
+        var img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function(){
+          thumb.textContent = '';
+          thumb.style.background = '#000';
+          img.style.cssText = 'width:100%;height:76px;object-fit:cover';
+          thumb.appendChild(img);
+        };
+        img.onerror = function(){ tryExt(j+1); };
+        img.src = '/hero_images/slide_'+idx+'.'+exts[j]+'?t='+Date.now();
+      })(0);
+
+      var lbl = document.createElement('div');
+      lbl.className = 'slide-label';
+      lbl.textContent = 'Slide ' + idx;
+
+      card.appendChild(thumb);
+      card.appendChild(lbl);
+      card.onclick = function(){ previewSlide(idx); };
+      grid.appendChild(card);
+    })(i);
+  }
+}
+
+async function previewSlide(idx){
+  setStatus('Cargando slide ' + idx + '…');
+  var exts = ['jpg','jpeg','png','webp'];
+  var img = null;
+  for(var j=0; j<exts.length; j++){
+    try{
+      img = await loadImgSrc('/hero_images/slide_'+idx+'.'+exts[j]+'?t='+Date.now());
+      break;
+    }catch(e){}
+  }
+  if(!img){ toast('⚠️ Slide '+idx+' sin imagen'); setStatus('Slide '+idx+': no hay imagen en el servidor'); return; }
+
+  var cv = stamp(img);
+  slideCanvases[idx] = cv;
+  resultCanvas = cv;
+  currentFile  = null;
+  showCanvas(cv);
+  document.getElementById('dlBtn').disabled = false;
+
+  document.querySelectorAll('.slide-card').forEach(function(c){ c.classList.remove('active'); });
+  var sc = document.getElementById('sc-'+idx);
+  if(sc) sc.classList.add('active');
+
+  setStatus('✅ Slide '+idx+' — '+cv.width+'×'+cv.height+'px');
+}
+
+async function previewAllSlides(){
+  for(var i=1; i<=SLIDE_N; i++){
+    await previewSlide(i);
+    await delay(200);
+  }
+  toast('👁 Todos los slides previsualizados');
+}
+
+async function stampAndSaveAll(){
+  setStatus('⏳ Estampando y guardando en servidor…');
+  var saved = 0;
+  for(var i=1; i<=SLIDE_N; i++){
+    setStatus('Procesando slide ' + i + ' / ' + SLIDE_N + '…');
+    await previewSlide(i);
+    if(!slideCanvases[i]){ continue; }
+    try{
+      var b64 = slideCanvases[i].toDataURL('image/jpeg', 0.93);
+      var res = await fetch('/api/upload-hero-slide',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ slideIndex: i-1, imageData: b64 })
+      });
+      var d = await res.json();
+      if(d.ok){
+        saved++;
+        var sc = document.getElementById('sc-'+i);
+        if(sc){ sc.classList.remove('active'); sc.classList.add('stamped'); }
+        var lbl = sc && sc.querySelector('.slide-label');
+        if(lbl) lbl.textContent = '✅ Slide '+i;
+      }
+    }catch(e){ setStatus('Error slide '+i+': '+e.message); }
+    await delay(300);
+  }
+  setStatus('💾 ' + saved + ' slides guardados en servidor con logo + aviso');
+  toast('🎉 ' + saved + ' slides estampados y guardados');
+}
+
+async function downloadAllStamped(){
+  var downloaded = 0;
+  for(var i=1; i<=SLIDE_N; i++){
+    if(!slideCanvases[i]) await previewSlide(i);
+    if(slideCanvases[i]){
+      triggerDownload(slideCanvases[i], 'slide_'+i+'_stamped.png');
+      downloaded++;
+      await delay(500);
+    }
+  }
+  toast('⬇️ ' + downloaded + ' slides descargados');
+}
+
+// ── Settings live-update ──────────────────────────────────
+['logoPos','logoSz','avisoPos','avisoStyle'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', function(){
+    renderAvisoPreview();
+    var active = document.querySelector('.slide-card.active');
+    if(active){
+      var idx = parseInt(active.id.replace('sc-',''));
+      previewSlide(idx);
+    } else if(currentFile){
+      handleFile(currentFile);
+    }
+  });
+});
+document.getElementById('logoSz').addEventListener('input', function(){
+  renderAvisoPreview();
+});
+
+// ── Utils ─────────────────────────────────────────────────
+function setStatus(msg){ document.getElementById('status').textContent = msg; }
+function delay(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// ── Init ──────────────────────────────────────────────────
+loadLogo().then(function(){
+  setStatus(logoImg ? '✅ Logo listo — sube una imagen o selecciona un slide' : '⚠️ Logo no encontrado en /logo.png — el aviso igual funciona');
+  renderAvisoPreview();
+  loadHeroSlides();
+});
+
+// Expose stamp function globally for integration with store.html
+window.TS_stampDataURL = async function(dataURL){
+  if(!logoImg) await loadLogo();
+  var img = await loadImgSrc(dataURL);
+  return stamp(img).toDataURL('image/jpeg', 0.93);
+};
+</script>
+</body>
+</html>

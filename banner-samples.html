@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;font-family:'Segoe UI',sans-serif;padding:20px;display:flex;flex-direction:column;gap:16px}
+.label{color:#fff;font-size:13px;font-weight:700;margin-bottom:6px;opacity:.5;letter-spacing:1px;text-transform:uppercase}
+
+/* ─── BANNER 1: Warm Fire ─────────────────── */
+.b1{
+  width:100%;height:130px;border-radius:12px;overflow:hidden;
+  background:linear-gradient(120deg,#1a0500 0%,#7c1d06 30%,#c2410c 65%,#f97316 100%);
+  display:flex;align-items:center;position:relative;
+}
+.b1::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(255,180,0,.25),transparent 60%);
+}
+.b1-logo{height:110px;margin-left:8px;filter:drop-shadow(0 4px 18px rgba(0,0,0,.6));position:relative;z-index:1}
+.b1-text{flex:1;padding:0 24px;position:relative;z-index:1}
+.b1-text h1{font-size:32px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.b1-text h1 span{color:#fde68a}
+.b1-text p{font-size:10px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.55);text-transform:uppercase;margin-top:7px}
+.b1-cta{margin-right:24px;background:#fff;color:#c2410c;font-weight:800;font-size:13px;padding:11px 20px;border-radius:99px;white-space:nowrap;text-decoration:none;position:relative;z-index:1;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+
+/* ─── BANNER 2: Clean White ───────────────── */
+.b2{
+  width:100%;height:130px;border-radius:12px;overflow:hidden;
+  background:#FAFAF5;
+  display:flex;align-items:center;position:relative;
+  border:1px solid #e5e5dc;
+}
+.b2::before{
+  content:'';position:absolute;right:0;top:0;bottom:0;width:40%;
+  background:linear-gradient(90deg,transparent,#F0EDE6);
+}
+.b2-left{display:flex;align-items:center;background:linear-gradient(135deg,#0A1628,#1e3a5f);height:100%;padding:0 16px;position:relative;z-index:1}
+.b2-logo{height:100px;filter:brightness(10)}
+.b2-text{flex:1;padding:0 28px;position:relative;z-index:1}
+.b2-text h1{font-size:30px;font-weight:900;color:#0A1628;letter-spacing:-1.5px;line-height:1}
+.b2-text h1 span{color:#d97706}
+.b2-text p{font-size:10px;font-weight:700;letter-spacing:2.5px;color:#94a3b8;text-transform:uppercase;margin-top:6px}
+.b2-branches{font-size:11px;color:#64748b;margin-top:8px;display:flex;gap:10px}
+.b2-branches span{padding-right:10px;border-right:1px solid #e2e8f0}
+.b2-branches span:last-child{border:none}
+.b2-cta{margin-right:24px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:800;font-size:13px;padding:11px 20px;border-radius:12px;white-space:nowrap;text-decoration:none;position:relative;z-index:1;box-shadow:0 4px 16px rgba(34,197,94,.35)}
+
+/* ─── BANNER 3: Neon Night ────────────────── */
+.b3{
+  width:100%;height:130px;border-radius:12px;overflow:hidden;
+  background:#03040A;
+  display:flex;align-items:center;position:relative;
+}
+.b3::before{
+  content:'';position:absolute;
+  width:350px;height:350px;left:-60px;top:50%;transform:translateY(-50%);
+  background:radial-gradient(circle,rgba(0,255,180,.12),transparent 65%);
+}
+.b3::after{
+  content:'';position:absolute;
+  width:250px;height:250px;right:-30px;top:50%;transform:translateY(-50%);
+  background:radial-gradient(circle,rgba(255,0,120,.12),transparent 65%);
+}
+.b3-logo{height:110px;margin-left:10px;filter:drop-shadow(0 0 16px rgba(0,255,180,.5));position:relative;z-index:1}
+.b3-text{flex:1;padding:0 24px;position:relative;z-index:1}
+.b3-text h1{font-size:30px;font-weight:900;letter-spacing:-1.5px;line-height:1;
+  background:linear-gradient(90deg,#00FFD1,#fff,#FF2D78);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.b3-text p{font-size:10px;font-weight:700;letter-spacing:3px;color:rgba(0,255,209,.45);text-transform:uppercase;margin-top:7px}
+.b3-cta{margin-right:24px;background:transparent;color:#00FFD1;font-weight:800;font-size:13px;padding:10px 20px;border-radius:99px;border:1.5px solid rgba(0,255,209,.5);white-space:nowrap;text-decoration:none;position:relative;z-index:1;box-shadow:0 0 20px rgba(0,255,209,.2)}
+
+/* ─── BANNER 4: Split Bold ────────────────── */
+.b4{
+  width:100%;height:130px;border-radius:12px;overflow:hidden;
+  display:flex;align-items:stretch;position:relative;
+}
+.b4-left{
+  width:38%;background:linear-gradient(160deg,#FCD34D 0%,#F59E0B 50%,#D97706 100%);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;
+  clip-path:polygon(0 0,90% 0,100% 100%,0 100%);
+}
+.b4-logo{height:112px;filter:drop-shadow(0 4px 16px rgba(0,0,0,.3))}
+.b4-right{
+  flex:1;background:#080C16;
+  display:flex;align-items:center;
+  padding:0 28px;position:relative;overflow:hidden;
+}
+.b4-right::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 0% 50%,rgba(245,158,11,.1),transparent 60%);
+}
+.b4-text{flex:1;position:relative;z-index:1}
+.b4-text h1{font-size:30px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1}
+.b4-text h1 span{color:#FCD34D}
+.b4-text p{font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-top:7px}
+.b4-info{font-size:11px;color:rgba(255,255,255,.35);margin-top:6px}
+.b4-cta{flex-shrink:0;position:relative;z-index:1;margin-right:0;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:800;font-size:13px;padding:11px 18px;border-radius:12px;white-space:nowrap;text-decoration:none;box-shadow:0 4px 20px rgba(34,197,94,.4)}
+</style>
+</head>
+<body>
+
+<div class="label">1 — Warm Fire</div>
+<div class="b1">
+  <img class="b1-logo" src="http://localhost:8000/logo.png"/>
+  <div class="b1-text">
+    <h1>Tu sed,<br><span>Nuestro Plan.</span></h1>
+    <p>Delivery · Iquique · IQQ</p>
+  </div>
+  <a class="b1-cta">📲 Pedir Ahora</a>
+</div>
+
+<div class="label">2 — White & Clean</div>
+<div class="b2">
+  <div class="b2-left"><img class="b2-logo" src="http://localhost:8000/logo.png"/></div>
+  <div class="b2-text">
+    <h1>Tu sed,<br><span>Nuestro Plan.</span></h1>
+    <p>tengo-sed.cl · Delivery Iquique</p>
+    <div class="b2-branches">
+      <span>Genaro Gallo 2836A</span>
+      <span>Genaro Gallo 2243</span>
+      <span>18 de Sept 1578</span>
+    </div>
+  </div>
+  <a class="b2-cta">📲 Pedir Ahora</a>
+</div>
+
+<div class="label">3 — Neon Night</div>
+<div class="b3">
+  <img class="b3-logo" src="http://localhost:8000/logo.png"/>
+  <div class="b3-text">
+    <h1>Tu sed,<br>Nuestro Plan.</h1>
+    <p>Delivery · Iquique · IQQ</p>
+  </div>
+  <a class="b3-cta">📲 Pedir Ahora</a>
+</div>
+
+<div class="label">4 — Gold Split</div>
+<div class="b4">
+  <div class="b4-left"><img class="b4-logo" src="http://localhost:8000/logo.png"/></div>
+  <div class="b4-right">
+    <div class="b4-text">
+      <h1>Tu sed,<br><span>Nuestro Plan.</span></h1>
+      <p>Delivery · Iquique · IQQ</p>
+      <div class="b4-info">Dom–Jue 12pm–1am &nbsp;·&nbsp; Vie–Sáb 12pm–3am</div>
+    </div>
+    <a class="b4-cta">📲 Pedir<br>Ahora</a>
+  </div>
+</div>
+
+</body>
+</html>

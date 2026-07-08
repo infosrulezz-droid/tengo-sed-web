@@ -129,6 +129,28 @@ function healImgMap(rawMap, products) {
   return healed;
 }
 
+// ── Heal product names on startup (fix Mojibake in products_inventory.json)
+(function healProductsOnStartup() {
+  try {
+    const prodPath = path.join(ROOT, 'products_inventory.json');
+    const raw      = fs.readFileSync(prodPath, 'utf8');
+    const products = JSON.parse(raw);
+    let changed    = false;
+    products.forEach(p => {
+      const fixed = fixMojibake(p.name);
+      if (fixed !== p.name) { p.name = fixed; changed = true; }
+    });
+    if (changed) {
+      fs.writeFileSync(prodPath, JSON.stringify(products, null, 2), 'utf8');
+      console.log('[HEAL] Fixed Mojibake in product names and re-saved products_inventory.json');
+    } else {
+      console.log('[HEAL] Product names look clean — no Mojibake detected');
+    }
+  } catch(e) {
+    console.error('[HEAL] Could not heal product names:', e.message);
+  }
+})();
+
 // ── MIME types ───────────────────────────────────────────────────────────
 function mime(ext) {
   const m = {
@@ -164,6 +186,38 @@ const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
+
+  // ── POST /api/save-note ─────────────────────────────────────────
+  if (req.method === 'POST' && req.url === '/api/save-note') {
+    collectBody(req).then(raw => {
+      const note = JSON.parse(raw);
+      const notesPath = path.join(ROOT, 'notes.json');
+      let notes = [];
+      try { notes = JSON.parse(fs.readFileSync(notesPath, 'utf8')); } catch(e) {}
+      notes.push(note);
+      fs.writeFileSync(notesPath, JSON.stringify(notes, null, 2), 'utf8');
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: true, total: notes.length}));
+    }).catch(e => {
+      res.writeHead(500, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: false, error: e.message}));
+    });
+    return;
+  }
+
+  // ── POST /api/update-notes — replace entire notes.json ──────────
+  if (req.method === 'POST' && req.url === '/api/update-notes') {
+    collectBody(req).then(raw => {
+      const notes = JSON.parse(raw);
+      fs.writeFileSync(path.join(ROOT, 'notes.json'), JSON.stringify(notes, null, 2), 'utf8');
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: true}));
+    }).catch(e => {
+      res.writeHead(500, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: false, error: e.message}));
+    });
+    return;
+  }
 
   // ── POST /api/save ───────────────────────────────────────────────
   if (req.method === 'POST' && req.url === '/api/save') {
@@ -278,6 +332,42 @@ const server = http.createServer((req, res) => {
         res.writeHead(500, {'Content-Type':'application/json'});
         res.end(JSON.stringify({ok: false, error: e.message}));
       });
+    return;
+  }
+
+  // ── POST /api/upload-hero-slide — save hero bg image ───────────
+  if (req.method === 'POST' && req.url === '/api/upload-hero-slide') {
+    collectBody(req).then(raw => {
+      const { slideIndex, imageData } = JSON.parse(raw);
+      if (imageData == null) throw new Error('No imageData');
+      const base64 = imageData.replace(/^data:image\/[^;]+;base64,/, '');
+      const match  = imageData.match(/^data:image\/([a-zA-Z0-9+\-]+);base64,/);
+      const ext    = match ? (match[1] === 'jpeg' ? 'jpg' : match[1].replace('+xml','')) : 'jpg';
+      const dir    = path.join(ROOT, 'hero_slides');
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+      const filename = 'slide_' + slideIndex + '.' + ext;
+      fs.writeFileSync(path.join(dir, filename), Buffer.from(base64, 'base64'));
+      console.log('[HERO] Slide', slideIndex, 'saved:', filename);
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: true, filename}));
+    }).catch(e => {
+      res.writeHead(500, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: false, error: e.message}));
+    });
+    return;
+  }
+
+  // ── POST /api/save-hero-config — save hero_config.json ──────────
+  if (req.method === 'POST' && req.url === '/api/save-hero-config') {
+    collectBody(req).then(raw => {
+      const cfg = JSON.parse(raw);
+      fs.writeFileSync(path.join(ROOT, 'hero_config.json'), JSON.stringify(cfg, null, 2), 'utf8');
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: true}));
+    }).catch(e => {
+      res.writeHead(500, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: false, error: e.message}));
+    });
     return;
   }
 
@@ -396,7 +486,16 @@ body{font-family:Inter,sans-serif;background:#fff;color:#1E293B;-webkit-print-co
   }
 
   // ── Serve static files ───────────────────────────────────────────
-  const filePath = path.join(ROOT, req.url === '/' ? 'catalog.html' : req.url.split('?')[0]);
+  if (req.url === '/') {
+    res.writeHead(302, { Location: '/index.html' });
+    return res.end();
+  }
+  // /tienda and /store → full-featured store (with admin)
+  if (req.url === '/tienda' || req.url === '/store') {
+    res.writeHead(302, { Location: '/store.html' });
+    return res.end();
+  }
+  const filePath = path.join(ROOT, req.url.split('?')[0]);
   fs.stat(filePath, (err, stat) => {
     if (err || !stat.isFile()) { res.writeHead(404); return res.end('Not found'); }
     const headers = {'Content-Type': mime(path.extname(filePath).toLowerCase())};

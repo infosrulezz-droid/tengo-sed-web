@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tengo Sed — Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Archivo+Black&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#ffffff; --text:#0A0A0A; --muted:#6B6B6B;
+  --red:#E8112D; --line:#0A0A0A;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+.black{font-family:'Archivo Black',sans-serif}
+
+/* NAV */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;border-bottom:2px solid var(--line);
+  position:sticky;top:0;background:#fff;z-index:100;
+}
+.brand{font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:-.5px}
+.brand span{color:var(--red)}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:1px}
+.nav-links a:hover{color:var(--red)}
+.nav-cta{
+  background:var(--red);color:#fff;font-size:12px;font-weight:600;
+  text-transform:uppercase;letter-spacing:1.5px;padding:10px 22px;
+}
+.nav-cta:hover{background:#0A0A0A}
+
+/* HERO */
+.hero{border-bottom:2px solid var(--line)}
+.hero-top{padding:64px 32px 40px;max-width:1280px;margin:0 auto}
+.kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:24px;
+}
+.kicker::before{content:'';width:32px;height:2px;background:var(--red)}
+.hero h1{
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(52px,10vw,140px);line-height:.92;letter-spacing:-3px;
+  text-transform:uppercase;
+}
+.hero h1 .outline{
+  color:#fff;-webkit-text-stroke:2px var(--text);
+}
+.hero h1 .red{color:var(--red)}
+.hero-bottom{
+  display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--line);
+}
+.hero-cell{padding:36px 32px}
+.hero-cell:first-child{border-right:2px solid var(--line)}
+.hero-cell p{font-size:17px;line-height:1.6;color:var(--muted);max-width:420px;margin-bottom:24px}
+.btn-red{
+  display:inline-block;background:var(--red);color:#fff;
+  font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2px;
+  padding:16px 36px;transition:.2s;
+}
+.btn-red:hover{background:#0A0A0A}
+.hero-meta{display:flex;flex-direction:column;gap:14px;justify-content:center}
+.meta-row{display:flex;justify-content:space-between;font-size:13px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #E5E5E5;padding-bottom:12px}
+.meta-row b{font-weight:600}
+.meta-row span{color:var(--muted)}
+@media(max-width:760px){.hero-bottom{grid-template-columns:1fr}.hero-cell:first-child{border-right:none;border-bottom:2px solid var(--line)}}
+
+/* PRODUCTS */
+.prods-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding:64px 32px 32px;max-width:1280px;margin:0 auto;gap:20px;flex-wrap:wrap;
+}
+.prods-head h2{font-family:'Archivo Black',sans-serif;font-size:clamp(30px,5vw,56px);text-transform:uppercase;letter-spacing:-1.5px}
+.prods-head a{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;border-bottom:2px solid var(--red);padding-bottom:3px}
+.prods{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:2px solid var(--line);border-bottom:2px solid var(--line);
+}
+.prod{
+  border-right:2px solid var(--line);padding:36px 24px 28px;
+  text-align:left;position:relative;transition:.2s;background:#fff;
+}
+.prod:last-child{border-right:none}
+.prod:hover{background:#FAFAFA}
+.prod-num{
+  position:absolute;top:16px;right:18px;
+  font-size:12px;font-weight:600;color:var(--muted);
+}
+.prod img{height:190px;width:auto;object-fit:contain;margin:0 auto 28px}
+.prod h3{font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.prod .pr{font-family:'Archivo Black',sans-serif;font-size:22px;color:var(--red);margin-bottom:16px}
+.prod .pa{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;border-bottom:2px solid var(--text);padding-bottom:2px}
+.prod:hover .pa{border-color:var(--red);color:var(--red)}
+@media(max-width:900px){.prods{grid-template-columns:repeat(2,1fr)}.prod:nth-child(2){border-right:none}.prod:nth-child(-n+2){border-bottom:2px solid var(--line)}}
+
+/* TICKER */
+.ticker{
+  background:var(--red);color:#fff;padding:14px 0;overflow:hidden;white-space:nowrap;
+}
+.ticker span{
+  font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;
+  letter-spacing:2px;padding:0 30px;
+}
+
+/* STORES */
+.stores{max-width:1280px;margin:0 auto;padding:72px 32px}
+.stores h2{font-family:'Archivo Black',sans-serif;font-size:clamp(30px,5vw,56px);text-transform:uppercase;letter-spacing:-1.5px;margin-bottom:40px}
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2px solid var(--line)}
+.store{padding:32px 26px;border-right:2px solid var(--line)}
+.store:last-child{border-right:none}
+.store .tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--red);margin-bottom:12px;display:block}
+.store h4{font-size:19px;font-weight:600;margin-bottom:8px}
+.store p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.store .hrs{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+@media(max-width:760px){.store-grid{grid-template-columns:1fr}.store{border-right:none;border-bottom:2px solid var(--line)}.store:last-child{border-bottom:none}}
+
+/* FOOTER */
+footer{border-top:2px solid var(--line);padding:40px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+footer .brand{font-size:22px}
+footer p{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">TENGO<span>SED</span></span>
+  <div class="nav-links">
+    <a href="#">Catálogo</a><a href="#">Promos</a><a href="#">Sucursales</a>
+  </div>
+  <a class="nav-cta" href="https://wa.me/56994832066" target="_blank">Pedir →</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-top">
+    <span class="kicker">Botillería · Delivery · Iquique</span>
+    <h1>Tu sed.<br><span class="outline">Nuestro</span> <span class="red">plan.</span></h1>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-cell">
+      <p>Más de 220 licores premium con delivery en 30–60 minutos a cualquier sector de Iquique. Pide por WhatsApp.</p>
+      <a class="btn-red" href="https://wa.me/56994832066" target="_blank">Hacer pedido</a>
+    </div>
+    <div class="hero-cell hero-meta">
+      <div class="meta-row"><b>Delivery</b><span>30–60 min</span></div>
+      <div class="meta-row"><b>Zona</b><span>Solo Iquique</span></div>
+      <div class="meta-row"><b>Horario</b><span>Hasta las 3 AM</span></div>
+      <div class="meta-row"><b>Clientes</b><span>+500 satisfechos</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="prods-head">
+  <h2>Promos —<br>Semana 24</h2>
+  <a href="#">Ver catálogo completo</a>
+</div>
+<section class="prods">
+  <div class="prod">
+    <span class="prod-num">01</span>
+    <img src="products/promo_ramazoti_custom.webp" alt="Ramazoti"/>
+    <h3>Promo Ramazoti</h3>
+    <div class="pr">$19.990</div>
+    <span class="pa">Pedir ahora</span>
+  </div>
+  <div class="prod">
+    <span class="prod-num">02</span>
+    <img src="products/promo_ballentine_custom.png" alt="Ballentine"/>
+    <h3>Ballentine's</h3>
+    <div class="pr">$14.990</div>
+    <span class="pa">Pedir ahora</span>
+  </div>
+  <div class="prod">
+    <span class="prod-num">03</span>
+    <img src="products/promo_mistral_35_custom.png" alt="Mistral"/>
+    <h3>Mistral 35°</h3>
+    <div class="pr">$10.990</div>
+    <span class="pa">Pedir ahora</span>
+  </div>
+  <div class="prod">
+    <span class="prod-num">04</span>
+    <img src="products/promo_alto_de_carmen_custom.png" alt="Alto del Carmen"/>
+    <h3>Alto del Carmen</h3>
+    <div class="pr">$10.990</div>
+    <span class="pa">Pedir ahora</span>
+  </div>
+</section>
+
+<div class="ticker">
+  <span>Delivery solo IQQ</span><span>★</span><span>30–60 minutos</span><span>★</span><span>Pide por WhatsApp</span><span>★</span><span>Hasta las 3 AM</span><span>★</span><span>Producto original</span>
+</div>
+
+<section class="stores">
+  <h2>3 Sucursales</h2>
+  <div class="store-grid">
+    <div class="store">
+      <span class="tag">Principal</span>
+      <h4>Boti Tengo Sed</h4>
+      <p>Genaro Gallo #2836A<br>Sector Centro, Iquique</p>
+      <span class="hrs">12:00 — 01:00</span>
+    </div>
+    <div class="store">
+      <span class="tag">Los Negros</span>
+      <h4>Boti Los Negros</h4>
+      <p>Genaro Gallo #2243<br>Sector Centro, Iquique</p>
+      <span class="hrs">12:00 — 01:00</span>
+    </div>
+    <div class="store">
+      <span class="tag">Cavancha · 3 AM</span>
+      <h4>Boti Red and White</h4>
+      <p>18 de Septiembre #1578<br>Sector Cavancha, Iquique</p>
+      <span class="hrs">12:00 — 03:00</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="brand black">TENGO<span style="color:var(--red)">SED</span></span>
+  <p>© 2026 — Solo mayores de 18 · Iquique, Chile</p>
+</footer>
+
+</body>
+</html>
