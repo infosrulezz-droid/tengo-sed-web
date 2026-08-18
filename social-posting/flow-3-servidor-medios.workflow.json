@@ -1,0 +1,138 @@
+{
+  "name": "Social — Servidor de medios",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "tengosed-media",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "peticion-de-medio",
+      "name": "Peticion de medio",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// This endpoint is public by necessity — Meta's servers must reach it\n// without credentials. The shared token keeps it from becoming an open\n// proxy to the entire Drive account.\nconst MEDIA_SECRET = 'KHgDO9uohdVM02EVYtY44i_fc2j7Lzr5';\n\nconst q = $json.query || {};\nif (!q.t || q.t !== MEDIA_SECRET) {\n  throw new Error('Token invalido para ' + (q.id || 'sin id'));\n}\nif (!q.id) {\n  throw new Error('Falta el parametro id.');\n}\nreturn [{ json: { fileId: q.id } }];"
+      },
+      "id": "validar-token",
+      "name": "Validar token",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.fileId }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "bajar-de-drive",
+      "name": "Bajar de Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        20,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "inputFieldName": "data",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "public, max-age=300"
+              }
+            ]
+          }
+        }
+      },
+      "id": "entregar-el-archivo",
+      "name": "Entregar el archivo",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Flow 3 — the public media link\n\n**This workflow must stay ACTIVE.** If it is off, Instagram and\nFacebook get a 404 when they try to download, and every slot fails.\n\nProduction URL:\n`https://n8n.136.65.229.48.sslip.io/webhook/tengosed-media?id=<fileId>&t=<secret>`\n\nSet `MEDIA_SECRET` here to the same value used in Flow 2.\nChange it any time — just change it in both places.\n\nScope: it only ever serves a file whose id the caller already knows,\nand only with the token. It is not a Drive browser.",
+        "width": 560,
+        "height": 260,
+        "color": 5
+      },
+      "id": "note-fcuo",
+      "name": "Note fcuo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -430,
+        20
+      ]
+    }
+  ],
+  "connections": {
+    "Peticion de medio": {
+      "main": [
+        [
+          {
+            "node": "Validar token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar token": {
+      "main": [
+        [
+          {
+            "node": "Bajar de Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bajar de Drive": {
+      "main": [
+        [
+          {
+            "node": "Entregar el archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Santiago",
+    "saveManualExecutions": true
+  },
+  "pinData": {}
+}

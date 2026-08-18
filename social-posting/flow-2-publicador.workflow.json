@@ -1,0 +1,707 @@
+{
+  "name": "Social — Publicador",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "cuando-el-programador-llama",
+      "name": "Cuando el programador llama",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Q1Z46f1FZ7DWGuaFPTWKWeGn1tdxkBNdTFyNwyv4zus",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "leer-la-cola",
+      "name": "Leer la cola",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Picks the next row to publish. Rules, in order:\n//   1. estado must be \"listo\" (anything else is skipped: pausa, publicado, blank)\n//   2. prioridad \"alta\" jumps the queue\n//   3. otherwise oldest row first (sheet order)\n// Nothing here mutates the sheet — the ledger step at the end does that.\n\nconst IG_USER_ID = 'REPLACE_IG_USER_ID';\nconst FB_PAGE_ID = 'REPLACE_FB_PAGE_ID';\nconst OWNER_CHAT_ID = 'REPLACE_OWNER_CHAT_ID';\nconst MEDIA_SECRET = 'KHgDO9uohdVM02EVYtY44i_fc2j7Lzr5';\nconst MEDIA_BASE = 'https://n8n.136.65.229.48.sslip.io/webhook/tengosed-media';\n\n// Chile requires the MINSAL warning on alcohol advertising.\nconst AVISO = 'Bebe con moderacion. Prohibida su venta a menores de 18 anos.';\n\nconst rows = $input.all().map(i => i.json);\nconst ready = rows.filter(r => String(r.estado || '').trim().toLowerCase() === 'listo');\n\nif (ready.length === 0) {\n  return [{ json: { empty: true, reason: 'No hay filas en estado \"listo\".' } }];\n}\n\nready.sort((a, b) => {\n  const pa = String(a.prioridad || '').toLowerCase() === 'alta' ? 0 : 1;\n  const pb = String(b.prioridad || '').toLowerCase() === 'alta' ? 0 : 1;\n  return pa - pb;\n});\n\nconst row = ready[0];\nconst archivo = String(row.archivo || '').trim();\n\nif (!archivo) {\n  return [{ json: { empty: true, reason: 'La fila ' + row.id + ' no tiene archivo.' } }];\n}\n\nconst esVideo = /\\.(mp4|mov|m4v)$/i.test(archivo);\n\n// Append the MINSAL notice unless the caption already carries it.\nconst withAviso = (t) => {\n  const s = String(t || '').trim();\n  if (!s) return AVISO;\n  return s.toLowerCase().includes('moderacion') ? s : s + '\\n\\n' + AVISO;\n};\n\nreturn [{ json: {\n  empty: false,\n  rowId: row.id,\n  archivo,\n  esVideo,\n  captionIg: withAviso(row.caption_ig),\n  captionFb: withAviso(row.caption_fb),\n  captionWa: withAviso(row.caption_wa),\n  igUserId: IG_USER_ID,\n  fbPageId: FB_PAGE_ID,\n  ownerChatId: OWNER_CHAT_ID,\n  mediaSecret: MEDIA_SECRET,\n  mediaBase: MEDIA_BASE,\n  slot: $('Cuando el programador llama').first().json.slot || '',\n} }];"
+      },
+      "id": "elegir-el-siguiente",
+      "name": "Elegir el siguiente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "Hay algo que publicar-cond",
+              "leftValue": "={{ $json.empty }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "hay-algo-que-publicar",
+      "name": "Hay algo que publicar",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.ownerChatId || 'REPLACE_OWNER_CHAT_ID' }}",
+        "text": "={{ \"Slot sin publicar.\\n\\n\" + $json.reason + \"\\n\\nAgrega filas en estado listo a la Cola de publicaciones.\" }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "avisar-cola-vacia",
+      "name": "Avisar cola vacia",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        560
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.archivo }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "12HvBwzoad40QwZz3rgHoMZTEB_Gysbrl",
+            "mode": "id"
+          }
+        },
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "mimeType"
+          ]
+        }
+      },
+      "id": "buscar-el-archivo",
+      "name": "Buscar el archivo",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -40,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Turns the Drive hit + the queue row into the exact payloads each platform wants.\nconst post = $('Elegir el siguiente').first().json;\nconst hit = $input.first().json;\n\nif (!hit || !hit.id) {\n  throw new Error('No se encontro \"' + post.archivo + '\" en la carpeta 1 Por publicar.');\n}\n\n// The media link Meta will fetch from. It carries a shared token so the\n// endpoint is not an open proxy to the whole Drive. The file becomes public\n// on Instagram seconds later, so a signed short link is proportionate here.\nconst mediaUrl = post.mediaBase\n  + '?id=' + encodeURIComponent(hit.id)\n  + '&t=' + encodeURIComponent(post.mediaSecret);\n\nreturn [{ json: {\n  ...post,\n  fileId: hit.id,\n  mimeType: hit.mimeType,\n  mediaUrl,\n  publishedAt: new Date().toISOString(),\n} }];"
+      },
+      "id": "armar-el-post",
+      "name": "Armar el post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        180,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $json.igUserId }}/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "={{ $json.esVideo ? \"video_url\" : \"image_url\" }}",
+              "value": "={{ $json.mediaUrl }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.captionIg }}"
+            },
+            {
+              "name": "media_type",
+              "value": "={{ $json.esVideo ? \"REELS\" : \"IMAGE\" }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "ig-crear-contenedor",
+      "name": "IG crear contenedor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 8,
+        "unit": "seconds"
+      },
+      "id": "esperar-proceso",
+      "name": "Esperar proceso",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        620,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('IG crear contenedor').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "status_code,status"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "ig-revisar-estado",
+      "name": "IG revisar estado",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Instagram stages media asynchronously. Publishing before it reports\n// FINISHED produces an empty post, so we poll — but never forever.\nconst MAX_TRIES = 12;               // 12 x 8s = ~96s, enough for a Reel\nconst code = String($json.status_code || '').toUpperCase();\nconst tries = $runIndex + 1;\n\nif (code === 'FINISHED') return [{ json: { ready: true, giveUp: false, tries } }];\nif (code === 'ERROR' || code === 'EXPIRED') {\n  throw new Error('Instagram rechazo el contenedor: ' + ($json.status || code));\n}\nif (tries >= MAX_TRIES) {\n  throw new Error('El contenedor sigue en ' + code + ' tras ' + tries + ' intentos.');\n}\nreturn [{ json: { ready: false, giveUp: false, tries } }];"
+      },
+      "id": "listo-o-esperar",
+      "name": "Listo o esperar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "Contenedor listo-cond",
+              "leftValue": "={{ $json.ready }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "contenedor-listo",
+      "name": "Contenedor listo",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1220,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $('Armar el post').item.json.igUserId }}/media_publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('IG crear contenedor').item.json.id }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "ig-publicar",
+      "name": "IG publicar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v21.0/{{ $json.fbPageId }}/{{ $json.esVideo ? \"videos\" : \"photos\" }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "={{ $json.esVideo ? \"file_url\" : \"url\" }}",
+              "value": "={{ $json.mediaUrl }}"
+            },
+            {
+              "name": "={{ $json.esVideo ? \"description\" : \"caption\" }}",
+              "value": "={{ $json.captionFb }}"
+            },
+            {
+              "name": "published",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "fb-publicar",
+      "name": "FB publicar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.ownerChatId }}",
+        "file": "={{ $json.mediaUrl }}",
+        "additionalFields": {
+          "caption": "={{ \"ESTADO DE WHATSAPP — \" + $json.slot + \"\\n\\n\" + $json.captionWa + \"\\n\\nGuarda la imagen y subela a Estado.\" }}",
+          "appendAttribution": false
+        }
+      },
+      "id": "wa-borrador-al-telefono",
+      "name": "WA borrador al telefono",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        420,
+        560
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "id": "juntar-resultados",
+      "name": "Juntar resultados",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1680,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q1Z46f1FZ7DWGuaFPTWKWeGn1tdxkBNdTFyNwyv4zus",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "value": {
+            "id": "={{ $('Armar el post').item.json.rowId }}",
+            "estado": "publicado",
+            "publicado_en": "={{ $('Armar el post').item.json.publishedAt }}",
+            "link_ig": "={{ $('IG publicar').item.json.id || '' }}",
+            "link_fb": "={{ $('FB publicar').item.json.post_id || $('FB publicar').item.json.id || '' }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "marcar-publicado",
+      "name": "Marcar publicado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1900,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Armar el post').item.json.fileId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "124LkQeu4SxY1qq5NMibeoj_LOalszo9-",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "archivar-el-medio",
+      "name": "Archivar el medio",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2120,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Flow 2 — one slot, end to end\n\n**Before this runs, set in \"Elegir el siguiente\":**\n- `IG_USER_ID` — Instagram Business account id\n- `FB_PAGE_ID` — Facebook Page id\n- `OWNER_CHAT_ID` — your Telegram chat id\n- `MEDIA_SECRET` — same string as in Flow 3\n\n**Credential:** every Graph node uses a Header Auth credential.\nCreate it once as: Name `Authorization`, Value `Bearer <page token>`.\n\n**Verify after import:** the two Google Sheets nodes and the Drive\nnodes use resource-locator pickers. Open each and re-pick the\ndocument / folder from the dropdown so n8n caches the display name.",
+        "width": 560,
+        "height": 420,
+        "color": 3
+      },
+      "id": "note-5af6",
+      "name": "Note 5af6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -910,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Why Instagram needs three calls\n\ncreate container -> poll status -> publish.\n\nSkipping the poll is the usual cause of \"it posted but the image is\nblank\". Videos legitimately sit in IN_PROGRESS for up to a minute.\n\nThe loop gives up after 12 tries (~96s) and raises, which hands the\nfailure to Flow 4 rather than publishing something broken.",
+        "width": 520,
+        "height": 240,
+        "color": 4
+      },
+      "id": "note-4a5z",
+      "name": "Note 4a5z",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -140
+      ]
+    }
+  ],
+  "connections": {
+    "Cuando el programador llama": {
+      "main": [
+        [
+          {
+            "node": "Leer la cola",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer la cola": {
+      "main": [
+        [
+          {
+            "node": "Elegir el siguiente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Elegir el siguiente": {
+      "main": [
+        [
+          {
+            "node": "Hay algo que publicar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hay algo que publicar": {
+      "main": [
+        [
+          {
+            "node": "Avisar cola vacia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar el archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar el archivo": {
+      "main": [
+        [
+          {
+            "node": "Armar el post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el post": {
+      "main": [
+        [
+          {
+            "node": "IG crear contenedor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "FB publicar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WA borrador al telefono",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG crear contenedor": {
+      "main": [
+        [
+          {
+            "node": "Esperar proceso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar proceso": {
+      "main": [
+        [
+          {
+            "node": "IG revisar estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG revisar estado": {
+      "main": [
+        [
+          {
+            "node": "Listo o esperar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listo o esperar": {
+      "main": [
+        [
+          {
+            "node": "Contenedor listo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contenedor listo": {
+      "main": [
+        [
+          {
+            "node": "IG publicar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar proceso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG publicar": {
+      "main": [
+        [
+          {
+            "node": "Juntar resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB publicar": {
+      "main": [
+        [
+          {
+            "node": "Juntar resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WA borrador al telefono": {
+      "main": [
+        [
+          {
+            "node": "Juntar resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Juntar resultados": {
+      "main": [
+        [
+          {
+            "node": "Marcar publicado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar publicado": {
+      "main": [
+        [
+          {
+            "node": "Archivar el medio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Santiago",
+    "saveManualExecutions": true
+  },
+  "pinData": {}
+}

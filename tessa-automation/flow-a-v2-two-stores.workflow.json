@@ -1,0 +1,1186 @@
+{
+  "name": "Flow A v2 — Inventario 2 locales",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 12 * * 0-5"
+            }
+          ]
+        }
+      },
+      "id": "trg-schedule",
+      "name": "Dom a Vie 12:30",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -680,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "trg-manual",
+      "name": "Ejecutar manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ZWzp8b3WkpfVMbGh"
+        },
+        "matchType": "anyCondition",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "get-conteos",
+      "name": "Conteos recibidos",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -460,
+        500
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "invent",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "17LKTSeQCB1ZYdi8OdlpJNEjR8SbheBQs",
+            "mode": "id"
+          }
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "modifiedTime"
+          ],
+          "orderBy": [
+            {
+              "key": "modifiedTime",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "id": "ts-f-inv",
+      "name": "Buscar inventario — Tengo Sed",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        100
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "ts-d-inv",
+      "name": "Bajar inventario — Tengo Sed",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        60,
+        100
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "binaryPropertyName": "data",
+        "options": {
+          "headerRow": true
+        }
+      },
+      "id": "ts-x-inv",
+      "name": "Leer xlsx — Tengo Sed",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        280,
+        100
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "venta",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "17LKTSeQCB1ZYdi8OdlpJNEjR8SbheBQs",
+            "mode": "id"
+          }
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "modifiedTime"
+          ],
+          "orderBy": [
+            {
+              "key": "modifiedTime",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "id": "ts-f-ven",
+      "name": "Buscar ventas — Tengo Sed",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        280
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "ts-d-ven",
+      "name": "Bajar ventas — Tengo Sed",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        60,
+        280
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "binaryPropertyName": "data",
+        "options": {
+          "delimiter": ";",
+          "encoding": "utf8",
+          "headerRow": true
+        }
+      },
+      "id": "ts-x-ven",
+      "name": "Leer csv — Tengo Sed",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        280,
+        280
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 1,
+        "numberInputs": 2
+      },
+      "id": "ts-merge",
+      "name": "Esperar ambos — Tengo Sed",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        500,
+        190
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst CONFIG = {\n  stores: {\n    'Tengo Sed':  { uploadsFolderId: '17LKTSeQCB1ZYdi8OdlpJNEjR8SbheBQs', chatId: '-1004441790999' },\n    'Los Negros': { uploadsFolderId: '1BfjcRpN18hkUCTy9VvwU6nn6KAkTmU-4', chatId: '-1003585797649' },\n  },\n  ownerChatId: '6905734880',\n  inv: {\n    sku:   ['codigo', 'código', 'sku', 'barcode', 'ean'],\n    name:  ['nombre', 'producto', 'descripcion'],\n    stock: ['cantidad', 'stock', 'existencia'],\n    price: ['precio_venta', 'precio venta', 'pvp'],\n    cost:  ['precio_compra', 'precio compra', 'cpp'],\n    min:   ['stock_minimo', 'stock minimo', 'minimo', 'mínimo'],\n    store: ['bodega', 'local', 'sucursal'],\n  },\n  sales: {\n    sku:   ['código', 'codigo', 'sku'],\n    name:  ['producto', 'nombre'],\n    sold:  ['unidades', 'vendido', 'cantidad_vendida'],\n    amount:['monto total', 'monto'],\n    price: ['precio venta', 'precio_venta'],\n    cost:  ['cpp', 'p.compra'],\n  },\n  reorderRule: 'velocity',\n  periodDays: 3,\n  coverDays: 7,      // days of stock we want on hand\n  minDefault: 6,\n  bucketPatterns: ['suelto', 'vaso', 'brandy', 'encendador', 'encendedor'],\n  varianceThreshold: 1,   // ignore variances under this many units\n  maxLines: 25,           // lines per Telegram section\n  telegramLimit: 3890,\n  fileStaleDays: 4,\n  negativesPerDay: 8,     // negative-stock products to fix\n  countPerDay: 8,         // products to physically count\n};\nfunction pick(row, candidates, what, fileLabel) {\n  const keys = Object.keys(row || {});\n  const norm = k => String(k).trim().toLowerCase();\n  for (const c of candidates) {\n    const hit = keys.find(k => norm(k) === c);\n    if (hit !== undefined) return hit;\n  }\n  for (const c of candidates) {\n    const hit = keys.find(k => norm(k).includes(c));\n    if (hit !== undefined) return hit;\n  }\n  if (what) {\n    throw new Error(\n      'No encontre la columna \"' + what + '\" en ' + fileLabel +\n      '. Cabecera real: [' + keys.join(', ') + ']. ' +\n      'Agrega el nombre real a CONFIG.'\n    );\n  }\n  return null;\n}\nfunction qty(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n  let s = String(v).trim().replace(/\\s|\\u00a0|\\$/g, '');\n  if (!s) return 0;\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n  let normalized;\n  if (s.includes(',')) {\n    normalized = s.replace(/\\./g, '').replace(',', '.');   // 3.876,000 -> 3876.000\n  } else {\n    normalized = s;                                        // 6.000 -> 6.000 (decimal)\n  }\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\nfunction money(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n  let s = String(v).trim().replace(/\\s|\\u00a0|\\$/g, '');\n  if (!s) return 0;\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n  let normalized;\n  if (s.includes(',')) {\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    normalized = s.replace(/\\./g, '');                     // 12.990 -> 12990\n  } else {\n    normalized = s;\n  }\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\nfunction keysOf(v) {\n  const raw = String(v === null || v === undefined ? '' : v).trim().toUpperCase();\n  if (!raw) return [];\n  return raw.split('/').map(s => s.trim()).filter(Boolean);\n}\nfunction nameKey(v) {\n  const s = String(v === null || v === undefined ? '' : v).trim();\n  const m = s.match(/[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/);\n  return (m ? s.slice(m.index) : s).toLocaleLowerCase('es');\n}\nfunction byName(a, b) {\n  const ka = nameKey(a.name), kb = nameKey(b.name);\n  const c = ka.localeCompare(kb, 'es', { numeric: true, sensitivity: 'base' });\n  if (c !== 0) return c;\n  return String(a.name).localeCompare(String(b.name), 'es', { numeric: true });\n}\nfunction clp(n) {\n  const sign = n < 0 ? '-' : '';\n  return sign + '$' + Math.abs(Math.round(n)).toLocaleString('es-CL');\n}\n/**\n * Parse a store's reply into counts. Accepts the shapes people actually type:\n *   7801620001643 22      7801620001643: 22      7801620001643 - 22\n *   PROD-XWNDHVRL 0       7801620001643=22       7801620001643 x22\n *\n * Deliberately strict about what counts as a reply: ordinary chat in the group\n * must not be swallowed as a count. A message only counts when at least half of\n * its non-empty lines parse AND at least one does. Unknown SKUs and unreadable\n * lines are reported back rather than dropped — never guessed.\n *\n * @param {string} text          message text, or the caption of a photo\n * @param {Set<string>} known    SKUs currently outstanding for this store\n */\nfunction parseCountReply(text, known) {\n  const raw = String(text === null || text === undefined ? '' : text);\n  const lines = raw.split(/\\r?\\n/).map(s => s.trim()).filter(Boolean);\n  const counts = [];\n  const unknown = [];\n  const unparsed = [];\n  const seen = new Set();\n  const RE = /^([A-Za-z0-9][A-Za-z0-9._\\-\\/]*)\\s*(?::|-|=|x|\\s)\\s*(-?\\d+(?:[.,]\\d+)?)\\s*(?:un|unid|unidades|u)?$/i;\n  for (const line of lines) {\n    const m = line.match(RE);\n    if (!m) { unparsed.push(line); continue; }\n    const sku = String(m[1]).trim().toUpperCase();\n    const q = qty(m[2]);\n    if (!Number.isFinite(q)) { unparsed.push(line); continue; }\n    if (!/\\d/.test(sku) && !sku.startsWith('PROD-')) { unparsed.push(line); continue; }\n    if (seen.has(sku)) {\n      const idx = counts.findIndex(c => c.sku === sku);\n      if (idx >= 0) counts[idx] = { sku: sku, qty: q };\n      continue;\n    }\n    seen.add(sku);\n    if (known && known.size && !known.has(sku)) { unknown.push({ sku: sku, qty: q }); continue; }\n    counts.push({ sku: sku, qty: q });\n  }\n  const parsedLines = counts.length + unknown.length;\n  const isCountReply = parsedLines > 0 && parsedLines * 2 >= lines.length;\n  return { counts: counts, unknown: unknown, unparsed: unparsed,\n           isCountReply: isCountReply, lines: lines.length };\n}\n/**\n * Confirmation sent back to the store. Says exactly what was recorded, what was\n * not understood, and what is still missing — so a partial reply is obvious.\n */\nfunction buildCountConfirmation(storeName, parsed, stillOpen, photoSaved) {\n  const L = [];\n  L.push('RECIBIDO — ' + storeName);\n  L.push(SEP);\n  if (parsed.counts.length) {\n    L.push('Anotado (' + parsed.counts.length + '):');\n    parsed.counts.forEach(function (c, i) { L.push(pad(i + 1) + '. ' + c.sku + '  =  ' + c.qty); });\n  } else {\n    L.push('No anote ninguna cantidad.');\n  }\n  if (photoSaved) {\n    L.push('');\n    L.push('Foto guardada como respaldo.');\n  }\n  if (parsed.unknown.length) {\n    L.push('');\n    L.push('SKU que no son de la lista de hoy:');\n    parsed.unknown.forEach(function (c) { L.push('  ' + c.sku); });\n    L.push('Revisa el codigo, o mandalo igual y lo reviso.');\n  }\n  if (parsed.unparsed.length) {\n    L.push('');\n    L.push('No entendi estas lineas:');\n    parsed.unparsed.slice(0, 5).forEach(function (s) { L.push('  ' + s); });\n    L.push('Formato: SKU cantidad');\n  }\n  L.push('');\n  if (stillOpen && stillOpen.length) {\n    L.push('FALTAN ' + stillOpen.length + ':');\n    stillOpen.slice(0, 12).forEach(function (p, i) { L.push(pad(i + 1) + '. ' + p.name + '  ->  ' + p.sku); });\n    if (stillOpen.length > 12) L.push('  ...y ' + (stillOpen.length - 12) + ' mas.');\n  } else {\n    L.push('Listo, respondiste todo. Manana van productos nuevos.');\n  }\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\n/** Asked when a photo arrives with no caption. Never guess the numbers. */\nfunction buildPhotoNeedsCaption(storeName, stillOpen) {\n  const L = [];\n  L.push('FOTO RECIBIDA — ' + storeName);\n  L.push(SEP);\n  L.push('Guarde la foto, pero no puedo saber que cantidad anotar.');\n  L.push('Reenviala con el texto en el pie de foto, o escribelo aparte:');\n  L.push('');\n  L.push('  SKU cantidad');\n  if (stillOpen && stillOpen.length) {\n    L.push('');\n    L.push('Ejemplo con lo que falta hoy:');\n    L.push('  ' + stillOpen[0].sku + ' 4');\n  }\n  return L.join('\\n');\n}\n/** Split \"/stock corona 6 pack\" into { cmd:'stock', args:'corona 6 pack' }. */\nfunction parseCommand(text) {\n  const raw = String(text === null || text === undefined ? '' : text).trim();\n  const m = raw.match(/^\\/([a-zA-Z_]+)(?:@\\S+)?\\s*([\\s\\S]*)$/);\n  if (!m) return null;\n  return { cmd: m[1].toLowerCase(), args: (m[2] || '').trim() };\n}\n/**\n * Find products by SKU, exact name, or word-subset match. Returns ALL matches —\n * the caller shows them rather than picking one, because guessing which \"Corona\"\n * the user meant is exactly the failure mode the master doc forbids.\n */\nfunction findProducts(rows, cols, term) {\n  const q = String(term || '').trim().toLowerCase();\n  if (!q) return [];\n  const words = q.split(/\\s+/).filter(Boolean);\n  const out = [];\n  for (const r of rows) {\n    const ks = keysOf(r[cols.sku]);\n    const name = String(r[cols.name] === undefined || r[cols.name] === null ? '' : r[cols.name]).trim();\n    const hay = name.toLowerCase();\n    let hit = false;\n    if (ks.some(k => k.toLowerCase() === q)) hit = true;              // exact SKU\n    else if (hay === q) hit = true;                                    // exact name\n    else if (words.every(w => hay.includes(w))) hit = true;            // all words present\n    if (hit) {\n      out.push({\n        sku: ks[0] || '',\n        name: name || (ks[0] || ''),\n        stock: qty(r[cols.stock]),\n        price: cols.price ? money(r[cols.price]) : 0,\n        cost: cols.cost ? money(r[cols.cost]) : 0,\n      });\n    }\n  }\n  return out;\n}\n/**\n * Answer one command against the store's own data. Deterministic — no LLM, no\n * guessing. Unknown commands and empty results say so plainly.\n */\nfunction answerCommand(storeName, cmd, args, invRows, salesRows) {\n  const HELP = [\n    'COMANDOS — ' + storeName,\n    SEP,\n    '/stock <producto>    stock de un producto',\n    '/precio <producto>   precio de venta y compra',\n    '/bajos               que hay que reponer',\n    '/negativos           productos en negativo',\n    '/resumen             resumen del local',\n    '/ayuda               esta lista',\n    '',\n    'Tambien puedes responder conteos:',\n    '  SKU cantidad   (una linea por producto)',\n    'o mandar una foto con ese texto en el pie de foto.',\n  ].join('\\n');\n  if (cmd === 'ayuda' || cmd === 'help' || cmd === 'start') return HELP;\n  if (!invRows || !invRows.length) {\n    return 'No pude leer el inventario de ' + storeName + '. Revisa que haya un archivo en Uploads.';\n  }\n  const cols = {\n    sku: pick(invRows[0], CONFIG.inv.sku, 'codigo/SKU', 'inventario ' + storeName),\n    name: pick(invRows[0], CONFIG.inv.name, 'nombre', 'inventario ' + storeName),\n    stock: pick(invRows[0], CONFIG.inv.stock, 'cantidad', 'inventario ' + storeName),\n    price: pick(invRows[0], CONFIG.inv.price, null),\n    cost: pick(invRows[0], CONFIG.inv.cost, null),\n  };\n  if (cmd === 'stock' || cmd === 'precio' || cmd === 'inventario') {\n    if (!args) return 'Escribe que producto buscas. Ejemplo: /' + cmd + ' corona';\n    const found = findProducts(invRows, cols, args);\n    if (!found.length) return 'No encontre \"' + args + '\" en ' + storeName + '.';\n    found.sort(byName);\n    const L = [];\n    L.push((cmd === 'precio' ? 'PRECIO' : 'STOCK') + ' — ' + storeName);\n    L.push('Busqueda: ' + args + '  (' + found.length + ' resultado' + (found.length > 1 ? 's' : '') + ')');\n    L.push(SEP);\n    found.slice(0, 20).forEach(function (p, i) {\n      L.push(pad(i + 1) + '. ' + p.name);\n      if (cmd === 'precio') {\n        L.push('    venta ' + clp(p.price) + '   compra ' + clp(p.cost));\n      } else {\n        L.push('    quedan ' + p.stock + (p.stock < 0 ? '   (NEGATIVO)' : ''));\n      }\n      L.push('    SKU: ' + p.sku);\n    });\n    if (found.length > 20) L.push('  ...y ' + (found.length - 20) + ' mas. Se mas especifico.');\n    const t = L.join('\\n');\n    return t.length > CONFIG.telegramLimit ? t.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)' : t;\n  }\n  if (cmd === 'bajos' || cmd === 'negativos' || cmd === 'resumen') {\n    const res = calcStore(storeName, invRows, salesRows || [], [], undefined, null);\n    if (cmd === 'resumen') return res.report;\n    const list = cmd === 'bajos' ? res.reorders : res.negatives;\n    if (!list.length) {\n      return (cmd === 'bajos' ? 'No hay nada que reponer en ' : 'No hay stock negativo en ') + storeName + '.';\n    }\n    const L = [];\n    L.push((cmd === 'bajos' ? 'REPONER' : 'STOCK NEGATIVO') + ' — ' + storeName);\n    L.push(SEP);\n    list.slice(0, 25).forEach(function (p, i) {\n      L.push(pad(i + 1) + '. ' + p.name);\n      L.push(cmd === 'bajos'\n        ? '    PEDIR ' + p.suggest + '   (quedan ' + p.stock + ', vendio ' + p.sold + ')'\n        : '    sistema: ' + p.stock);\n    });\n    if (list.length > 25) L.push('  ...y ' + (list.length - 25) + ' mas.');\n    const t = L.join('\\n');\n    return t.length > CONFIG.telegramLimit ? t.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)' : t;\n  }\n  return 'No conozco el comando /' + cmd + '.\\n\\n' + HELP;\n}\n/**\n * @param {string} storeName\n * @param {Array<object>} invRows    rows of the inventory .xlsx export\n * @param {Array<object>} salesRows  rows of the ventas .csv export\n * @param {Array<object>} countRows  physical counts [{sku, qty}] (may be empty)\n * @returns {object} report payload for this store\n */\nfunction calcStore(storeName, invRows, salesRows, countRows, state, files) {\n  invRows = (invRows || []).filter(r => r && Object.keys(r).length);\n  salesRows = (salesRows || []).filter(r => r && Object.keys(r).length);\n  countRows = (countRows || []).filter(r => r && Object.keys(r).length);\n  if (!invRows.length) {\n    throw new Error('Local ' + storeName + ': el archivo de inventario esta vacio o no se pudo leer. Sin stock no hay reporte.');\n  }\n  const I = {\n    sku:   pick(invRows[0], CONFIG.inv.sku,   'codigo/SKU', 'inventario ' + storeName),\n    name:  pick(invRows[0], CONFIG.inv.name,  'nombre',     'inventario ' + storeName),\n    stock: pick(invRows[0], CONFIG.inv.stock, 'cantidad',   'inventario ' + storeName),\n    price: pick(invRows[0], CONFIG.inv.price, null),\n    cost:  pick(invRows[0], CONFIG.inv.cost,  null),\n    min:   pick(invRows[0], CONFIG.inv.min,   null),\n  };\n  const S = salesRows.length ? {\n    sku:    pick(salesRows[0], CONFIG.sales.sku,   'codigo/SKU', 'ventas ' + storeName),\n    sold:   pick(salesRows[0], CONFIG.sales.sold,  'unidades',   'ventas ' + storeName),\n    amount: pick(salesRows[0], CONFIG.sales.amount, null),\n    price:  pick(salesRows[0], CONFIG.sales.price,  null),\n  } : null;\n  const soldBy = new Map();\n  let revenue = 0;\n  if (S) {\n    for (const r of salesRows) {\n      const units = qty(r[S.sold]);\n      const amt = S.amount ? money(r[S.amount]) : 0;\n      revenue += amt;\n      for (const k of keysOf(r[S.sku])) {\n        const prev = soldBy.get(k) || { units: 0, amount: 0 };\n        soldBy.set(k, { units: prev.units + units, amount: prev.amount + amt });\n      }\n    }\n  }\n  const countBy = new Map();\n  for (const r of countRows) {\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    const q = qty(r.qty !== undefined ? r.qty : r.cantidad);\n    for (const k of keysOf(sku)) countBy.set(k, q);\n  }\n  const isBucket = name =>\n    CONFIG.bucketPatterns.some(p => name.toLowerCase().includes(p));\n  const variances = [];\n  const reorders = [];\n  const negatives = [];\n  const buckets = [];\n  const countable = [];   // catalogue used for the daily physical count\n  let stockValue = 0;\n  let counted = 0;\n  for (const row of invRows) {\n    const ks = keysOf(row[I.sku]);\n    if (!ks.length) continue;\n    const name = String(row[I.name] === undefined || row[I.name] === null ? '' : row[I.name]).trim() || ks[0];\n    const stock = qty(row[I.stock]);\n    const price = I.price ? money(row[I.price]) : 0;\n    const cost = I.cost ? money(row[I.cost]) : 0;\n    stockValue += stock * (cost || price);\n    const bucket = isBucket(name);\n    if (bucket) buckets.push({ sku: ks[0], name: name, stock: stock });\n    if (!bucket) countable.push({ sku: ks[0], name: name, stock: stock });\n    if (stock < 0 && !bucket) negatives.push({ sku: ks[0], name: name, stock: stock });\n    let cnt;\n    for (const k of ks) if (countBy.has(k)) { cnt = countBy.get(k); break; }\n    if (cnt !== undefined) {\n      counted++;\n      const diff = cnt - stock;           // negative = falta mercaderia\n      if (Math.abs(diff) >= CONFIG.varianceThreshold) {\n        variances.push({\n          sku: ks[0], name: name, system: stock, counted: cnt,\n          diff: diff, value: diff * (cost || price),\n        });\n      }\n    }\n    let sold = 0;\n    for (const k of ks) if (soldBy.has(k)) { sold = soldBy.get(k).units; break; }\n    let threshold;\n    if (CONFIG.reorderRule === 'velocity') {\n      const perDay = sold / Math.max(1, CONFIG.periodDays);\n      threshold = Math.ceil(perDay * CONFIG.coverDays);\n    } else {\n      threshold = I.min ? (qty(row[I.min]) || CONFIG.minDefault) : CONFIG.minDefault;\n    }\n    if (threshold > 0 && stock < threshold && !bucket) {\n      reorders.push({\n        sku: ks[0], name: name, stock: stock, sold: sold,\n        threshold: threshold, suggest: Math.max(1, Math.ceil(threshold - stock)),\n      });\n    }\n  }\n  variances.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));\n  reorders.sort((a, b) => (b.sold - a.sold) || (a.stock - b.stock));\n  negatives.sort((a, b) => a.stock - b.stock);\n  const varianceValue = variances.reduce((s, v) => s + v.value, 0);\n  const day = workingDayIndex();\n  countable.sort(byName);\n  const answered = new Set();\n  for (const r of countRows) {\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    for (const k of keysOf(sku)) answered.add(k);\n  }\n  const st = state || {};\n  const negTask = buildNegativesTask(storeName, negatives, st.negatives, answered);\n  const cntTask = buildCountTask(storeName, countable, st.count, answered);\n  const nextState = { negatives: negTask.state, count: cntTask.state };\n  const filesWarn = buildFilesWarning(storeName, files);\n  return {\n    store: storeName,\n    generatedAt: new Date().toISOString(),\n    products: invRows.length,\n    salesRows: salesRows.length,\n    revenue: revenue,\n    stockValue: stockValue,\n    counted: counted,\n    variances: variances,\n    varianceValue: varianceValue,\n    reorders: reorders,\n    negatives: negatives,\n    buckets: buckets,\n    day: day,\n    negativesTask: negTask.text,\n    negativesBatch: negTask.batch,\n    negativesResent: negTask.resent,\n    countTask: cntTask.text,\n    countBatch: cntTask.batch,\n    countResent: cntTask.resent,\n    nextState: nextState,\n    filesStale: filesWarn.stale,\n    filesTask: filesWarn.text,\n    invAgeDays: filesWarn.invAgeDays,\n    venAgeDays: filesWarn.venAgeDays,\n    report: buildReport(storeName, {\n      products: invRows.length, revenue: revenue, counted: counted,\n      variances: variances, varianceValue: varianceValue,\n      reorders: reorders, negatives: negatives, buckets: buckets,\n      filesStale: filesWarn.stale, invAgeDays: filesWarn.invAgeDays,\n      venAgeDays: filesWarn.venAgeDays,\n    }),\n  };\n}\nfunction dayIndex(now) {\n  const d = now || new Date();\n  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000);\n}\nfunction saturdaysUpTo(n) {\n  return n < 2 ? 0 : Math.floor((n - 2) / 7) + 1;\n}\nfunction workingDayIndex(now) {\n  const n = dayIndex(now);\n  return n - saturdaysUpTo(n);\n}\nfunction isSaturday(now) {\n  const d = now || new Date();\n  return d.getDay() === 6;\n}\nfunction rotate(list, perDay, day) {\n  if (!list.length || perDay <= 0) return [];\n  const out = [];\n  const start = (day * perDay) % list.length;\n  for (let i = 0; i < Math.min(perDay, list.length); i++) {\n    out.push(list[(start + i) % list.length]);\n  }\n  return out;\n}\n/**\n * Reply-driven batching. The store only moves on to new products once it has\n * answered the current ones — an unanswered batch is re-sent unchanged rather\n * than being buried under a fresh list. The cursor advances ONLY when the\n * outstanding batch is fully cleared, so nothing is ever skipped.\n *\n * @param {Array<{sku:string,name:string}>} list   full ordered catalogue\n * @param {{cursor:number, pending:string[]}} state  persisted between runs\n * @param {Set<string>} answered                   SKUs replied to since the send\n * @param {number} perDay\n * @returns {{batch:Array, state:object, resent:boolean, cleared:string[]}}\n */\nfunction nextBatch(list, state, answered, perDay) {\n  const prev = { cursor: (state && state.cursor) || 0, pending: (state && state.pending) || [] };\n  const cleared = prev.pending.filter(s => answered.has(s));\n  const stillOpen = prev.pending.filter(s => !answered.has(s));\n  if (!list.length || perDay <= 0) {\n    return { batch: [], state: { cursor: prev.cursor, pending: [] }, resent: false, cleared: cleared };\n  }\n  if (stillOpen.length) {\n    const byKey = new Map(list.map(p => [String(p.sku), p]));\n    const batch = stillOpen.map(s => byKey.get(s)).filter(Boolean);\n    if (batch.length) {\n      return {\n        batch: batch,\n        state: { cursor: prev.cursor, pending: batch.map(p => String(p.sku)), items: batch },\n        resent: true, cleared: cleared,\n      };\n    }\n  }\n  const start = ((prev.cursor % list.length) + list.length) % list.length;\n  const batch = [];\n  for (let i = 0; i < Math.min(perDay, list.length); i++) {\n    batch.push(list[(start + i) % list.length]);\n  }\n  return {\n    batch: batch,\n    state: { cursor: start + batch.length, pending: batch.map(p => String(p.sku)), items: batch },\n    resent: false, cleared: cleared,\n  };\n}\n/**\n * What is still unanswered right now. Used by the afternoon reminder — it reads\n * the batch that was already sent instead of recomputing one, so the reminder\n * can never introduce new products or advance the cursor.\n */\nfunction outstandingFrom(state, answered) {\n  const items = (state && state.items) || [];\n  return items.filter(p => !answered.has(String(p.sku)));\n}\n/**\n * How old the store's two exports are, and the nag to upload fresh ones.\n * @param {{inventory?:string, ventas?:string}} files  modifiedTime ISO strings\n */\nfunction buildFilesWarning(storeName, files, now) {\n  const ref = now || new Date();\n  const ageDays = iso => {\n    if (!iso) return null;\n    const t = new Date(iso).getTime();\n    if (!Number.isFinite(t)) return null;\n    return Math.floor((ref.getTime() - t) / 86400000);\n  };\n  const inv = ageDays(files && files.inventory);\n  const ven = ageDays(files && files.ventas);\n  const late = [];\n  if (inv === null) late.push('INVENTARIO: no hay archivo');\n  else if (inv >= CONFIG.fileStaleDays) late.push('INVENTARIO: ultimo archivo de hace ' + inv + ' dias');\n  if (ven === null) late.push('VENTAS: no hay archivo');\n  else if (ven >= CONFIG.fileStaleDays) late.push('VENTAS: ultimo archivo de hace ' + ven + ' dias');\n  if (!late.length) return { stale: false, text: '', invAgeDays: inv, venAgeDays: ven };\n  const L = [];\n  L.push('SUBIR ARCHIVOS — ' + storeName);\n  L.push(SEP);\n  late.forEach(function (s, i) { L.push(pad(i + 1) + '. ' + s); });\n  L.push('');\n  L.push('Exporta de ControlVentas y sube el archivo a la carpeta');\n  L.push('Uploads de ' + storeName + ' en Google Drive.');\n  L.push('Sin archivo nuevo el reporte queda con datos viejos.');\n  return { stale: true, text: L.join('\\n'), invAgeDays: inv, venAgeDays: ven };\n}\nfunction buildReminder(storeName, negOpen, cntOpen) {\n  if (!negOpen.length && !cntOpen.length) return '';\n  const L = [];\n  L.push('RECORDATORIO — ' + storeName);\n  L.push('Todavia falta responder lo de hoy. Responde: SKU cantidad');\n  if (negOpen.length) {\n    L.push('');\n    L.push('AJUSTE DE STOCK (' + negOpen.length + ' sin responder)');\n    negOpen.forEach(function (p) { L.push('  ' + p.name + '  ->  ' + p.sku); });\n  }\n  if (cntOpen.length) {\n    L.push('');\n    L.push('CONTEO DEL DIA (' + cntOpen.length + ' sin responder)');\n    cntOpen.forEach(function (p) { L.push('  ' + p.name + '  ->  ' + p.sku); });\n  }\n  L.push('');\n  L.push('Ejemplo: ' + (negOpen[0] || cntOpen[0]).sku + ' 3');\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\nfunction buildNegativesTask(storeName, negatives, state, answered) {\n  const sorted = negatives.slice().sort(byName);\n  const r = nextBatch(sorted, state, answered, CONFIG.negativesPerDay);\n  const batch = r.batch;\n  if (!batch.length) {\n    return { batch: batch, state: r.state, resent: false,\n             text: 'AJUSTE DE STOCK — ' + storeName + '\\nNo hay productos en negativo. Todo en orden.' };\n  }\n  const L = [];\n  L.push('AJUSTE DE STOCK — ' + storeName);\n  if (r.resent) {\n    L.push('(REPETIDO - faltan estos ' + batch.length + ' por responder)');\n  }\n  L.push('Estos ' + batch.length + ' productos estan en NEGATIVO. Cuenta cuantos hay de verdad');\n  L.push('en la tienda y responde una linea por producto: SKU cantidad');\n  L.push('');\n  batch.forEach(function (n, i) {\n    L.push((i + 1) + ') ' + n.name);\n    L.push('   sistema: ' + n.stock + '   SKU: ' + n.sku);\n  });\n  L.push('');\n  L.push('Ejemplo de respuesta:');\n  L.push(batch[0].sku + ' 4');\n  L.push('(quedan ' + Math.max(0, negatives.length - batch.length) + ' negativos para los proximos dias)');\n  return { batch: batch, state: r.state, resent: r.resent, text: L.join('\\n') };\n}\nfunction buildCountTask(storeName, products, state, answered) {\n  const r = nextBatch(products, state, answered, CONFIG.countPerDay);\n  const batch = r.batch;\n  if (!batch.length) return { batch: batch, state: r.state, resent: false, text: '' };\n  const L = [];\n  L.push('CONTEO DEL DIA — ' + storeName);\n  if (r.resent) {\n    L.push('(REPETIDO - faltan estos ' + batch.length + ' por responder)');\n  }\n  L.push('Cuenta estos ' + batch.length + ' productos y responde: SKU cantidad');\n  L.push('');\n  batch.forEach(function (p, i) {\n    L.push((i + 1) + ') ' + p.name);\n    L.push('   SKU: ' + p.sku);\n  });\n  L.push('');\n  L.push('Ejemplo: ' + batch[0].sku + ' 12');\n  L.push('No mires el sistema antes de contar.');\n  return { batch: batch, state: r.state, resent: r.resent, text: L.join('\\n') };\n}\nconst SEP = '--------------------------------';\nfunction pad(n) {\n  return (n < 10 ? ' ' : '') + n;\n}\nfunction buildReport(storeName, d) {\n  const L = [];\n  L.push('INVENTARIO — ' + storeName);\n  L.push(new Date().toLocaleDateString('es-CL'));\n  L.push(SEP);\n  if (d.filesStale) {\n    L.push('OJO: ARCHIVOS DESACTUALIZADOS');\n    if (d.invAgeDays === null) L.push('  inventario: falta archivo');\n    else if (d.invAgeDays >= CONFIG.fileStaleDays) L.push('  inventario: ' + d.invAgeDays + ' dias');\n    if (d.venAgeDays === null) L.push('  ventas: falta archivo');\n    else if (d.venAgeDays >= CONFIG.fileStaleDays) L.push('  ventas: ' + d.venAgeDays + ' dias');\n    L.push('  Los numeros de abajo son de esa fecha.');\n    L.push(SEP);\n  }\n  L.push('Productos:  ' + d.products);\n  L.push('Venta:      ' + clp(d.revenue));\n  L.push('');\n  if (d.counted > 0) {\n    L.push('CONTEO FISICO (' + d.counted + ' productos contados)');\n    if (!d.variances.length) {\n      L.push('Sin diferencias.');\n    } else {\n      L.push('Diferencias: ' + d.variances.length + '  |  ' + clp(d.varianceValue));\n      for (const v of d.variances.slice(0, CONFIG.maxLines)) {\n        L.push('  ' + v.name + ': sistema ' + v.system + ' / contado ' + v.counted +\n               ' = ' + (v.diff > 0 ? '+' : '') + v.diff + ' (' + clp(v.value) + ')');\n      }\n      if (d.variances.length > CONFIG.maxLines) {\n        L.push('  ...y ' + (d.variances.length - CONFIG.maxLines) + ' mas.');\n      }\n    }\n    L.push('');\n  } else {\n    L.push('CONTEO FISICO: sin conteo recibido hoy.');\n    L.push('');\n  }\n  if (d.reorders.length) {\n    L.push(SEP);\n    L.push('REPONER  (' + d.reorders.length + ' productos)');\n    L.push(SEP);\n    d.reorders.slice(0, CONFIG.maxLines).forEach(function (r, i) {\n      L.push(pad(i + 1) + '. ' + r.name);\n      L.push('    PEDIR ' + r.suggest + '   (quedan ' + r.stock + ', vendio ' + r.sold + ')');\n    });\n    if (d.reorders.length > CONFIG.maxLines) {\n      L.push('    ...y ' + (d.reorders.length - CONFIG.maxLines) + ' productos mas.');\n    }\n    L.push('');\n  }\n  if (d.negatives.length) {\n    L.push(SEP);\n    L.push('STOCK NEGATIVO  (' + d.negatives.length + ' productos)');\n    L.push('hay movimiento sin registrar');\n    L.push(SEP);\n    d.negatives.slice(0, 10).forEach(function (n, i) {\n      L.push(pad(i + 1) + '. ' + n.name);\n      L.push('    sistema: ' + n.stock);\n    });\n    if (d.negatives.length > 10) {\n      L.push('    ...y ' + (d.negatives.length - 10) + ' productos mas.');\n    }\n    L.push('');\n  }\n  if (d.buckets && d.buckets.length) {\n    L.push(SEP);\n    L.push('CANASTOS  (no se piden, cifras no confiables)');\n    L.push(SEP);\n    for (const b of d.buckets.slice(0, 8)) {\n      L.push('  ' + b.name + ': ' + b.stock);\n    }\n  }\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\n\n// ---- n8n wiring ----------------------------------------------------------\nconst STORE = \"Tengo Sed\";\n\nfunction rowsOf(nodeName) {\n  try {\n    return $(nodeName).all().map(i => i.json).filter(r => r && Object.keys(r).length);\n  } catch (e) { return []; }\n}\n\nconst invRows = rowsOf(\"Leer xlsx — Tengo Sed\");\nconst salesRows = rowsOf(\"Leer csv — Tengo Sed\");\n\n// Replies from the 'conteos' Data Table, narrowed to this store. A missing or\n// empty table is fine: it just means nothing has been answered yet.\nconst countRows = rowsOf('Conteos recibidos')\n  .filter(r => !r.store || String(r.store).trim() === STORE);\n\n// Which products are currently outstanding, and how far through the catalogue\n// this store has walked. Persisted on the workflow so an unanswered batch is\n// re-sent unchanged tomorrow instead of being replaced by new products.\nconst store = $getWorkflowStaticData('global');\nstore.batches = store.batches || {};\nconst prevState = store.batches[STORE];\n\n// modifiedTime of the newest file found in this store's Uploads folder, used to\n// nag when nobody has exported from ControlVentas for a while.\nfunction newestModified(nodeName) {\n  try {\n    const it = $(nodeName).first();\n    return (it && it.json && (it.json.modifiedTime || it.json.modified_time)) || null;\n  } catch (e) { return null; }\n}\n\nconst files = {\n  inventory: newestModified(\"Buscar inventario — Tengo Sed\"),\n  ventas: newestModified(\"Buscar ventas — Tengo Sed\"),\n};\n\nconst result = calcStore(STORE, invRows, salesRows, countRows, prevState, files);\nstore.batches[STORE] = result.nextState;\n// carried so the 17:30 branch can repeat the upload nag without re-reading Drive\nstore.batches[STORE].filesTask = result.filesTask;\n\nresult.chatId = CONFIG.stores[STORE] ? CONFIG.stores[STORE].chatId : CONFIG.ownerChatId;\nreturn [{ json: result }];"
+      },
+      "id": "ts-calc",
+      "name": "Calc core — Tengo Sed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        190
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Calc core — Tengo Sed').first().json.chatId }}",
+        "text": "={{ $('Calc core — Tengo Sed').first().json.report }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ts-tg",
+      "name": "Telegram — Tengo Sed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        190
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "ts-w1",
+      "name": "Esperar 10s — Tengo Sed (1)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        190
+      ],
+      "webhookId": "ts-w1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Calc core — Tengo Sed').first().json.chatId }}",
+        "text": "={{ $('Calc core — Tengo Sed').first().json.negativesTask }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ts-tg-neg",
+      "name": "Ajuste negativos — Tengo Sed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1300,
+        190
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "ts-w2",
+      "name": "Esperar 10s — Tengo Sed (2)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1480,
+        190
+      ],
+      "webhookId": "ts-w2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Calc core — Tengo Sed').first().json.chatId }}",
+        "text": "={{ $('Calc core — Tengo Sed').first().json.countTask }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ts-tg-cnt",
+      "name": "Conteo del dia — Tengo Sed",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1660,
+        190
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "invent",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1BfjcRpN18hkUCTy9VvwU6nn6KAkTmU-4",
+            "mode": "id"
+          }
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "modifiedTime"
+          ],
+          "orderBy": [
+            {
+              "key": "modifiedTime",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "id": "ln-f-inv",
+      "name": "Buscar inventario — Los Negros",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        520
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "ln-d-inv",
+      "name": "Bajar inventario — Los Negros",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        60,
+        520
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "binaryPropertyName": "data",
+        "options": {
+          "headerRow": true
+        }
+      },
+      "id": "ln-x-inv",
+      "name": "Leer xlsx — Los Negros",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        280,
+        520
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "venta",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1BfjcRpN18hkUCTy9VvwU6nn6KAkTmU-4",
+            "mode": "id"
+          }
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {
+          "fields": [
+            "id",
+            "name",
+            "modifiedTime"
+          ],
+          "orderBy": [
+            {
+              "key": "modifiedTime",
+              "value": "desc"
+            }
+          ]
+        }
+      },
+      "id": "ln-f-ven",
+      "name": "Buscar ventas — Los Negros",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        700
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "ln-d-ven",
+      "name": "Bajar ventas — Los Negros",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        60,
+        700
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "CDibYBClrFaZqq15",
+          "name": "Google Drive account"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "binaryPropertyName": "data",
+        "options": {
+          "delimiter": ";",
+          "encoding": "utf8",
+          "headerRow": true
+        }
+      },
+      "id": "ln-x-ven",
+      "name": "Leer csv — Los Negros",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        280,
+        700
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 1,
+        "numberInputs": 2
+      },
+      "id": "ln-merge",
+      "name": "Esperar ambos — Los Negros",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        500,
+        610
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst CONFIG = {\n  stores: {\n    'Tengo Sed':  { uploadsFolderId: '17LKTSeQCB1ZYdi8OdlpJNEjR8SbheBQs', chatId: '-1004441790999' },\n    'Los Negros': { uploadsFolderId: '1BfjcRpN18hkUCTy9VvwU6nn6KAkTmU-4', chatId: '-1003585797649' },\n  },\n  ownerChatId: '6905734880',\n  inv: {\n    sku:   ['codigo', 'código', 'sku', 'barcode', 'ean'],\n    name:  ['nombre', 'producto', 'descripcion'],\n    stock: ['cantidad', 'stock', 'existencia'],\n    price: ['precio_venta', 'precio venta', 'pvp'],\n    cost:  ['precio_compra', 'precio compra', 'cpp'],\n    min:   ['stock_minimo', 'stock minimo', 'minimo', 'mínimo'],\n    store: ['bodega', 'local', 'sucursal'],\n  },\n  sales: {\n    sku:   ['código', 'codigo', 'sku'],\n    name:  ['producto', 'nombre'],\n    sold:  ['unidades', 'vendido', 'cantidad_vendida'],\n    amount:['monto total', 'monto'],\n    price: ['precio venta', 'precio_venta'],\n    cost:  ['cpp', 'p.compra'],\n  },\n  reorderRule: 'velocity',\n  periodDays: 3,\n  coverDays: 7,      // days of stock we want on hand\n  minDefault: 6,\n  bucketPatterns: ['suelto', 'vaso', 'brandy', 'encendador', 'encendedor'],\n  varianceThreshold: 1,   // ignore variances under this many units\n  maxLines: 25,           // lines per Telegram section\n  telegramLimit: 3890,\n  fileStaleDays: 4,\n  negativesPerDay: 8,     // negative-stock products to fix\n  countPerDay: 8,         // products to physically count\n};\nfunction pick(row, candidates, what, fileLabel) {\n  const keys = Object.keys(row || {});\n  const norm = k => String(k).trim().toLowerCase();\n  for (const c of candidates) {\n    const hit = keys.find(k => norm(k) === c);\n    if (hit !== undefined) return hit;\n  }\n  for (const c of candidates) {\n    const hit = keys.find(k => norm(k).includes(c));\n    if (hit !== undefined) return hit;\n  }\n  if (what) {\n    throw new Error(\n      'No encontre la columna \"' + what + '\" en ' + fileLabel +\n      '. Cabecera real: [' + keys.join(', ') + ']. ' +\n      'Agrega el nombre real a CONFIG.'\n    );\n  }\n  return null;\n}\nfunction qty(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n  let s = String(v).trim().replace(/\\s|\\u00a0|\\$/g, '');\n  if (!s) return 0;\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n  let normalized;\n  if (s.includes(',')) {\n    normalized = s.replace(/\\./g, '').replace(',', '.');   // 3.876,000 -> 3876.000\n  } else {\n    normalized = s;                                        // 6.000 -> 6.000 (decimal)\n  }\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\nfunction money(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n  let s = String(v).trim().replace(/\\s|\\u00a0|\\$/g, '');\n  if (!s) return 0;\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n  let normalized;\n  if (s.includes(',')) {\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    normalized = s.replace(/\\./g, '');                     // 12.990 -> 12990\n  } else {\n    normalized = s;\n  }\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\nfunction keysOf(v) {\n  const raw = String(v === null || v === undefined ? '' : v).trim().toUpperCase();\n  if (!raw) return [];\n  return raw.split('/').map(s => s.trim()).filter(Boolean);\n}\nfunction nameKey(v) {\n  const s = String(v === null || v === undefined ? '' : v).trim();\n  const m = s.match(/[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/);\n  return (m ? s.slice(m.index) : s).toLocaleLowerCase('es');\n}\nfunction byName(a, b) {\n  const ka = nameKey(a.name), kb = nameKey(b.name);\n  const c = ka.localeCompare(kb, 'es', { numeric: true, sensitivity: 'base' });\n  if (c !== 0) return c;\n  return String(a.name).localeCompare(String(b.name), 'es', { numeric: true });\n}\nfunction clp(n) {\n  const sign = n < 0 ? '-' : '';\n  return sign + '$' + Math.abs(Math.round(n)).toLocaleString('es-CL');\n}\n/**\n * Parse a store's reply into counts. Accepts the shapes people actually type:\n *   7801620001643 22      7801620001643: 22      7801620001643 - 22\n *   PROD-XWNDHVRL 0       7801620001643=22       7801620001643 x22\n *\n * Deliberately strict about what counts as a reply: ordinary chat in the group\n * must not be swallowed as a count. A message only counts when at least half of\n * its non-empty lines parse AND at least one does. Unknown SKUs and unreadable\n * lines are reported back rather than dropped — never guessed.\n *\n * @param {string} text          message text, or the caption of a photo\n * @param {Set<string>} known    SKUs currently outstanding for this store\n */\nfunction parseCountReply(text, known) {\n  const raw = String(text === null || text === undefined ? '' : text);\n  const lines = raw.split(/\\r?\\n/).map(s => s.trim()).filter(Boolean);\n  const counts = [];\n  const unknown = [];\n  const unparsed = [];\n  const seen = new Set();\n  const RE = /^([A-Za-z0-9][A-Za-z0-9._\\-\\/]*)\\s*(?::|-|=|x|\\s)\\s*(-?\\d+(?:[.,]\\d+)?)\\s*(?:un|unid|unidades|u)?$/i;\n  for (const line of lines) {\n    const m = line.match(RE);\n    if (!m) { unparsed.push(line); continue; }\n    const sku = String(m[1]).trim().toUpperCase();\n    const q = qty(m[2]);\n    if (!Number.isFinite(q)) { unparsed.push(line); continue; }\n    if (!/\\d/.test(sku) && !sku.startsWith('PROD-')) { unparsed.push(line); continue; }\n    if (seen.has(sku)) {\n      const idx = counts.findIndex(c => c.sku === sku);\n      if (idx >= 0) counts[idx] = { sku: sku, qty: q };\n      continue;\n    }\n    seen.add(sku);\n    if (known && known.size && !known.has(sku)) { unknown.push({ sku: sku, qty: q }); continue; }\n    counts.push({ sku: sku, qty: q });\n  }\n  const parsedLines = counts.length + unknown.length;\n  const isCountReply = parsedLines > 0 && parsedLines * 2 >= lines.length;\n  return { counts: counts, unknown: unknown, unparsed: unparsed,\n           isCountReply: isCountReply, lines: lines.length };\n}\n/**\n * Confirmation sent back to the store. Says exactly what was recorded, what was\n * not understood, and what is still missing — so a partial reply is obvious.\n */\nfunction buildCountConfirmation(storeName, parsed, stillOpen, photoSaved) {\n  const L = [];\n  L.push('RECIBIDO — ' + storeName);\n  L.push(SEP);\n  if (parsed.counts.length) {\n    L.push('Anotado (' + parsed.counts.length + '):');\n    parsed.counts.forEach(function (c, i) { L.push(pad(i + 1) + '. ' + c.sku + '  =  ' + c.qty); });\n  } else {\n    L.push('No anote ninguna cantidad.');\n  }\n  if (photoSaved) {\n    L.push('');\n    L.push('Foto guardada como respaldo.');\n  }\n  if (parsed.unknown.length) {\n    L.push('');\n    L.push('SKU que no son de la lista de hoy:');\n    parsed.unknown.forEach(function (c) { L.push('  ' + c.sku); });\n    L.push('Revisa el codigo, o mandalo igual y lo reviso.');\n  }\n  if (parsed.unparsed.length) {\n    L.push('');\n    L.push('No entendi estas lineas:');\n    parsed.unparsed.slice(0, 5).forEach(function (s) { L.push('  ' + s); });\n    L.push('Formato: SKU cantidad');\n  }\n  L.push('');\n  if (stillOpen && stillOpen.length) {\n    L.push('FALTAN ' + stillOpen.length + ':');\n    stillOpen.slice(0, 12).forEach(function (p, i) { L.push(pad(i + 1) + '. ' + p.name + '  ->  ' + p.sku); });\n    if (stillOpen.length > 12) L.push('  ...y ' + (stillOpen.length - 12) + ' mas.');\n  } else {\n    L.push('Listo, respondiste todo. Manana van productos nuevos.');\n  }\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\n/** Asked when a photo arrives with no caption. Never guess the numbers. */\nfunction buildPhotoNeedsCaption(storeName, stillOpen) {\n  const L = [];\n  L.push('FOTO RECIBIDA — ' + storeName);\n  L.push(SEP);\n  L.push('Guarde la foto, pero no puedo saber que cantidad anotar.');\n  L.push('Reenviala con el texto en el pie de foto, o escribelo aparte:');\n  L.push('');\n  L.push('  SKU cantidad');\n  if (stillOpen && stillOpen.length) {\n    L.push('');\n    L.push('Ejemplo con lo que falta hoy:');\n    L.push('  ' + stillOpen[0].sku + ' 4');\n  }\n  return L.join('\\n');\n}\n/** Split \"/stock corona 6 pack\" into { cmd:'stock', args:'corona 6 pack' }. */\nfunction parseCommand(text) {\n  const raw = String(text === null || text === undefined ? '' : text).trim();\n  const m = raw.match(/^\\/([a-zA-Z_]+)(?:@\\S+)?\\s*([\\s\\S]*)$/);\n  if (!m) return null;\n  return { cmd: m[1].toLowerCase(), args: (m[2] || '').trim() };\n}\n/**\n * Find products by SKU, exact name, or word-subset match. Returns ALL matches —\n * the caller shows them rather than picking one, because guessing which \"Corona\"\n * the user meant is exactly the failure mode the master doc forbids.\n */\nfunction findProducts(rows, cols, term) {\n  const q = String(term || '').trim().toLowerCase();\n  if (!q) return [];\n  const words = q.split(/\\s+/).filter(Boolean);\n  const out = [];\n  for (const r of rows) {\n    const ks = keysOf(r[cols.sku]);\n    const name = String(r[cols.name] === undefined || r[cols.name] === null ? '' : r[cols.name]).trim();\n    const hay = name.toLowerCase();\n    let hit = false;\n    if (ks.some(k => k.toLowerCase() === q)) hit = true;              // exact SKU\n    else if (hay === q) hit = true;                                    // exact name\n    else if (words.every(w => hay.includes(w))) hit = true;            // all words present\n    if (hit) {\n      out.push({\n        sku: ks[0] || '',\n        name: name || (ks[0] || ''),\n        stock: qty(r[cols.stock]),\n        price: cols.price ? money(r[cols.price]) : 0,\n        cost: cols.cost ? money(r[cols.cost]) : 0,\n      });\n    }\n  }\n  return out;\n}\n/**\n * Answer one command against the store's own data. Deterministic — no LLM, no\n * guessing. Unknown commands and empty results say so plainly.\n */\nfunction answerCommand(storeName, cmd, args, invRows, salesRows) {\n  const HELP = [\n    'COMANDOS — ' + storeName,\n    SEP,\n    '/stock <producto>    stock de un producto',\n    '/precio <producto>   precio de venta y compra',\n    '/bajos               que hay que reponer',\n    '/negativos           productos en negativo',\n    '/resumen             resumen del local',\n    '/ayuda               esta lista',\n    '',\n    'Tambien puedes responder conteos:',\n    '  SKU cantidad   (una linea por producto)',\n    'o mandar una foto con ese texto en el pie de foto.',\n  ].join('\\n');\n  if (cmd === 'ayuda' || cmd === 'help' || cmd === 'start') return HELP;\n  if (!invRows || !invRows.length) {\n    return 'No pude leer el inventario de ' + storeName + '. Revisa que haya un archivo en Uploads.';\n  }\n  const cols = {\n    sku: pick(invRows[0], CONFIG.inv.sku, 'codigo/SKU', 'inventario ' + storeName),\n    name: pick(invRows[0], CONFIG.inv.name, 'nombre', 'inventario ' + storeName),\n    stock: pick(invRows[0], CONFIG.inv.stock, 'cantidad', 'inventario ' + storeName),\n    price: pick(invRows[0], CONFIG.inv.price, null),\n    cost: pick(invRows[0], CONFIG.inv.cost, null),\n  };\n  if (cmd === 'stock' || cmd === 'precio' || cmd === 'inventario') {\n    if (!args) return 'Escribe que producto buscas. Ejemplo: /' + cmd + ' corona';\n    const found = findProducts(invRows, cols, args);\n    if (!found.length) return 'No encontre \"' + args + '\" en ' + storeName + '.';\n    found.sort(byName);\n    const L = [];\n    L.push((cmd === 'precio' ? 'PRECIO' : 'STOCK') + ' — ' + storeName);\n    L.push('Busqueda: ' + args + '  (' + found.length + ' resultado' + (found.length > 1 ? 's' : '') + ')');\n    L.push(SEP);\n    found.slice(0, 20).forEach(function (p, i) {\n      L.push(pad(i + 1) + '. ' + p.name);\n      if (cmd === 'precio') {\n        L.push('    venta ' + clp(p.price) + '   compra ' + clp(p.cost));\n      } else {\n        L.push('    quedan ' + p.stock + (p.stock < 0 ? '   (NEGATIVO)' : ''));\n      }\n      L.push('    SKU: ' + p.sku);\n    });\n    if (found.length > 20) L.push('  ...y ' + (found.length - 20) + ' mas. Se mas especifico.');\n    const t = L.join('\\n');\n    return t.length > CONFIG.telegramLimit ? t.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)' : t;\n  }\n  if (cmd === 'bajos' || cmd === 'negativos' || cmd === 'resumen') {\n    const res = calcStore(storeName, invRows, salesRows || [], [], undefined, null);\n    if (cmd === 'resumen') return res.report;\n    const list = cmd === 'bajos' ? res.reorders : res.negatives;\n    if (!list.length) {\n      return (cmd === 'bajos' ? 'No hay nada que reponer en ' : 'No hay stock negativo en ') + storeName + '.';\n    }\n    const L = [];\n    L.push((cmd === 'bajos' ? 'REPONER' : 'STOCK NEGATIVO') + ' — ' + storeName);\n    L.push(SEP);\n    list.slice(0, 25).forEach(function (p, i) {\n      L.push(pad(i + 1) + '. ' + p.name);\n      L.push(cmd === 'bajos'\n        ? '    PEDIR ' + p.suggest + '   (quedan ' + p.stock + ', vendio ' + p.sold + ')'\n        : '    sistema: ' + p.stock);\n    });\n    if (list.length > 25) L.push('  ...y ' + (list.length - 25) + ' mas.');\n    const t = L.join('\\n');\n    return t.length > CONFIG.telegramLimit ? t.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)' : t;\n  }\n  return 'No conozco el comando /' + cmd + '.\\n\\n' + HELP;\n}\n/**\n * @param {string} storeName\n * @param {Array<object>} invRows    rows of the inventory .xlsx export\n * @param {Array<object>} salesRows  rows of the ventas .csv export\n * @param {Array<object>} countRows  physical counts [{sku, qty}] (may be empty)\n * @returns {object} report payload for this store\n */\nfunction calcStore(storeName, invRows, salesRows, countRows, state, files) {\n  invRows = (invRows || []).filter(r => r && Object.keys(r).length);\n  salesRows = (salesRows || []).filter(r => r && Object.keys(r).length);\n  countRows = (countRows || []).filter(r => r && Object.keys(r).length);\n  if (!invRows.length) {\n    throw new Error('Local ' + storeName + ': el archivo de inventario esta vacio o no se pudo leer. Sin stock no hay reporte.');\n  }\n  const I = {\n    sku:   pick(invRows[0], CONFIG.inv.sku,   'codigo/SKU', 'inventario ' + storeName),\n    name:  pick(invRows[0], CONFIG.inv.name,  'nombre',     'inventario ' + storeName),\n    stock: pick(invRows[0], CONFIG.inv.stock, 'cantidad',   'inventario ' + storeName),\n    price: pick(invRows[0], CONFIG.inv.price, null),\n    cost:  pick(invRows[0], CONFIG.inv.cost,  null),\n    min:   pick(invRows[0], CONFIG.inv.min,   null),\n  };\n  const S = salesRows.length ? {\n    sku:    pick(salesRows[0], CONFIG.sales.sku,   'codigo/SKU', 'ventas ' + storeName),\n    sold:   pick(salesRows[0], CONFIG.sales.sold,  'unidades',   'ventas ' + storeName),\n    amount: pick(salesRows[0], CONFIG.sales.amount, null),\n    price:  pick(salesRows[0], CONFIG.sales.price,  null),\n  } : null;\n  const soldBy = new Map();\n  let revenue = 0;\n  if (S) {\n    for (const r of salesRows) {\n      const units = qty(r[S.sold]);\n      const amt = S.amount ? money(r[S.amount]) : 0;\n      revenue += amt;\n      for (const k of keysOf(r[S.sku])) {\n        const prev = soldBy.get(k) || { units: 0, amount: 0 };\n        soldBy.set(k, { units: prev.units + units, amount: prev.amount + amt });\n      }\n    }\n  }\n  const countBy = new Map();\n  for (const r of countRows) {\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    const q = qty(r.qty !== undefined ? r.qty : r.cantidad);\n    for (const k of keysOf(sku)) countBy.set(k, q);\n  }\n  const isBucket = name =>\n    CONFIG.bucketPatterns.some(p => name.toLowerCase().includes(p));\n  const variances = [];\n  const reorders = [];\n  const negatives = [];\n  const buckets = [];\n  const countable = [];   // catalogue used for the daily physical count\n  let stockValue = 0;\n  let counted = 0;\n  for (const row of invRows) {\n    const ks = keysOf(row[I.sku]);\n    if (!ks.length) continue;\n    const name = String(row[I.name] === undefined || row[I.name] === null ? '' : row[I.name]).trim() || ks[0];\n    const stock = qty(row[I.stock]);\n    const price = I.price ? money(row[I.price]) : 0;\n    const cost = I.cost ? money(row[I.cost]) : 0;\n    stockValue += stock * (cost || price);\n    const bucket = isBucket(name);\n    if (bucket) buckets.push({ sku: ks[0], name: name, stock: stock });\n    if (!bucket) countable.push({ sku: ks[0], name: name, stock: stock });\n    if (stock < 0 && !bucket) negatives.push({ sku: ks[0], name: name, stock: stock });\n    let cnt;\n    for (const k of ks) if (countBy.has(k)) { cnt = countBy.get(k); break; }\n    if (cnt !== undefined) {\n      counted++;\n      const diff = cnt - stock;           // negative = falta mercaderia\n      if (Math.abs(diff) >= CONFIG.varianceThreshold) {\n        variances.push({\n          sku: ks[0], name: name, system: stock, counted: cnt,\n          diff: diff, value: diff * (cost || price),\n        });\n      }\n    }\n    let sold = 0;\n    for (const k of ks) if (soldBy.has(k)) { sold = soldBy.get(k).units; break; }\n    let threshold;\n    if (CONFIG.reorderRule === 'velocity') {\n      const perDay = sold / Math.max(1, CONFIG.periodDays);\n      threshold = Math.ceil(perDay * CONFIG.coverDays);\n    } else {\n      threshold = I.min ? (qty(row[I.min]) || CONFIG.minDefault) : CONFIG.minDefault;\n    }\n    if (threshold > 0 && stock < threshold && !bucket) {\n      reorders.push({\n        sku: ks[0], name: name, stock: stock, sold: sold,\n        threshold: threshold, suggest: Math.max(1, Math.ceil(threshold - stock)),\n      });\n    }\n  }\n  variances.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));\n  reorders.sort((a, b) => (b.sold - a.sold) || (a.stock - b.stock));\n  negatives.sort((a, b) => a.stock - b.stock);\n  const varianceValue = variances.reduce((s, v) => s + v.value, 0);\n  const day = workingDayIndex();\n  countable.sort(byName);\n  const answered = new Set();\n  for (const r of countRows) {\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    for (const k of keysOf(sku)) answered.add(k);\n  }\n  const st = state || {};\n  const negTask = buildNegativesTask(storeName, negatives, st.negatives, answered);\n  const cntTask = buildCountTask(storeName, countable, st.count, answered);\n  const nextState = { negatives: negTask.state, count: cntTask.state };\n  const filesWarn = buildFilesWarning(storeName, files);\n  return {\n    store: storeName,\n    generatedAt: new Date().toISOString(),\n    products: invRows.length,\n    salesRows: salesRows.length,\n    revenue: revenue,\n    stockValue: stockValue,\n    counted: counted,\n    variances: variances,\n    varianceValue: varianceValue,\n    reorders: reorders,\n    negatives: negatives,\n    buckets: buckets,\n    day: day,\n    negativesTask: negTask.text,\n    negativesBatch: negTask.batch,\n    negativesResent: negTask.resent,\n    countTask: cntTask.text,\n    countBatch: cntTask.batch,\n    countResent: cntTask.resent,\n    nextState: nextState,\n    filesStale: filesWarn.stale,\n    filesTask: filesWarn.text,\n    invAgeDays: filesWarn.invAgeDays,\n    venAgeDays: filesWarn.venAgeDays,\n    report: buildReport(storeName, {\n      products: invRows.length, revenue: revenue, counted: counted,\n      variances: variances, varianceValue: varianceValue,\n      reorders: reorders, negatives: negatives, buckets: buckets,\n      filesStale: filesWarn.stale, invAgeDays: filesWarn.invAgeDays,\n      venAgeDays: filesWarn.venAgeDays,\n    }),\n  };\n}\nfunction dayIndex(now) {\n  const d = now || new Date();\n  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000);\n}\nfunction saturdaysUpTo(n) {\n  return n < 2 ? 0 : Math.floor((n - 2) / 7) + 1;\n}\nfunction workingDayIndex(now) {\n  const n = dayIndex(now);\n  return n - saturdaysUpTo(n);\n}\nfunction isSaturday(now) {\n  const d = now || new Date();\n  return d.getDay() === 6;\n}\nfunction rotate(list, perDay, day) {\n  if (!list.length || perDay <= 0) return [];\n  const out = [];\n  const start = (day * perDay) % list.length;\n  for (let i = 0; i < Math.min(perDay, list.length); i++) {\n    out.push(list[(start + i) % list.length]);\n  }\n  return out;\n}\n/**\n * Reply-driven batching. The store only moves on to new products once it has\n * answered the current ones — an unanswered batch is re-sent unchanged rather\n * than being buried under a fresh list. The cursor advances ONLY when the\n * outstanding batch is fully cleared, so nothing is ever skipped.\n *\n * @param {Array<{sku:string,name:string}>} list   full ordered catalogue\n * @param {{cursor:number, pending:string[]}} state  persisted between runs\n * @param {Set<string>} answered                   SKUs replied to since the send\n * @param {number} perDay\n * @returns {{batch:Array, state:object, resent:boolean, cleared:string[]}}\n */\nfunction nextBatch(list, state, answered, perDay) {\n  const prev = { cursor: (state && state.cursor) || 0, pending: (state && state.pending) || [] };\n  const cleared = prev.pending.filter(s => answered.has(s));\n  const stillOpen = prev.pending.filter(s => !answered.has(s));\n  if (!list.length || perDay <= 0) {\n    return { batch: [], state: { cursor: prev.cursor, pending: [] }, resent: false, cleared: cleared };\n  }\n  if (stillOpen.length) {\n    const byKey = new Map(list.map(p => [String(p.sku), p]));\n    const batch = stillOpen.map(s => byKey.get(s)).filter(Boolean);\n    if (batch.length) {\n      return {\n        batch: batch,\n        state: { cursor: prev.cursor, pending: batch.map(p => String(p.sku)), items: batch },\n        resent: true, cleared: cleared,\n      };\n    }\n  }\n  const start = ((prev.cursor % list.length) + list.length) % list.length;\n  const batch = [];\n  for (let i = 0; i < Math.min(perDay, list.length); i++) {\n    batch.push(list[(start + i) % list.length]);\n  }\n  return {\n    batch: batch,\n    state: { cursor: start + batch.length, pending: batch.map(p => String(p.sku)), items: batch },\n    resent: false, cleared: cleared,\n  };\n}\n/**\n * What is still unanswered right now. Used by the afternoon reminder — it reads\n * the batch that was already sent instead of recomputing one, so the reminder\n * can never introduce new products or advance the cursor.\n */\nfunction outstandingFrom(state, answered) {\n  const items = (state && state.items) || [];\n  return items.filter(p => !answered.has(String(p.sku)));\n}\n/**\n * How old the store's two exports are, and the nag to upload fresh ones.\n * @param {{inventory?:string, ventas?:string}} files  modifiedTime ISO strings\n */\nfunction buildFilesWarning(storeName, files, now) {\n  const ref = now || new Date();\n  const ageDays = iso => {\n    if (!iso) return null;\n    const t = new Date(iso).getTime();\n    if (!Number.isFinite(t)) return null;\n    return Math.floor((ref.getTime() - t) / 86400000);\n  };\n  const inv = ageDays(files && files.inventory);\n  const ven = ageDays(files && files.ventas);\n  const late = [];\n  if (inv === null) late.push('INVENTARIO: no hay archivo');\n  else if (inv >= CONFIG.fileStaleDays) late.push('INVENTARIO: ultimo archivo de hace ' + inv + ' dias');\n  if (ven === null) late.push('VENTAS: no hay archivo');\n  else if (ven >= CONFIG.fileStaleDays) late.push('VENTAS: ultimo archivo de hace ' + ven + ' dias');\n  if (!late.length) return { stale: false, text: '', invAgeDays: inv, venAgeDays: ven };\n  const L = [];\n  L.push('SUBIR ARCHIVOS — ' + storeName);\n  L.push(SEP);\n  late.forEach(function (s, i) { L.push(pad(i + 1) + '. ' + s); });\n  L.push('');\n  L.push('Exporta de ControlVentas y sube el archivo a la carpeta');\n  L.push('Uploads de ' + storeName + ' en Google Drive.');\n  L.push('Sin archivo nuevo el reporte queda con datos viejos.');\n  return { stale: true, text: L.join('\\n'), invAgeDays: inv, venAgeDays: ven };\n}\nfunction buildReminder(storeName, negOpen, cntOpen) {\n  if (!negOpen.length && !cntOpen.length) return '';\n  const L = [];\n  L.push('RECORDATORIO — ' + storeName);\n  L.push('Todavia falta responder lo de hoy. Responde: SKU cantidad');\n  if (negOpen.length) {\n    L.push('');\n    L.push('AJUSTE DE STOCK (' + negOpen.length + ' sin responder)');\n    negOpen.forEach(function (p) { L.push('  ' + p.name + '  ->  ' + p.sku); });\n  }\n  if (cntOpen.length) {\n    L.push('');\n    L.push('CONTEO DEL DIA (' + cntOpen.length + ' sin responder)');\n    cntOpen.forEach(function (p) { L.push('  ' + p.name + '  ->  ' + p.sku); });\n  }\n  L.push('');\n  L.push('Ejemplo: ' + (negOpen[0] || cntOpen[0]).sku + ' 3');\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\nfunction buildNegativesTask(storeName, negatives, state, answered) {\n  const sorted = negatives.slice().sort(byName);\n  const r = nextBatch(sorted, state, answered, CONFIG.negativesPerDay);\n  const batch = r.batch;\n  if (!batch.length) {\n    return { batch: batch, state: r.state, resent: false,\n             text: 'AJUSTE DE STOCK — ' + storeName + '\\nNo hay productos en negativo. Todo en orden.' };\n  }\n  const L = [];\n  L.push('AJUSTE DE STOCK — ' + storeName);\n  if (r.resent) {\n    L.push('(REPETIDO - faltan estos ' + batch.length + ' por responder)');\n  }\n  L.push('Estos ' + batch.length + ' productos estan en NEGATIVO. Cuenta cuantos hay de verdad');\n  L.push('en la tienda y responde una linea por producto: SKU cantidad');\n  L.push('');\n  batch.forEach(function (n, i) {\n    L.push((i + 1) + ') ' + n.name);\n    L.push('   sistema: ' + n.stock + '   SKU: ' + n.sku);\n  });\n  L.push('');\n  L.push('Ejemplo de respuesta:');\n  L.push(batch[0].sku + ' 4');\n  L.push('(quedan ' + Math.max(0, negatives.length - batch.length) + ' negativos para los proximos dias)');\n  return { batch: batch, state: r.state, resent: r.resent, text: L.join('\\n') };\n}\nfunction buildCountTask(storeName, products, state, answered) {\n  const r = nextBatch(products, state, answered, CONFIG.countPerDay);\n  const batch = r.batch;\n  if (!batch.length) return { batch: batch, state: r.state, resent: false, text: '' };\n  const L = [];\n  L.push('CONTEO DEL DIA — ' + storeName);\n  if (r.resent) {\n    L.push('(REPETIDO - faltan estos ' + batch.length + ' por responder)');\n  }\n  L.push('Cuenta estos ' + batch.length + ' productos y responde: SKU cantidad');\n  L.push('');\n  batch.forEach(function (p, i) {\n    L.push((i + 1) + ') ' + p.name);\n    L.push('   SKU: ' + p.sku);\n  });\n  L.push('');\n  L.push('Ejemplo: ' + batch[0].sku + ' 12');\n  L.push('No mires el sistema antes de contar.');\n  return { batch: batch, state: r.state, resent: r.resent, text: L.join('\\n') };\n}\nconst SEP = '--------------------------------';\nfunction pad(n) {\n  return (n < 10 ? ' ' : '') + n;\n}\nfunction buildReport(storeName, d) {\n  const L = [];\n  L.push('INVENTARIO — ' + storeName);\n  L.push(new Date().toLocaleDateString('es-CL'));\n  L.push(SEP);\n  if (d.filesStale) {\n    L.push('OJO: ARCHIVOS DESACTUALIZADOS');\n    if (d.invAgeDays === null) L.push('  inventario: falta archivo');\n    else if (d.invAgeDays >= CONFIG.fileStaleDays) L.push('  inventario: ' + d.invAgeDays + ' dias');\n    if (d.venAgeDays === null) L.push('  ventas: falta archivo');\n    else if (d.venAgeDays >= CONFIG.fileStaleDays) L.push('  ventas: ' + d.venAgeDays + ' dias');\n    L.push('  Los numeros de abajo son de esa fecha.');\n    L.push(SEP);\n  }\n  L.push('Productos:  ' + d.products);\n  L.push('Venta:      ' + clp(d.revenue));\n  L.push('');\n  if (d.counted > 0) {\n    L.push('CONTEO FISICO (' + d.counted + ' productos contados)');\n    if (!d.variances.length) {\n      L.push('Sin diferencias.');\n    } else {\n      L.push('Diferencias: ' + d.variances.length + '  |  ' + clp(d.varianceValue));\n      for (const v of d.variances.slice(0, CONFIG.maxLines)) {\n        L.push('  ' + v.name + ': sistema ' + v.system + ' / contado ' + v.counted +\n               ' = ' + (v.diff > 0 ? '+' : '') + v.diff + ' (' + clp(v.value) + ')');\n      }\n      if (d.variances.length > CONFIG.maxLines) {\n        L.push('  ...y ' + (d.variances.length - CONFIG.maxLines) + ' mas.');\n      }\n    }\n    L.push('');\n  } else {\n    L.push('CONTEO FISICO: sin conteo recibido hoy.');\n    L.push('');\n  }\n  if (d.reorders.length) {\n    L.push(SEP);\n    L.push('REPONER  (' + d.reorders.length + ' productos)');\n    L.push(SEP);\n    d.reorders.slice(0, CONFIG.maxLines).forEach(function (r, i) {\n      L.push(pad(i + 1) + '. ' + r.name);\n      L.push('    PEDIR ' + r.suggest + '   (quedan ' + r.stock + ', vendio ' + r.sold + ')');\n    });\n    if (d.reorders.length > CONFIG.maxLines) {\n      L.push('    ...y ' + (d.reorders.length - CONFIG.maxLines) + ' productos mas.');\n    }\n    L.push('');\n  }\n  if (d.negatives.length) {\n    L.push(SEP);\n    L.push('STOCK NEGATIVO  (' + d.negatives.length + ' productos)');\n    L.push('hay movimiento sin registrar');\n    L.push(SEP);\n    d.negatives.slice(0, 10).forEach(function (n, i) {\n      L.push(pad(i + 1) + '. ' + n.name);\n      L.push('    sistema: ' + n.stock);\n    });\n    if (d.negatives.length > 10) {\n      L.push('    ...y ' + (d.negatives.length - 10) + ' productos mas.');\n    }\n    L.push('');\n  }\n  if (d.buckets && d.buckets.length) {\n    L.push(SEP);\n    L.push('CANASTOS  (no se piden, cifras no confiables)');\n    L.push(SEP);\n    for (const b of d.buckets.slice(0, 8)) {\n      L.push('  ' + b.name + ': ' + b.stock);\n    }\n  }\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\n\n// ---- n8n wiring ----------------------------------------------------------\nconst STORE = \"Los Negros\";\n\nfunction rowsOf(nodeName) {\n  try {\n    return $(nodeName).all().map(i => i.json).filter(r => r && Object.keys(r).length);\n  } catch (e) { return []; }\n}\n\nconst invRows = rowsOf(\"Leer xlsx — Los Negros\");\nconst salesRows = rowsOf(\"Leer csv — Los Negros\");\n\n// Replies from the 'conteos' Data Table, narrowed to this store. A missing or\n// empty table is fine: it just means nothing has been answered yet.\nconst countRows = rowsOf('Conteos recibidos')\n  .filter(r => !r.store || String(r.store).trim() === STORE);\n\n// Which products are currently outstanding, and how far through the catalogue\n// this store has walked. Persisted on the workflow so an unanswered batch is\n// re-sent unchanged tomorrow instead of being replaced by new products.\nconst store = $getWorkflowStaticData('global');\nstore.batches = store.batches || {};\nconst prevState = store.batches[STORE];\n\n// modifiedTime of the newest file found in this store's Uploads folder, used to\n// nag when nobody has exported from ControlVentas for a while.\nfunction newestModified(nodeName) {\n  try {\n    const it = $(nodeName).first();\n    return (it && it.json && (it.json.modifiedTime || it.json.modified_time)) || null;\n  } catch (e) { return null; }\n}\n\nconst files = {\n  inventory: newestModified(\"Buscar inventario — Los Negros\"),\n  ventas: newestModified(\"Buscar ventas — Los Negros\"),\n};\n\nconst result = calcStore(STORE, invRows, salesRows, countRows, prevState, files);\nstore.batches[STORE] = result.nextState;\n// carried so the 17:30 branch can repeat the upload nag without re-reading Drive\nstore.batches[STORE].filesTask = result.filesTask;\n\nresult.chatId = CONFIG.stores[STORE] ? CONFIG.stores[STORE].chatId : CONFIG.ownerChatId;\nreturn [{ json: result }];"
+      },
+      "id": "ln-calc",
+      "name": "Calc core — Los Negros",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        610
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Calc core — Los Negros').first().json.chatId }}",
+        "text": "={{ $('Calc core — Los Negros').first().json.report }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ln-tg",
+      "name": "Telegram — Los Negros",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        610
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "ln-w1",
+      "name": "Esperar 10s — Los Negros (1)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        610
+      ],
+      "webhookId": "ln-w1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Calc core — Los Negros').first().json.chatId }}",
+        "text": "={{ $('Calc core — Los Negros').first().json.negativesTask }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ln-tg-neg",
+      "name": "Ajuste negativos — Los Negros",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1300,
+        610
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "ln-w2",
+      "name": "Esperar 10s — Los Negros (2)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1480,
+        610
+      ],
+      "webhookId": "ln-w2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Calc core — Los Negros').first().json.chatId }}",
+        "text": "={{ $('Calc core — Los Negros').first().json.countTask }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ln-tg-cnt",
+      "name": "Conteo del dia — Los Negros",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1660,
+        610
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 17 * * 0-5"
+            }
+          ]
+        }
+      },
+      "id": "trg-remind",
+      "name": "Recordatorio 17:30",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -680,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ZWzp8b3WkpfVMbGh"
+        },
+        "matchType": "anyCondition",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "remind-conteos",
+      "name": "Conteos para recordatorio",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -460,
+        1180
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst CONFIG = {\n  stores: {\n    'Tengo Sed':  { uploadsFolderId: '17LKTSeQCB1ZYdi8OdlpJNEjR8SbheBQs', chatId: '-1004441790999' },\n    'Los Negros': { uploadsFolderId: '1BfjcRpN18hkUCTy9VvwU6nn6KAkTmU-4', chatId: '-1003585797649' },\n  },\n  ownerChatId: '6905734880',\n  inv: {\n    sku:   ['codigo', 'código', 'sku', 'barcode', 'ean'],\n    name:  ['nombre', 'producto', 'descripcion'],\n    stock: ['cantidad', 'stock', 'existencia'],\n    price: ['precio_venta', 'precio venta', 'pvp'],\n    cost:  ['precio_compra', 'precio compra', 'cpp'],\n    min:   ['stock_minimo', 'stock minimo', 'minimo', 'mínimo'],\n    store: ['bodega', 'local', 'sucursal'],\n  },\n  sales: {\n    sku:   ['código', 'codigo', 'sku'],\n    name:  ['producto', 'nombre'],\n    sold:  ['unidades', 'vendido', 'cantidad_vendida'],\n    amount:['monto total', 'monto'],\n    price: ['precio venta', 'precio_venta'],\n    cost:  ['cpp', 'p.compra'],\n  },\n  reorderRule: 'velocity',\n  periodDays: 3,\n  coverDays: 7,      // days of stock we want on hand\n  minDefault: 6,\n  bucketPatterns: ['suelto', 'vaso', 'brandy', 'encendador', 'encendedor'],\n  varianceThreshold: 1,   // ignore variances under this many units\n  maxLines: 25,           // lines per Telegram section\n  telegramLimit: 3890,\n  fileStaleDays: 4,\n  negativesPerDay: 8,     // negative-stock products to fix\n  countPerDay: 8,         // products to physically count\n};\nfunction pick(row, candidates, what, fileLabel) {\n  const keys = Object.keys(row || {});\n  const norm = k => String(k).trim().toLowerCase();\n  for (const c of candidates) {\n    const hit = keys.find(k => norm(k) === c);\n    if (hit !== undefined) return hit;\n  }\n  for (const c of candidates) {\n    const hit = keys.find(k => norm(k).includes(c));\n    if (hit !== undefined) return hit;\n  }\n  if (what) {\n    throw new Error(\n      'No encontre la columna \"' + what + '\" en ' + fileLabel +\n      '. Cabecera real: [' + keys.join(', ') + ']. ' +\n      'Agrega el nombre real a CONFIG.'\n    );\n  }\n  return null;\n}\nfunction qty(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n  let s = String(v).trim().replace(/\\s|\\u00a0|\\$/g, '');\n  if (!s) return 0;\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n  let normalized;\n  if (s.includes(',')) {\n    normalized = s.replace(/\\./g, '').replace(',', '.');   // 3.876,000 -> 3876.000\n  } else {\n    normalized = s;                                        // 6.000 -> 6.000 (decimal)\n  }\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\nfunction money(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n  let s = String(v).trim().replace(/\\s|\\u00a0|\\$/g, '');\n  if (!s) return 0;\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n  let normalized;\n  if (s.includes(',')) {\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    normalized = s.replace(/\\./g, '');                     // 12.990 -> 12990\n  } else {\n    normalized = s;\n  }\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\nfunction keysOf(v) {\n  const raw = String(v === null || v === undefined ? '' : v).trim().toUpperCase();\n  if (!raw) return [];\n  return raw.split('/').map(s => s.trim()).filter(Boolean);\n}\nfunction nameKey(v) {\n  const s = String(v === null || v === undefined ? '' : v).trim();\n  const m = s.match(/[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]/);\n  return (m ? s.slice(m.index) : s).toLocaleLowerCase('es');\n}\nfunction byName(a, b) {\n  const ka = nameKey(a.name), kb = nameKey(b.name);\n  const c = ka.localeCompare(kb, 'es', { numeric: true, sensitivity: 'base' });\n  if (c !== 0) return c;\n  return String(a.name).localeCompare(String(b.name), 'es', { numeric: true });\n}\nfunction clp(n) {\n  const sign = n < 0 ? '-' : '';\n  return sign + '$' + Math.abs(Math.round(n)).toLocaleString('es-CL');\n}\n/**\n * Parse a store's reply into counts. Accepts the shapes people actually type:\n *   7801620001643 22      7801620001643: 22      7801620001643 - 22\n *   PROD-XWNDHVRL 0       7801620001643=22       7801620001643 x22\n *\n * Deliberately strict about what counts as a reply: ordinary chat in the group\n * must not be swallowed as a count. A message only counts when at least half of\n * its non-empty lines parse AND at least one does. Unknown SKUs and unreadable\n * lines are reported back rather than dropped — never guessed.\n *\n * @param {string} text          message text, or the caption of a photo\n * @param {Set<string>} known    SKUs currently outstanding for this store\n */\nfunction parseCountReply(text, known) {\n  const raw = String(text === null || text === undefined ? '' : text);\n  const lines = raw.split(/\\r?\\n/).map(s => s.trim()).filter(Boolean);\n  const counts = [];\n  const unknown = [];\n  const unparsed = [];\n  const seen = new Set();\n  const RE = /^([A-Za-z0-9][A-Za-z0-9._\\-\\/]*)\\s*(?::|-|=|x|\\s)\\s*(-?\\d+(?:[.,]\\d+)?)\\s*(?:un|unid|unidades|u)?$/i;\n  for (const line of lines) {\n    const m = line.match(RE);\n    if (!m) { unparsed.push(line); continue; }\n    const sku = String(m[1]).trim().toUpperCase();\n    const q = qty(m[2]);\n    if (!Number.isFinite(q)) { unparsed.push(line); continue; }\n    if (!/\\d/.test(sku) && !sku.startsWith('PROD-')) { unparsed.push(line); continue; }\n    if (seen.has(sku)) {\n      const idx = counts.findIndex(c => c.sku === sku);\n      if (idx >= 0) counts[idx] = { sku: sku, qty: q };\n      continue;\n    }\n    seen.add(sku);\n    if (known && known.size && !known.has(sku)) { unknown.push({ sku: sku, qty: q }); continue; }\n    counts.push({ sku: sku, qty: q });\n  }\n  const parsedLines = counts.length + unknown.length;\n  const isCountReply = parsedLines > 0 && parsedLines * 2 >= lines.length;\n  return { counts: counts, unknown: unknown, unparsed: unparsed,\n           isCountReply: isCountReply, lines: lines.length };\n}\n/**\n * Confirmation sent back to the store. Says exactly what was recorded, what was\n * not understood, and what is still missing — so a partial reply is obvious.\n */\nfunction buildCountConfirmation(storeName, parsed, stillOpen, photoSaved) {\n  const L = [];\n  L.push('RECIBIDO — ' + storeName);\n  L.push(SEP);\n  if (parsed.counts.length) {\n    L.push('Anotado (' + parsed.counts.length + '):');\n    parsed.counts.forEach(function (c, i) { L.push(pad(i + 1) + '. ' + c.sku + '  =  ' + c.qty); });\n  } else {\n    L.push('No anote ninguna cantidad.');\n  }\n  if (photoSaved) {\n    L.push('');\n    L.push('Foto guardada como respaldo.');\n  }\n  if (parsed.unknown.length) {\n    L.push('');\n    L.push('SKU que no son de la lista de hoy:');\n    parsed.unknown.forEach(function (c) { L.push('  ' + c.sku); });\n    L.push('Revisa el codigo, o mandalo igual y lo reviso.');\n  }\n  if (parsed.unparsed.length) {\n    L.push('');\n    L.push('No entendi estas lineas:');\n    parsed.unparsed.slice(0, 5).forEach(function (s) { L.push('  ' + s); });\n    L.push('Formato: SKU cantidad');\n  }\n  L.push('');\n  if (stillOpen && stillOpen.length) {\n    L.push('FALTAN ' + stillOpen.length + ':');\n    stillOpen.slice(0, 12).forEach(function (p, i) { L.push(pad(i + 1) + '. ' + p.name + '  ->  ' + p.sku); });\n    if (stillOpen.length > 12) L.push('  ...y ' + (stillOpen.length - 12) + ' mas.');\n  } else {\n    L.push('Listo, respondiste todo. Manana van productos nuevos.');\n  }\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\n/** Asked when a photo arrives with no caption. Never guess the numbers. */\nfunction buildPhotoNeedsCaption(storeName, stillOpen) {\n  const L = [];\n  L.push('FOTO RECIBIDA — ' + storeName);\n  L.push(SEP);\n  L.push('Guarde la foto, pero no puedo saber que cantidad anotar.');\n  L.push('Reenviala con el texto en el pie de foto, o escribelo aparte:');\n  L.push('');\n  L.push('  SKU cantidad');\n  if (stillOpen && stillOpen.length) {\n    L.push('');\n    L.push('Ejemplo con lo que falta hoy:');\n    L.push('  ' + stillOpen[0].sku + ' 4');\n  }\n  return L.join('\\n');\n}\n/** Split \"/stock corona 6 pack\" into { cmd:'stock', args:'corona 6 pack' }. */\nfunction parseCommand(text) {\n  const raw = String(text === null || text === undefined ? '' : text).trim();\n  const m = raw.match(/^\\/([a-zA-Z_]+)(?:@\\S+)?\\s*([\\s\\S]*)$/);\n  if (!m) return null;\n  return { cmd: m[1].toLowerCase(), args: (m[2] || '').trim() };\n}\n/**\n * Find products by SKU, exact name, or word-subset match. Returns ALL matches —\n * the caller shows them rather than picking one, because guessing which \"Corona\"\n * the user meant is exactly the failure mode the master doc forbids.\n */\nfunction findProducts(rows, cols, term) {\n  const q = String(term || '').trim().toLowerCase();\n  if (!q) return [];\n  const words = q.split(/\\s+/).filter(Boolean);\n  const out = [];\n  for (const r of rows) {\n    const ks = keysOf(r[cols.sku]);\n    const name = String(r[cols.name] === undefined || r[cols.name] === null ? '' : r[cols.name]).trim();\n    const hay = name.toLowerCase();\n    let hit = false;\n    if (ks.some(k => k.toLowerCase() === q)) hit = true;              // exact SKU\n    else if (hay === q) hit = true;                                    // exact name\n    else if (words.every(w => hay.includes(w))) hit = true;            // all words present\n    if (hit) {\n      out.push({\n        sku: ks[0] || '',\n        name: name || (ks[0] || ''),\n        stock: qty(r[cols.stock]),\n        price: cols.price ? money(r[cols.price]) : 0,\n        cost: cols.cost ? money(r[cols.cost]) : 0,\n      });\n    }\n  }\n  return out;\n}\n/**\n * Answer one command against the store's own data. Deterministic — no LLM, no\n * guessing. Unknown commands and empty results say so plainly.\n */\nfunction answerCommand(storeName, cmd, args, invRows, salesRows) {\n  const HELP = [\n    'COMANDOS — ' + storeName,\n    SEP,\n    '/stock <producto>    stock de un producto',\n    '/precio <producto>   precio de venta y compra',\n    '/bajos               que hay que reponer',\n    '/negativos           productos en negativo',\n    '/resumen             resumen del local',\n    '/ayuda               esta lista',\n    '',\n    'Tambien puedes responder conteos:',\n    '  SKU cantidad   (una linea por producto)',\n    'o mandar una foto con ese texto en el pie de foto.',\n  ].join('\\n');\n  if (cmd === 'ayuda' || cmd === 'help' || cmd === 'start') return HELP;\n  if (!invRows || !invRows.length) {\n    return 'No pude leer el inventario de ' + storeName + '. Revisa que haya un archivo en Uploads.';\n  }\n  const cols = {\n    sku: pick(invRows[0], CONFIG.inv.sku, 'codigo/SKU', 'inventario ' + storeName),\n    name: pick(invRows[0], CONFIG.inv.name, 'nombre', 'inventario ' + storeName),\n    stock: pick(invRows[0], CONFIG.inv.stock, 'cantidad', 'inventario ' + storeName),\n    price: pick(invRows[0], CONFIG.inv.price, null),\n    cost: pick(invRows[0], CONFIG.inv.cost, null),\n  };\n  if (cmd === 'stock' || cmd === 'precio' || cmd === 'inventario') {\n    if (!args) return 'Escribe que producto buscas. Ejemplo: /' + cmd + ' corona';\n    const found = findProducts(invRows, cols, args);\n    if (!found.length) return 'No encontre \"' + args + '\" en ' + storeName + '.';\n    found.sort(byName);\n    const L = [];\n    L.push((cmd === 'precio' ? 'PRECIO' : 'STOCK') + ' — ' + storeName);\n    L.push('Busqueda: ' + args + '  (' + found.length + ' resultado' + (found.length > 1 ? 's' : '') + ')');\n    L.push(SEP);\n    found.slice(0, 20).forEach(function (p, i) {\n      L.push(pad(i + 1) + '. ' + p.name);\n      if (cmd === 'precio') {\n        L.push('    venta ' + clp(p.price) + '   compra ' + clp(p.cost));\n      } else {\n        L.push('    quedan ' + p.stock + (p.stock < 0 ? '   (NEGATIVO)' : ''));\n      }\n      L.push('    SKU: ' + p.sku);\n    });\n    if (found.length > 20) L.push('  ...y ' + (found.length - 20) + ' mas. Se mas especifico.');\n    const t = L.join('\\n');\n    return t.length > CONFIG.telegramLimit ? t.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)' : t;\n  }\n  if (cmd === 'bajos' || cmd === 'negativos' || cmd === 'resumen') {\n    const res = calcStore(storeName, invRows, salesRows || [], [], undefined, null);\n    if (cmd === 'resumen') return res.report;\n    const list = cmd === 'bajos' ? res.reorders : res.negatives;\n    if (!list.length) {\n      return (cmd === 'bajos' ? 'No hay nada que reponer en ' : 'No hay stock negativo en ') + storeName + '.';\n    }\n    const L = [];\n    L.push((cmd === 'bajos' ? 'REPONER' : 'STOCK NEGATIVO') + ' — ' + storeName);\n    L.push(SEP);\n    list.slice(0, 25).forEach(function (p, i) {\n      L.push(pad(i + 1) + '. ' + p.name);\n      L.push(cmd === 'bajos'\n        ? '    PEDIR ' + p.suggest + '   (quedan ' + p.stock + ', vendio ' + p.sold + ')'\n        : '    sistema: ' + p.stock);\n    });\n    if (list.length > 25) L.push('  ...y ' + (list.length - 25) + ' mas.');\n    const t = L.join('\\n');\n    return t.length > CONFIG.telegramLimit ? t.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)' : t;\n  }\n  return 'No conozco el comando /' + cmd + '.\\n\\n' + HELP;\n}\n/**\n * @param {string} storeName\n * @param {Array<object>} invRows    rows of the inventory .xlsx export\n * @param {Array<object>} salesRows  rows of the ventas .csv export\n * @param {Array<object>} countRows  physical counts [{sku, qty}] (may be empty)\n * @returns {object} report payload for this store\n */\nfunction calcStore(storeName, invRows, salesRows, countRows, state, files) {\n  invRows = (invRows || []).filter(r => r && Object.keys(r).length);\n  salesRows = (salesRows || []).filter(r => r && Object.keys(r).length);\n  countRows = (countRows || []).filter(r => r && Object.keys(r).length);\n  if (!invRows.length) {\n    throw new Error('Local ' + storeName + ': el archivo de inventario esta vacio o no se pudo leer. Sin stock no hay reporte.');\n  }\n  const I = {\n    sku:   pick(invRows[0], CONFIG.inv.sku,   'codigo/SKU', 'inventario ' + storeName),\n    name:  pick(invRows[0], CONFIG.inv.name,  'nombre',     'inventario ' + storeName),\n    stock: pick(invRows[0], CONFIG.inv.stock, 'cantidad',   'inventario ' + storeName),\n    price: pick(invRows[0], CONFIG.inv.price, null),\n    cost:  pick(invRows[0], CONFIG.inv.cost,  null),\n    min:   pick(invRows[0], CONFIG.inv.min,   null),\n  };\n  const S = salesRows.length ? {\n    sku:    pick(salesRows[0], CONFIG.sales.sku,   'codigo/SKU', 'ventas ' + storeName),\n    sold:   pick(salesRows[0], CONFIG.sales.sold,  'unidades',   'ventas ' + storeName),\n    amount: pick(salesRows[0], CONFIG.sales.amount, null),\n    price:  pick(salesRows[0], CONFIG.sales.price,  null),\n  } : null;\n  const soldBy = new Map();\n  let revenue = 0;\n  if (S) {\n    for (const r of salesRows) {\n      const units = qty(r[S.sold]);\n      const amt = S.amount ? money(r[S.amount]) : 0;\n      revenue += amt;\n      for (const k of keysOf(r[S.sku])) {\n        const prev = soldBy.get(k) || { units: 0, amount: 0 };\n        soldBy.set(k, { units: prev.units + units, amount: prev.amount + amt });\n      }\n    }\n  }\n  const countBy = new Map();\n  for (const r of countRows) {\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    const q = qty(r.qty !== undefined ? r.qty : r.cantidad);\n    for (const k of keysOf(sku)) countBy.set(k, q);\n  }\n  const isBucket = name =>\n    CONFIG.bucketPatterns.some(p => name.toLowerCase().includes(p));\n  const variances = [];\n  const reorders = [];\n  const negatives = [];\n  const buckets = [];\n  const countable = [];   // catalogue used for the daily physical count\n  let stockValue = 0;\n  let counted = 0;\n  for (const row of invRows) {\n    const ks = keysOf(row[I.sku]);\n    if (!ks.length) continue;\n    const name = String(row[I.name] === undefined || row[I.name] === null ? '' : row[I.name]).trim() || ks[0];\n    const stock = qty(row[I.stock]);\n    const price = I.price ? money(row[I.price]) : 0;\n    const cost = I.cost ? money(row[I.cost]) : 0;\n    stockValue += stock * (cost || price);\n    const bucket = isBucket(name);\n    if (bucket) buckets.push({ sku: ks[0], name: name, stock: stock });\n    if (!bucket) countable.push({ sku: ks[0], name: name, stock: stock });\n    if (stock < 0 && !bucket) negatives.push({ sku: ks[0], name: name, stock: stock });\n    let cnt;\n    for (const k of ks) if (countBy.has(k)) { cnt = countBy.get(k); break; }\n    if (cnt !== undefined) {\n      counted++;\n      const diff = cnt - stock;           // negative = falta mercaderia\n      if (Math.abs(diff) >= CONFIG.varianceThreshold) {\n        variances.push({\n          sku: ks[0], name: name, system: stock, counted: cnt,\n          diff: diff, value: diff * (cost || price),\n        });\n      }\n    }\n    let sold = 0;\n    for (const k of ks) if (soldBy.has(k)) { sold = soldBy.get(k).units; break; }\n    let threshold;\n    if (CONFIG.reorderRule === 'velocity') {\n      const perDay = sold / Math.max(1, CONFIG.periodDays);\n      threshold = Math.ceil(perDay * CONFIG.coverDays);\n    } else {\n      threshold = I.min ? (qty(row[I.min]) || CONFIG.minDefault) : CONFIG.minDefault;\n    }\n    if (threshold > 0 && stock < threshold && !bucket) {\n      reorders.push({\n        sku: ks[0], name: name, stock: stock, sold: sold,\n        threshold: threshold, suggest: Math.max(1, Math.ceil(threshold - stock)),\n      });\n    }\n  }\n  variances.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));\n  reorders.sort((a, b) => (b.sold - a.sold) || (a.stock - b.stock));\n  negatives.sort((a, b) => a.stock - b.stock);\n  const varianceValue = variances.reduce((s, v) => s + v.value, 0);\n  const day = workingDayIndex();\n  countable.sort(byName);\n  const answered = new Set();\n  for (const r of countRows) {\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    for (const k of keysOf(sku)) answered.add(k);\n  }\n  const st = state || {};\n  const negTask = buildNegativesTask(storeName, negatives, st.negatives, answered);\n  const cntTask = buildCountTask(storeName, countable, st.count, answered);\n  const nextState = { negatives: negTask.state, count: cntTask.state };\n  const filesWarn = buildFilesWarning(storeName, files);\n  return {\n    store: storeName,\n    generatedAt: new Date().toISOString(),\n    products: invRows.length,\n    salesRows: salesRows.length,\n    revenue: revenue,\n    stockValue: stockValue,\n    counted: counted,\n    variances: variances,\n    varianceValue: varianceValue,\n    reorders: reorders,\n    negatives: negatives,\n    buckets: buckets,\n    day: day,\n    negativesTask: negTask.text,\n    negativesBatch: negTask.batch,\n    negativesResent: negTask.resent,\n    countTask: cntTask.text,\n    countBatch: cntTask.batch,\n    countResent: cntTask.resent,\n    nextState: nextState,\n    filesStale: filesWarn.stale,\n    filesTask: filesWarn.text,\n    invAgeDays: filesWarn.invAgeDays,\n    venAgeDays: filesWarn.venAgeDays,\n    report: buildReport(storeName, {\n      products: invRows.length, revenue: revenue, counted: counted,\n      variances: variances, varianceValue: varianceValue,\n      reorders: reorders, negatives: negatives, buckets: buckets,\n      filesStale: filesWarn.stale, invAgeDays: filesWarn.invAgeDays,\n      venAgeDays: filesWarn.venAgeDays,\n    }),\n  };\n}\nfunction dayIndex(now) {\n  const d = now || new Date();\n  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000);\n}\nfunction saturdaysUpTo(n) {\n  return n < 2 ? 0 : Math.floor((n - 2) / 7) + 1;\n}\nfunction workingDayIndex(now) {\n  const n = dayIndex(now);\n  return n - saturdaysUpTo(n);\n}\nfunction isSaturday(now) {\n  const d = now || new Date();\n  return d.getDay() === 6;\n}\nfunction rotate(list, perDay, day) {\n  if (!list.length || perDay <= 0) return [];\n  const out = [];\n  const start = (day * perDay) % list.length;\n  for (let i = 0; i < Math.min(perDay, list.length); i++) {\n    out.push(list[(start + i) % list.length]);\n  }\n  return out;\n}\n/**\n * Reply-driven batching. The store only moves on to new products once it has\n * answered the current ones — an unanswered batch is re-sent unchanged rather\n * than being buried under a fresh list. The cursor advances ONLY when the\n * outstanding batch is fully cleared, so nothing is ever skipped.\n *\n * @param {Array<{sku:string,name:string}>} list   full ordered catalogue\n * @param {{cursor:number, pending:string[]}} state  persisted between runs\n * @param {Set<string>} answered                   SKUs replied to since the send\n * @param {number} perDay\n * @returns {{batch:Array, state:object, resent:boolean, cleared:string[]}}\n */\nfunction nextBatch(list, state, answered, perDay) {\n  const prev = { cursor: (state && state.cursor) || 0, pending: (state && state.pending) || [] };\n  const cleared = prev.pending.filter(s => answered.has(s));\n  const stillOpen = prev.pending.filter(s => !answered.has(s));\n  if (!list.length || perDay <= 0) {\n    return { batch: [], state: { cursor: prev.cursor, pending: [] }, resent: false, cleared: cleared };\n  }\n  if (stillOpen.length) {\n    const byKey = new Map(list.map(p => [String(p.sku), p]));\n    const batch = stillOpen.map(s => byKey.get(s)).filter(Boolean);\n    if (batch.length) {\n      return {\n        batch: batch,\n        state: { cursor: prev.cursor, pending: batch.map(p => String(p.sku)), items: batch },\n        resent: true, cleared: cleared,\n      };\n    }\n  }\n  const start = ((prev.cursor % list.length) + list.length) % list.length;\n  const batch = [];\n  for (let i = 0; i < Math.min(perDay, list.length); i++) {\n    batch.push(list[(start + i) % list.length]);\n  }\n  return {\n    batch: batch,\n    state: { cursor: start + batch.length, pending: batch.map(p => String(p.sku)), items: batch },\n    resent: false, cleared: cleared,\n  };\n}\n/**\n * What is still unanswered right now. Used by the afternoon reminder — it reads\n * the batch that was already sent instead of recomputing one, so the reminder\n * can never introduce new products or advance the cursor.\n */\nfunction outstandingFrom(state, answered) {\n  const items = (state && state.items) || [];\n  return items.filter(p => !answered.has(String(p.sku)));\n}\n/**\n * How old the store's two exports are, and the nag to upload fresh ones.\n * @param {{inventory?:string, ventas?:string}} files  modifiedTime ISO strings\n */\nfunction buildFilesWarning(storeName, files, now) {\n  const ref = now || new Date();\n  const ageDays = iso => {\n    if (!iso) return null;\n    const t = new Date(iso).getTime();\n    if (!Number.isFinite(t)) return null;\n    return Math.floor((ref.getTime() - t) / 86400000);\n  };\n  const inv = ageDays(files && files.inventory);\n  const ven = ageDays(files && files.ventas);\n  const late = [];\n  if (inv === null) late.push('INVENTARIO: no hay archivo');\n  else if (inv >= CONFIG.fileStaleDays) late.push('INVENTARIO: ultimo archivo de hace ' + inv + ' dias');\n  if (ven === null) late.push('VENTAS: no hay archivo');\n  else if (ven >= CONFIG.fileStaleDays) late.push('VENTAS: ultimo archivo de hace ' + ven + ' dias');\n  if (!late.length) return { stale: false, text: '', invAgeDays: inv, venAgeDays: ven };\n  const L = [];\n  L.push('SUBIR ARCHIVOS — ' + storeName);\n  L.push(SEP);\n  late.forEach(function (s, i) { L.push(pad(i + 1) + '. ' + s); });\n  L.push('');\n  L.push('Exporta de ControlVentas y sube el archivo a la carpeta');\n  L.push('Uploads de ' + storeName + ' en Google Drive.');\n  L.push('Sin archivo nuevo el reporte queda con datos viejos.');\n  return { stale: true, text: L.join('\\n'), invAgeDays: inv, venAgeDays: ven };\n}\nfunction buildReminder(storeName, negOpen, cntOpen) {\n  if (!negOpen.length && !cntOpen.length) return '';\n  const L = [];\n  L.push('RECORDATORIO — ' + storeName);\n  L.push('Todavia falta responder lo de hoy. Responde: SKU cantidad');\n  if (negOpen.length) {\n    L.push('');\n    L.push('AJUSTE DE STOCK (' + negOpen.length + ' sin responder)');\n    negOpen.forEach(function (p) { L.push('  ' + p.name + '  ->  ' + p.sku); });\n  }\n  if (cntOpen.length) {\n    L.push('');\n    L.push('CONTEO DEL DIA (' + cntOpen.length + ' sin responder)');\n    cntOpen.forEach(function (p) { L.push('  ' + p.name + '  ->  ' + p.sku); });\n  }\n  L.push('');\n  L.push('Ejemplo: ' + (negOpen[0] || cntOpen[0]).sku + ' 3');\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\nfunction buildNegativesTask(storeName, negatives, state, answered) {\n  const sorted = negatives.slice().sort(byName);\n  const r = nextBatch(sorted, state, answered, CONFIG.negativesPerDay);\n  const batch = r.batch;\n  if (!batch.length) {\n    return { batch: batch, state: r.state, resent: false,\n             text: 'AJUSTE DE STOCK — ' + storeName + '\\nNo hay productos en negativo. Todo en orden.' };\n  }\n  const L = [];\n  L.push('AJUSTE DE STOCK — ' + storeName);\n  if (r.resent) {\n    L.push('(REPETIDO - faltan estos ' + batch.length + ' por responder)');\n  }\n  L.push('Estos ' + batch.length + ' productos estan en NEGATIVO. Cuenta cuantos hay de verdad');\n  L.push('en la tienda y responde una linea por producto: SKU cantidad');\n  L.push('');\n  batch.forEach(function (n, i) {\n    L.push((i + 1) + ') ' + n.name);\n    L.push('   sistema: ' + n.stock + '   SKU: ' + n.sku);\n  });\n  L.push('');\n  L.push('Ejemplo de respuesta:');\n  L.push(batch[0].sku + ' 4');\n  L.push('(quedan ' + Math.max(0, negatives.length - batch.length) + ' negativos para los proximos dias)');\n  return { batch: batch, state: r.state, resent: r.resent, text: L.join('\\n') };\n}\nfunction buildCountTask(storeName, products, state, answered) {\n  const r = nextBatch(products, state, answered, CONFIG.countPerDay);\n  const batch = r.batch;\n  if (!batch.length) return { batch: batch, state: r.state, resent: false, text: '' };\n  const L = [];\n  L.push('CONTEO DEL DIA — ' + storeName);\n  if (r.resent) {\n    L.push('(REPETIDO - faltan estos ' + batch.length + ' por responder)');\n  }\n  L.push('Cuenta estos ' + batch.length + ' productos y responde: SKU cantidad');\n  L.push('');\n  batch.forEach(function (p, i) {\n    L.push((i + 1) + ') ' + p.name);\n    L.push('   SKU: ' + p.sku);\n  });\n  L.push('');\n  L.push('Ejemplo: ' + batch[0].sku + ' 12');\n  L.push('No mires el sistema antes de contar.');\n  return { batch: batch, state: r.state, resent: r.resent, text: L.join('\\n') };\n}\nconst SEP = '--------------------------------';\nfunction pad(n) {\n  return (n < 10 ? ' ' : '') + n;\n}\nfunction buildReport(storeName, d) {\n  const L = [];\n  L.push('INVENTARIO — ' + storeName);\n  L.push(new Date().toLocaleDateString('es-CL'));\n  L.push(SEP);\n  if (d.filesStale) {\n    L.push('OJO: ARCHIVOS DESACTUALIZADOS');\n    if (d.invAgeDays === null) L.push('  inventario: falta archivo');\n    else if (d.invAgeDays >= CONFIG.fileStaleDays) L.push('  inventario: ' + d.invAgeDays + ' dias');\n    if (d.venAgeDays === null) L.push('  ventas: falta archivo');\n    else if (d.venAgeDays >= CONFIG.fileStaleDays) L.push('  ventas: ' + d.venAgeDays + ' dias');\n    L.push('  Los numeros de abajo son de esa fecha.');\n    L.push(SEP);\n  }\n  L.push('Productos:  ' + d.products);\n  L.push('Venta:      ' + clp(d.revenue));\n  L.push('');\n  if (d.counted > 0) {\n    L.push('CONTEO FISICO (' + d.counted + ' productos contados)');\n    if (!d.variances.length) {\n      L.push('Sin diferencias.');\n    } else {\n      L.push('Diferencias: ' + d.variances.length + '  |  ' + clp(d.varianceValue));\n      for (const v of d.variances.slice(0, CONFIG.maxLines)) {\n        L.push('  ' + v.name + ': sistema ' + v.system + ' / contado ' + v.counted +\n               ' = ' + (v.diff > 0 ? '+' : '') + v.diff + ' (' + clp(v.value) + ')');\n      }\n      if (d.variances.length > CONFIG.maxLines) {\n        L.push('  ...y ' + (d.variances.length - CONFIG.maxLines) + ' mas.');\n      }\n    }\n    L.push('');\n  } else {\n    L.push('CONTEO FISICO: sin conteo recibido hoy.');\n    L.push('');\n  }\n  if (d.reorders.length) {\n    L.push(SEP);\n    L.push('REPONER  (' + d.reorders.length + ' productos)');\n    L.push(SEP);\n    d.reorders.slice(0, CONFIG.maxLines).forEach(function (r, i) {\n      L.push(pad(i + 1) + '. ' + r.name);\n      L.push('    PEDIR ' + r.suggest + '   (quedan ' + r.stock + ', vendio ' + r.sold + ')');\n    });\n    if (d.reorders.length > CONFIG.maxLines) {\n      L.push('    ...y ' + (d.reorders.length - CONFIG.maxLines) + ' productos mas.');\n    }\n    L.push('');\n  }\n  if (d.negatives.length) {\n    L.push(SEP);\n    L.push('STOCK NEGATIVO  (' + d.negatives.length + ' productos)');\n    L.push('hay movimiento sin registrar');\n    L.push(SEP);\n    d.negatives.slice(0, 10).forEach(function (n, i) {\n      L.push(pad(i + 1) + '. ' + n.name);\n      L.push('    sistema: ' + n.stock);\n    });\n    if (d.negatives.length > 10) {\n      L.push('    ...y ' + (d.negatives.length - 10) + ' productos mas.');\n    }\n    L.push('');\n  }\n  if (d.buckets && d.buckets.length) {\n    L.push(SEP);\n    L.push('CANASTOS  (no se piden, cifras no confiables)');\n    L.push(SEP);\n    for (const b of d.buckets.slice(0, 8)) {\n      L.push('  ' + b.name + ': ' + b.stock);\n    }\n  }\n  const text = L.join('\\n');\n  return text.length > CONFIG.telegramLimit\n    ? text.slice(0, CONFIG.telegramLimit) + '\\n...(cortado)'\n    : text;\n}\n\n// ---- n8n wiring ----------------------------------------------------------\nconst rows = (() => {\n  try { return $('Conteos para recordatorio').all().map(i => i.json).filter(r => r && Object.keys(r).length); }\n  catch (e) { return []; }\n})();\n\nconst store = $getWorkflowStaticData('global');\nconst batches = store.batches || {};\nconst out = [];\n\nfor (const name of Object.keys(CONFIG.stores)) {\n  const st = batches[name];\n  if (!st) continue;\n\n  const answered = new Set();\n  for (const r of rows) {\n    if (r.store && String(r.store).trim() !== name) continue;\n    const sku = r.sku !== undefined ? r.sku : r.SKU;\n    for (const k of keysOf(sku)) answered.add(k);\n  }\n\n  const negOpen = outstandingFrom(st.negatives, answered);\n  const cntOpen = outstandingFrom(st.count, answered);\n  const parts = [];\n\n  const text = buildReminder(name, negOpen, cntOpen);\n  if (text) parts.push(text);\n\n  // Re-nag about stale exports in the afternoon too — by 17:30 there is still\n  // time to upload today's file before tomorrow's 12:30 run.\n  if (st.filesTask) parts.push(st.filesTask);\n\n  for (const t of parts) {\n    out.push({ json: { store: name, chatId: CONFIG.stores[name].chatId, text: t,\n                       pendingNegatives: negOpen.length, pendingCount: cntOpen.length } });\n  }\n}\n\n// Empty output = everyone answered = no reminder sent.\nreturn out;"
+      },
+      "id": "remind-calc",
+      "name": "Que falta responder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "remind-tg",
+      "name": "Telegram recordatorio",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        1180
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Flow A v2 — dos locales\n\nUn ramo independiente por local. Si falla un archivo de un local,\nel otro igual manda su reporte.\n\n**Red and White NO tiene ramo** — es solo bodega. Su carpeta en Drive\nexiste pero queda vacia a proposito.\n\nCada local recibe 3 mensajes a las 12:30: resumen, ajuste de negativos (8)\ny conteo del dia (8). Domingo a viernes — sabado NO.\n\nA las 17:30 sale un RECORDATORIO solo con lo que quedo sin responder.\nSi el local ya respondio todo, no se manda nada.\n\nLos 8 productos se REPITEN hasta que el local responda \"SKU cantidad\".\nRecien cuando responden todos pasa a los 8 siguientes. Orden alfabetico\npor nombre (los \"120 ...\" quedan en su letra, no todos al principio).\n\nChat ids y credenciales YA configurados y probados (2026-08-03).\nOjo: son los ids de SUPERGRUPO (-100...), no los que salen en el mensaje.\n\nCONFIG.periodDays = 3: los export de ControlVentas se suben a Drive\ncada 3 dias, asi que cada archivo trae 3 dias de venta. Si cambia esa\nfrecuencia hay que cambiar este numero — de el salen todas las\ncantidades a pedir.",
+        "height": 540,
+        "width": 470,
+        "color": 4
+      },
+      "id": "note-1",
+      "name": "Leeme",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        860
+      ]
+    }
+  ],
+  "connections": {
+    "Dom a Vie 12:30": {
+      "main": [
+        [
+          {
+            "node": "Buscar inventario — Tengo Sed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar ventas — Tengo Sed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Conteos recibidos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar inventario — Los Negros",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar ventas — Los Negros",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Conteos recibidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ejecutar manualmente": {
+      "main": [
+        [
+          {
+            "node": "Buscar inventario — Tengo Sed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar ventas — Tengo Sed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Conteos recibidos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar inventario — Los Negros",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Buscar ventas — Los Negros",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Conteos recibidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar inventario — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Bajar inventario — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bajar inventario — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Leer xlsx — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer xlsx — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Esperar ambos — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar ventas — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Bajar ventas — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bajar ventas — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Leer csv — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer csv — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Esperar ambos — Tengo Sed",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Esperar ambos — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Calc core — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calc core — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Telegram — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Esperar 10s — Tengo Sed (1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar 10s — Tengo Sed (1)": {
+      "main": [
+        [
+          {
+            "node": "Ajuste negativos — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ajuste negativos — Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Esperar 10s — Tengo Sed (2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar 10s — Tengo Sed (2)": {
+      "main": [
+        [
+          {
+            "node": "Conteo del dia — Tengo Sed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar inventario — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Bajar inventario — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bajar inventario — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Leer xlsx — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer xlsx — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Esperar ambos — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar ventas — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Bajar ventas — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bajar ventas — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Leer csv — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer csv — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Esperar ambos — Los Negros",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Esperar ambos — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Calc core — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calc core — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Telegram — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Esperar 10s — Los Negros (1)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar 10s — Los Negros (1)": {
+      "main": [
+        [
+          {
+            "node": "Ajuste negativos — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ajuste negativos — Los Negros": {
+      "main": [
+        [
+          {
+            "node": "Esperar 10s — Los Negros (2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar 10s — Los Negros (2)": {
+      "main": [
+        [
+          {
+            "node": "Conteo del dia — Los Negros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recordatorio 17:30": {
+      "main": [
+        [
+          {
+            "node": "Conteos para recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conteos para recordatorio": {
+      "main": [
+        [
+          {
+            "node": "Que falta responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Que falta responder": {
+      "main": [
+        [
+          {
+            "node": "Telegram recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,91 @@
+{
+  "name": "Tessa — Flow C — Error alerts",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "error-trigger",
+      "name": "On workflow error",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// Owner's Telegram chat id — where failures get reported.\nconst OWNER_CHAT_ID = 'REPLACE_OWNER_CHAT_ID';\n\nconst e = $json.execution ?? {};\nconst w = $json.workflow ?? {};\nconst err = e.error ?? {};\n\nconst when = new Date(e.startedAt ?? Date.now()).toLocaleString('es-CL');\n\nconst lines = [\n  'FALLO EN LA AUTOMATIZACION',\n  '',\n  'Workflow: ' + (w.name ?? 'desconocido'),\n  'Cuando: ' + when,\n];\nif (err.node?.name) lines.push('Nodo: ' + err.node.name);\nlines.push('Error: ' + (err.message ?? 'sin mensaje'));\nif (e.url) {\n  lines.push('');\n  lines.push('Ver ejecucion: ' + e.url);\n}\nlines.push('');\nlines.push('El reporte de hoy puede no haberse enviado. Revisar antes de abrir.');\n\nlet report = lines.join('\\n');\nif (report.length > 3900) report = report.slice(0, 3890) + '\\n... (truncado)';\n\nreturn [{ json: { chat_id: OWNER_CHAT_ID, report } }];\n"
+      },
+      "id": "code-Format-the-alert",
+      "name": "Format the alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.report }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "tg-Telegram-alert-owner",
+      "name": "Telegram alert owner",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Flow C — error alerts\n\nSet `OWNER_CHAT_ID` inside **Format the alert**.\n\nThen open Flow A and Flow B -> **Settings** -> **Error Workflow** ->\npick this workflow. Without that wiring this never fires.\n\nDo not set this workflow as its own error workflow — a failure here\nwould loop.",
+        "height": 250,
+        "width": 520,
+        "color": 2
+      },
+      "id": "note-hsldwnhd",
+      "name": "Note 4y50",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -410,
+        20
+      ]
+    }
+  ],
+  "connections": {
+    "On workflow error": {
+      "main": [
+        [
+          {
+            "node": "Format the alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format the alert": {
+      "main": [
+        [
+          {
+            "node": "Telegram alert owner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

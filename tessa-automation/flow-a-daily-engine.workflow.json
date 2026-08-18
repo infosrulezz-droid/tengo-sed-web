@@ -1,0 +1,623 @@
+{
+  "name": "Tessa — Flow A — Daily inventory engine",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "schedule-daily",
+      "name": "Schedule daily 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -820,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "stock.csv",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "REPLACE_WITH_DRIVE_FOLDER_ID"
+          }
+        },
+        "options": {}
+      },
+      "id": "find-stock-csv",
+      "name": "Find stock.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -600,
+        60
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "dl-Get-stock-csv",
+      "name": "Get stock.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -380,
+        60
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "binaryPropertyName": "data",
+        "options": {
+          "delimiter": ";",
+          "headerRow": true
+        }
+      },
+      "id": "csv-CSV-stock",
+      "name": "CSV stock",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        60
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "ventas.csv",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "REPLACE_WITH_DRIVE_FOLDER_ID"
+          }
+        },
+        "options": {}
+      },
+      "id": "find-ventas-csv",
+      "name": "Find ventas.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -600,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "dl-Get-ventas-csv",
+      "name": "Get ventas.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -380,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "binaryPropertyName": "data",
+        "options": {
+          "delimiter": ";",
+          "headerRow": true
+        }
+      },
+      "id": "csv-CSV-ventas",
+      "name": "CSV ventas",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "conteo.csv",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "REPLACE_WITH_DRIVE_FOLDER_ID"
+          }
+        },
+        "options": {}
+      },
+      "id": "find-conteo-csv",
+      "name": "Find conteo.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -600,
+        540
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "dl-Get-conteo-csv",
+      "name": "Get conteo.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -380,
+        540
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "binaryPropertyName": "data",
+        "options": {
+          "delimiter": ";",
+          "headerRow": true
+        }
+      },
+      "id": "csv-CSV-conteo",
+      "name": "CSV conteo",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        540
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ZWzp8b3WkpfVMbGh"
+        },
+        "matchType": "anyCondition",
+        "filters": {
+          "conditions": []
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "dt-Get-counts",
+      "name": "Get counts",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -380,
+        780
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "id": "merge-all",
+      "name": "Wait for all inputs",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        80,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// ======== EDIT THIS BLOCK — everything else is generic ========================\nconst CONFIG = {\n  // Candidate column names for the product key. The first one found in the CSV\n  // header wins. Add the real ControlVentas column name at the front.\n  skuColumns: ['sku', 'codigo', 'código', 'codigo_barras', 'código de barras',\n               'cod_barra', 'barcode', 'ean'],\n\n  // Candidate column names for the other fields we need.\n  nameColumns:  ['nombre', 'descripcion', 'descripción', 'producto', 'name'],\n  stockColumns: ['stock', 'existencia', 'existencias', 'cantidad', 'saldo'],\n  countColumns: ['conteo', 'fisico', 'físico', 'contado', 'cantidad_contada'],\n  soldColumns:  ['vendido', 'ventas', 'cantidad_vendida', 'unidades'],\n  priceColumns: ['precio', 'precio_venta', 'pvp', 'valor'],\n  minColumns:   ['minimo', 'mínimo', 'stock_minimo', 'punto_reorden'],\n  storeColumns: ['local', 'sucursal', 'tienda', 'store', 'bodega'],\n\n  // Reorder rule. 'fixed'    -> reorder when stock <= minimo column (or minDefault)\n  //              'velocity'  -> reorder when stock < avg daily sales * coverDays\n  reorderRule: 'fixed',\n  minDefault: 6,\n  coverDays: 7,\n\n  // Flag a variance only when it is at least this many units (noise filter).\n  varianceThreshold: 1,\n\n  // Flag a price as suspicious when it is 0/blank or moved more than this ratio.\n  priceJumpRatio: 0.25,\n\n  // Stores -> Telegram chat id. Keys must match the values in the store column.\n  // Use one chat id for all three if you want a single group.\n  stores: {\n    'LOCAL 1': 'REPLACE_CHAT_ID_1',\n    'LOCAL 2': 'REPLACE_CHAT_ID_2',\n    'LOCAL 3': 'REPLACE_CHAT_ID_3',\n  },\n\n  // Fallback chat when a row has no recognizable store.\n  fallbackChatId: 'REPLACE_CHAT_ID_1',\n\n  // Cycle count: how many SKUs to dispatch per store per day.\n  cycleCountPerDay: 5,\n};\n// =============================================================================\n\n// ---- helpers ---------------------------------------------------------------\nfunction pick(row, candidates) {\n  const keys = Object.keys(row);\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase() === cand);\n    if (hit !== undefined) return hit;\n  }\n  // second pass: contains\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase().includes(cand));\n    if (hit !== undefined) return hit;\n  }\n  return null;\n}\n\nfunction num(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n\n  let s = String(v).replace(/\\s/g, '').replace(/[$\\u00a0]/g, '');\n  if (!s) return 0;\n\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n\n  let normalized;\n  if (s.includes(',')) {\n    // 1.234,56 — dots are thousands separators, comma is the decimal mark.\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    // 1.290 / 12.990 / 1.234.567 — every group after the first is exactly three\n    // digits, so these are thousands separators, NOT a decimal point.\n    normalized = s.replace(/\\./g, '');\n  } else {\n    normalized = s;\n  }\n\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\n\nfunction key(v) {\n  return String(v ?? '').trim().toUpperCase();\n}\n\nfunction clp(n) {\n  return '$' + Math.round(n).toLocaleString('es-CL');\n}\n\n\n// ---- load the three exports -------------------------------------------------\nfunction rowsOf(nodeName) {\n  try {\n    return $(nodeName).all().map(i => i.json).filter(r => r && Object.keys(r).length);\n  } catch (e) {\n    return [];\n  }\n}\n\nconst stockRows = rowsOf('CSV stock');\nconst ventasRows = rowsOf('CSV ventas');\n\n// Counts come from two places: the n8n Data Table (filled by stores replying to the\n// cycle-count message in Telegram) and, as a fallback, a conteo.csv exported by hand.\n// The Data Table wins when a SKU appears in both — it is the fresher source.\nconst tableRows = rowsOf('Get counts').filter(r => r.sku);\nconst csvConteoRows = rowsOf('CSV conteo');\n\n// Keep only the newest count per SKU+store; stores re-send corrections.\nconst newest = new Map();\nfor (const r of tableRows) {\n  const k = key(r.sku) + '::' + key(r.store);\n  const prev = newest.get(k);\n  if (!prev || String(r.counted_at ?? '') >= String(prev.counted_at ?? '')) newest.set(k, r);\n}\nconst normalizedTableRows = [...newest.values()].map(r => ({\n  __sku: r.sku, __store: r.store, __count: r.qty,\n}));\n\nconst conteoRows = normalizedTableRows.length ? normalizedTableRows : csvConteoRows;\nconst countsFromTable = normalizedTableRows.length > 0;\n\nif (!stockRows.length) {\n  throw new Error('stock.csv produced no rows — check the Drive file and the CSV separator.');\n}\n\n// ---- resolve column names once ---------------------------------------------\nconst sample = stockRows[0];\nconst COL = {\n  sku:   pick(sample, CONFIG.skuColumns),\n  name:  pick(sample, CONFIG.nameColumns),\n  stock: pick(sample, CONFIG.stockColumns),\n  price: pick(sample, CONFIG.priceColumns),\n  min:   pick(sample, CONFIG.minColumns),\n  store: pick(sample, CONFIG.storeColumns),\n};\nif (!COL.sku) {\n  throw new Error('No SKU column found in stock.csv. Header was: ' + Object.keys(sample).join(' | ') +\n                  ' — add the real name to CONFIG.skuColumns.');\n}\n\nconst vSample = ventasRows[0] || {};\nconst VCOL = {\n  sku:   pick(vSample, CONFIG.skuColumns),\n  sold:  pick(vSample, CONFIG.soldColumns),\n  price: pick(vSample, CONFIG.priceColumns),\n  store: pick(vSample, CONFIG.storeColumns),\n};\n\nconst cSample = conteoRows[0] || {};\nconst CCOL = countsFromTable\n  ? { sku: '__sku', count: '__count', store: '__store' }\n  : {\n      sku:   pick(cSample, CONFIG.skuColumns),\n      count: pick(cSample, CONFIG.countColumns),\n      store: pick(cSample, CONFIG.storeColumns),\n    };\n\n// ---- index sales and counts by SKU (+ store when available) -----------------\nconst idx = (rows, skuCol, storeCol) => {\n  const m = new Map();\n  if (!skuCol) return m;\n  for (const r of rows) {\n    const k = key(r[skuCol]) + '::' + (storeCol ? key(r[storeCol]) : '');\n    m.set(k, r);\n  }\n  return m;\n};\nconst salesIdx = idx(ventasRows, VCOL.sku, VCOL.store);\nconst countIdx = idx(conteoRows, CCOL.sku, CCOL.store);\n\nconst lookup = (m, sku, store) =>\n  m.get(key(sku) + '::' + key(store)) ?? m.get(key(sku) + '::') ?? null;\n\n// ---- the actual reconciliation ---------------------------------------------\nconst byStore = new Map();\n\nfor (const row of stockRows) {\n  const sku = key(row[COL.sku]);\n  if (!sku) continue;\n\n  const store = COL.store ? key(row[COL.store]) : Object.keys(CONFIG.stores)[0];\n  if (!byStore.has(store)) {\n    byStore.set(store, { store, variances: [], reorders: [], price_flags: [], counted: 0, skus: 0 });\n  }\n  const bucket = byStore.get(store);\n  bucket.skus++;\n\n  const name = COL.name ? String(row[COL.name] ?? '').trim() : sku;\n  const expected = num(row[COL.stock]);\n  const price = COL.price ? num(row[COL.price]) : 0;\n\n  const saleRow = lookup(salesIdx, sku, store);\n  const countRow = lookup(countIdx, sku, store);\n\n  // --- variance: system stock minus physical count -------------------------\n  if (countRow && CCOL.count) {\n    bucket.counted++;\n    const physical = num(countRow[CCOL.count]);\n    const variance = expected - physical;\n    if (Math.abs(variance) >= CONFIG.varianceThreshold) {\n      bucket.variances.push({\n        sku, name, expected, physical, variance,\n        value: variance * price,\n      });\n    }\n  }\n\n  // --- reorder --------------------------------------------------------------\n  let needsReorder = false;\n  let threshold = CONFIG.minDefault;\n  if (CONFIG.reorderRule === 'velocity' && saleRow && VCOL.sold) {\n    const sold = num(saleRow[VCOL.sold]);\n    threshold = Math.ceil(sold * CONFIG.coverDays);\n    needsReorder = expected < threshold;\n  } else {\n    threshold = COL.min ? (num(row[COL.min]) || CONFIG.minDefault) : CONFIG.minDefault;\n    needsReorder = expected <= threshold;\n  }\n  if (needsReorder) {\n    bucket.reorders.push({ sku, name, stock: expected, threshold, suggested: Math.max(threshold * 2 - expected, 1) });\n  }\n\n  // --- price flags ----------------------------------------------------------\n  if (COL.price) {\n    if (price <= 0) {\n      bucket.price_flags.push({ sku, name, reason: 'precio en cero o vacio', price });\n    } else if (saleRow && VCOL.price) {\n      const sold_at = num(saleRow[VCOL.price]);\n      if (sold_at > 0 && Math.abs(sold_at - price) / price > CONFIG.priceJumpRatio) {\n        bucket.price_flags.push({\n          sku, name, reason: 'precio de venta distinto al de lista', price, sold_at,\n        });\n      }\n    }\n  }\n}\n\n// ---- shape one output item per store ---------------------------------------\nconst today = new Date().toLocaleDateString('es-CL');\nconst out = [];\n\nfor (const bucket of byStore.values()) {\n  bucket.variances.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));\n  bucket.reorders.sort((a, b) => a.stock - b.stock);\n\n  const lostValue = bucket.variances.reduce((s, v) => s + Math.max(v.value, 0), 0);\n\n  // Plain text, no emoji, per the project rules. The AI agent can rewrite this\n  // later; until then this is already a valid report.\n  const lines = [];\n  lines.push('Reporte de inventario - ' + bucket.store + ' - ' + today);\n  lines.push('SKUs revisados: ' + bucket.skus + ' | contados hoy: ' + bucket.counted +\n             ' (' + (countsFromTable ? 'conteo por Telegram' : 'conteo.csv') + ')');\n  lines.push('');\n\n  lines.push('DIFERENCIAS (' + bucket.variances.length + ')');\n  if (!bucket.variances.length) {\n    lines.push('  sin diferencias sobre el umbral');\n  } else {\n    for (const v of bucket.variances.slice(0, 15)) {\n      const signo = v.variance > 0 ? 'faltan' : 'sobran';\n      lines.push('  ' + v.sku + ' ' + v.name + ': sistema ' + v.expected +\n                 ', fisico ' + v.physical + ' -> ' + signo + ' ' + Math.abs(v.variance) +\n                 ' (' + clp(Math.abs(v.value)) + ')');\n    }\n    if (bucket.variances.length > 15) lines.push('  ... y ' + (bucket.variances.length - 15) + ' mas');\n    lines.push('  Valor de faltantes: ' + clp(lostValue));\n  }\n  lines.push('');\n\n  lines.push('REPOSICION (' + bucket.reorders.length + ')');\n  if (!bucket.reorders.length) {\n    lines.push('  nada bajo el minimo');\n  } else {\n    for (const r of bucket.reorders.slice(0, 20)) {\n      lines.push('  ' + r.sku + ' ' + r.name + ': quedan ' + r.stock +\n                 ' (min ' + r.threshold + ') -> pedir ' + r.suggested);\n    }\n    if (bucket.reorders.length > 20) lines.push('  ... y ' + (bucket.reorders.length - 20) + ' mas');\n  }\n\n  if (bucket.price_flags.length) {\n    lines.push('');\n    lines.push('PRECIOS A REVISAR (' + bucket.price_flags.length + ')');\n    for (const p of bucket.price_flags.slice(0, 10)) {\n      lines.push('  ' + p.sku + ' ' + p.name + ': ' + p.reason);\n    }\n  }\n\n  let report = lines.join('\\n');\n  if (report.length > 3900) report = report.slice(0, 3890) + '\\n... (truncado)';\n\n  out.push({\n    json: {\n      store: bucket.store,\n      chat_id: CONFIG.stores[bucket.store] ?? CONFIG.fallbackChatId,\n      date: today,\n      count_source: countsFromTable ? 'data_table' : 'csv',\n      counts: {\n        skus: bucket.skus,\n        counted: bucket.counted,\n        variances: bucket.variances.length,\n        reorders: bucket.reorders.length,\n        price_flags: bucket.price_flags.length,\n        lost_value: Math.round(lostValue),\n      },\n      variances: bucket.variances,\n      reorders: bucket.reorders,\n      price_flags: bucket.price_flags,\n      report,\n    },\n  });\n}\n\nreturn out;\n"
+      },
+      "id": "code-Calc-core",
+      "name": "Calc core",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// ======== EDIT THIS BLOCK — everything else is generic ========================\nconst CONFIG = {\n  // Candidate column names for the product key. The first one found in the CSV\n  // header wins. Add the real ControlVentas column name at the front.\n  skuColumns: ['sku', 'codigo', 'código', 'codigo_barras', 'código de barras',\n               'cod_barra', 'barcode', 'ean'],\n\n  // Candidate column names for the other fields we need.\n  nameColumns:  ['nombre', 'descripcion', 'descripción', 'producto', 'name'],\n  stockColumns: ['stock', 'existencia', 'existencias', 'cantidad', 'saldo'],\n  countColumns: ['conteo', 'fisico', 'físico', 'contado', 'cantidad_contada'],\n  soldColumns:  ['vendido', 'ventas', 'cantidad_vendida', 'unidades'],\n  priceColumns: ['precio', 'precio_venta', 'pvp', 'valor'],\n  minColumns:   ['minimo', 'mínimo', 'stock_minimo', 'punto_reorden'],\n  storeColumns: ['local', 'sucursal', 'tienda', 'store', 'bodega'],\n\n  // Reorder rule. 'fixed'    -> reorder when stock <= minimo column (or minDefault)\n  //              'velocity'  -> reorder when stock < avg daily sales * coverDays\n  reorderRule: 'fixed',\n  minDefault: 6,\n  coverDays: 7,\n\n  // Flag a variance only when it is at least this many units (noise filter).\n  varianceThreshold: 1,\n\n  // Flag a price as suspicious when it is 0/blank or moved more than this ratio.\n  priceJumpRatio: 0.25,\n\n  // Stores -> Telegram chat id. Keys must match the values in the store column.\n  // Use one chat id for all three if you want a single group.\n  stores: {\n    'LOCAL 1': 'REPLACE_CHAT_ID_1',\n    'LOCAL 2': 'REPLACE_CHAT_ID_2',\n    'LOCAL 3': 'REPLACE_CHAT_ID_3',\n  },\n\n  // Fallback chat when a row has no recognizable store.\n  fallbackChatId: 'REPLACE_CHAT_ID_1',\n\n  // Cycle count: how many SKUs to dispatch per store per day.\n  cycleCountPerDay: 5,\n};\n// =============================================================================\n\n// ---- helpers ---------------------------------------------------------------\nfunction pick(row, candidates) {\n  const keys = Object.keys(row);\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase() === cand);\n    if (hit !== undefined) return hit;\n  }\n  // second pass: contains\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase().includes(cand));\n    if (hit !== undefined) return hit;\n  }\n  return null;\n}\n\nfunction num(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n\n  let s = String(v).replace(/\\s/g, '').replace(/[$\\u00a0]/g, '');\n  if (!s) return 0;\n\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n\n  let normalized;\n  if (s.includes(',')) {\n    // 1.234,56 — dots are thousands separators, comma is the decimal mark.\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    // 1.290 / 12.990 / 1.234.567 — every group after the first is exactly three\n    // digits, so these are thousands separators, NOT a decimal point.\n    normalized = s.replace(/\\./g, '');\n  } else {\n    normalized = s;\n  }\n\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\n\nfunction key(v) {\n  return String(v ?? '').trim().toUpperCase();\n}\n\nfunction clp(n) {\n  return '$' + Math.round(n).toLocaleString('es-CL');\n}\n\n\nconst stockRows = $('CSV stock').all().map(i => i.json).filter(r => r && Object.keys(r).length);\nif (!stockRows.length) return [];\n\nconst sample = stockRows[0];\nconst COL = {\n  sku:   pick(sample, CONFIG.skuColumns),\n  name:  pick(sample, CONFIG.nameColumns),\n  store: pick(sample, CONFIG.storeColumns),\n};\nif (!COL.sku) throw new Error('No SKU column found for the cycle count.');\n\n// Group SKUs per store, sorted so the rotation is stable day to day.\nconst perStore = new Map();\nfor (const row of stockRows) {\n  const sku = key(row[COL.sku]);\n  if (!sku) continue;\n  const store = COL.store ? key(row[COL.store]) : Object.keys(CONFIG.stores)[0];\n  if (!perStore.has(store)) perStore.set(store, []);\n  perStore.get(store).push({ sku, name: COL.name ? String(row[COL.name] ?? '').trim() : sku });\n}\n\n// Day-of-year drives the window, so the list rotates through the whole catalog\n// and comes back around instead of repeating the same SKUs.\nconst start = new Date(new Date().getFullYear(), 0, 0);\nconst dayOfYear = Math.floor((Date.now() - start) / 86400000);\nconst today = new Date().toLocaleDateString('es-CL');\n\nconst out = [];\nfor (const [store, items] of perStore) {\n  items.sort((a, b) => a.sku.localeCompare(b.sku));\n  const n = CONFIG.cycleCountPerDay;\n  const offset = (dayOfYear * n) % Math.max(items.length, 1);\n  const slice = [];\n  for (let i = 0; i < Math.min(n, items.length); i++) {\n    slice.push(items[(offset + i) % items.length]);\n  }\n\n  const lines = ['Conteo del dia - ' + store + ' - ' + today,\n                 'Contar estos ' + slice.length + ' productos y responder con las cantidades:', ''];\n  slice.forEach((s, i) => lines.push('  ' + (i + 1) + '. ' + s.sku + ' ' + s.name));\n  lines.push('');\n  lines.push('Formato de respuesta: SKU cantidad (uno por linea)');\n\n  out.push({\n    json: {\n      store,\n      chat_id: CONFIG.stores[store] ?? CONFIG.fallbackChatId,\n      skus: slice,\n      report: lines.join('\\n'),\n    },\n  });\n}\n\nreturn out;\n"
+      },
+      "id": "code-Cycle-count-dispatch",
+      "name": "Cycle count dispatch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.report }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "tg-Telegram-report-per-store",
+      "name": "Telegram report per store",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.report }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "tg-Telegram-cycle-count",
+      "name": "Telegram cycle count",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// ======== EDIT THIS BLOCK — everything else is generic ========================\nconst CONFIG = {\n  // Candidate column names for the product key. The first one found in the CSV\n  // header wins. Add the real ControlVentas column name at the front.\n  skuColumns: ['sku', 'codigo', 'código', 'codigo_barras', 'código de barras',\n               'cod_barra', 'barcode', 'ean'],\n\n  // Candidate column names for the other fields we need.\n  nameColumns:  ['nombre', 'descripcion', 'descripción', 'producto', 'name'],\n  stockColumns: ['stock', 'existencia', 'existencias', 'cantidad', 'saldo'],\n  countColumns: ['conteo', 'fisico', 'físico', 'contado', 'cantidad_contada'],\n  soldColumns:  ['vendido', 'ventas', 'cantidad_vendida', 'unidades'],\n  priceColumns: ['precio', 'precio_venta', 'pvp', 'valor'],\n  minColumns:   ['minimo', 'mínimo', 'stock_minimo', 'punto_reorden'],\n  storeColumns: ['local', 'sucursal', 'tienda', 'store', 'bodega'],\n\n  // Reorder rule. 'fixed'    -> reorder when stock <= minimo column (or minDefault)\n  //              'velocity'  -> reorder when stock < avg daily sales * coverDays\n  reorderRule: 'fixed',\n  minDefault: 6,\n  coverDays: 7,\n\n  // Flag a variance only when it is at least this many units (noise filter).\n  varianceThreshold: 1,\n\n  // Flag a price as suspicious when it is 0/blank or moved more than this ratio.\n  priceJumpRatio: 0.25,\n\n  // Stores -> Telegram chat id. Keys must match the values in the store column.\n  // Use one chat id for all three if you want a single group.\n  stores: {\n    'LOCAL 1': 'REPLACE_CHAT_ID_1',\n    'LOCAL 2': 'REPLACE_CHAT_ID_2',\n    'LOCAL 3': 'REPLACE_CHAT_ID_3',\n  },\n\n  // Fallback chat when a row has no recognizable store.\n  fallbackChatId: 'REPLACE_CHAT_ID_1',\n\n  // Cycle count: how many SKUs to dispatch per store per day.\n  cycleCountPerDay: 5,\n};\n// =============================================================================\n\n// ---- helpers ---------------------------------------------------------------\nfunction pick(row, candidates) {\n  const keys = Object.keys(row);\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase() === cand);\n    if (hit !== undefined) return hit;\n  }\n  // second pass: contains\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase().includes(cand));\n    if (hit !== undefined) return hit;\n  }\n  return null;\n}\n\nfunction num(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n\n  let s = String(v).replace(/\\s/g, '').replace(/[$\\u00a0]/g, '');\n  if (!s) return 0;\n\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n\n  let normalized;\n  if (s.includes(',')) {\n    // 1.234,56 — dots are thousands separators, comma is the decimal mark.\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    // 1.290 / 12.990 / 1.234.567 — every group after the first is exactly three\n    // digits, so these are thousands separators, NOT a decimal point.\n    normalized = s.replace(/\\./g, '');\n  } else {\n    normalized = s;\n  }\n\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\n\nfunction key(v) {\n  return String(v ?? '').trim().toUpperCase();\n}\n\nfunction clp(n) {\n  return '$' + Math.round(n).toLocaleString('es-CL');\n}\n\n\nconst OWNER_CHAT_ID = 'REPLACE_OWNER_CHAT_ID';\n\nconst reports = $('Calc core').all().map(i => i.json);\nconst when = new Date().toLocaleString('es-CL');\n\nconst totals = reports.reduce((a, r) => ({\n  variances: a.variances + r.counts.variances,\n  reorders: a.reorders + r.counts.reorders,\n  lost: a.lost + r.counts.lost_value,\n  counted: a.counted + r.counts.counted,\n}), { variances: 0, reorders: 0, lost: 0, counted: 0 });\n\nconst lines = [\n  'Motor de inventario OK - ' + when,\n  '',\n  'Locales procesados: ' + reports.length,\n  'Productos contados: ' + totals.counted +\n    ' (' + (reports[0]?.count_source === 'data_table' ? 'via Telegram' : 'via conteo.csv') + ')',\n  'Diferencias: ' + totals.variances + ' (' + clp(totals.lost) + ')',\n  'Reposiciones: ' + totals.reorders,\n  '',\n  'Si un dia no llega este mensaje, la automatizacion no corrio.',\n];\n\nreturn [{ json: { chat_id: OWNER_CHAT_ID, report: lines.join('\\n') } }];\n"
+      },
+      "id": "code-Heartbeat",
+      "name": "Heartbeat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.report }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "tg-Telegram-heartbeat",
+      "name": "Telegram heartbeat",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Before this runs\n\n1. Set the Google Drive **folder id** in the three \"Find ...\" nodes.\n2. Open **Calc core**, **Cycle count dispatch** and **Heartbeat** and edit the `CONFIG` block at the top:\n   - real Telegram chat ids per store\n   - `OWNER_CHAT_ID` in **Heartbeat** (your own chat)\n   - the real SKU column name (add it first in `skuColumns`)\n3. Attach the Google Drive and Telegram credentials.\n4. Check the CSV **delimiter** in the three \"CSV ...\" nodes — ControlVentas exports are usually `;`.\n\n**Counts:** the `conteos` Data Table is the primary source — stores fill it by replying to the cycle-count message in Telegram (Flow B). `conteo.csv` is only the fallback when the table is empty.",
+        "height": 520,
+        "width": 520,
+        "color": 3
+      },
+      "id": "note-ow1uymei",
+      "name": "Note h045",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -830,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## AI agent goes here\n\nThe Code nodes already emit a finished plain-text `report`.\nWhen you want the AI to rewrite it, insert an AI Agent node between\n**Calc core** and **Telegram**, feed it `{{ $json.report }}`, and map the\nagent output to the Telegram `text` field.\n\nThe AI must never touch the numbers — it only rewrites wording.",
+        "height": 300,
+        "width": 460,
+        "color": 5
+      },
+      "id": "note-pnljy67e",
+      "name": "Note z4qv",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -220
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule daily 09:00": {
+      "main": [
+        [
+          {
+            "node": "Find stock.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Find ventas.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Find conteo.csv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get counts": {
+      "main": [
+        [
+          {
+            "node": "Wait for all inputs",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Find stock.csv": {
+      "main": [
+        [
+          {
+            "node": "Get stock.csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get stock.csv": {
+      "main": [
+        [
+          {
+            "node": "CSV stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSV stock": {
+      "main": [
+        [
+          {
+            "node": "Wait for all inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find ventas.csv": {
+      "main": [
+        [
+          {
+            "node": "Get ventas.csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ventas.csv": {
+      "main": [
+        [
+          {
+            "node": "CSV ventas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSV ventas": {
+      "main": [
+        [
+          {
+            "node": "Wait for all inputs",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Find conteo.csv": {
+      "main": [
+        [
+          {
+            "node": "Get conteo.csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get conteo.csv": {
+      "main": [
+        [
+          {
+            "node": "CSV conteo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSV conteo": {
+      "main": [
+        [
+          {
+            "node": "Wait for all inputs",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Wait for all inputs": {
+      "main": [
+        [
+          {
+            "node": "Calc core",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cycle count dispatch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calc core": {
+      "main": [
+        [
+          {
+            "node": "Telegram report per store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cycle count dispatch": {
+      "main": [
+        [
+          {
+            "node": "Telegram cycle count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram report per store": {
+      "main": [
+        [
+          {
+            "node": "Heartbeat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Heartbeat": {
+      "main": [
+        [
+          {
+            "node": "Telegram heartbeat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

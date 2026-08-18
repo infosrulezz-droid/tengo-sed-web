@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="445" viewBox="0 0 680 445">
+<style>
+  svg { background:#ffffff; font-family:-apple-system,Segoe UI,Roboto,sans-serif; }
+  .th { font-size:13px; font-weight:600; fill:#1e293b; }
+  .ts { font-size:11px; fill:#64748b; }
+  .arr { stroke:#94a3b8; stroke-width:1.5; fill:none; }
+  .c-gray  rect { fill:#f1f5f9; stroke:#94a3b8; }
+  .c-teal  rect { fill:#ccfbf1; stroke:#14b8a6; }
+  .c-purple rect{ fill:#ede9fe; stroke:#8b5cf6; }
+  .c-coral rect { fill:#ffe4e6; stroke:#fb7185; }
+</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="0" y="0" width="680" height="445" fill="#ffffff"/>
+<g class="c-gray"><rect x="60" y="40" width="560" height="50" rx="8"/><text class="th" x="80" y="63" text-anchor="start">Phase 1 — Foundation setup</text><text class="ts" x="80" y="81" text-anchor="start">n8n running, Drive + Telegram connected, file format agreed</text></g>
+<g class="c-teal"><rect x="60" y="103" width="560" height="50" rx="8"/><text class="th" x="80" y="126" text-anchor="start">Phase 2 — Calc core node</text><text class="ts" x="80" y="144" text-anchor="start">the Code node that outputs variances, reorders, price flags</text></g>
+<g class="c-teal"><rect x="60" y="166" width="560" height="50" rx="8"/><text class="th" x="80" y="189" text-anchor="start">Phase 3 — Flow A reports</text><text class="ts" x="80" y="207" text-anchor="start">schedule to read to merge to calc to AI to Telegram per store</text></g>
+<g class="c-teal"><rect x="60" y="229" width="560" height="50" rx="8"/><text class="th" x="80" y="252" text-anchor="start">Phase 4 — Cycle-count branch</text><text class="ts" x="80" y="270" text-anchor="start">dispatch 5 rotating SKUs per store each day</text></g>
+<g class="c-purple"><rect x="60" y="292" width="560" height="50" rx="8"/><text class="th" x="80" y="315" text-anchor="start">Phase 5 — Flow B commands</text><text class="ts" x="80" y="333" text-anchor="start">Telegram slash-command listener, one command at a time</text></g>
+<g class="c-purple"><rect x="60" y="355" width="560" height="50" rx="8"/><text class="th" x="80" y="378" text-anchor="start">Phase 6 — Go live</text><text class="ts" x="80" y="396" text-anchor="start">real data, real schedule, error handling, monitoring</text></g>
+<line x1="340" y1="90" x2="340" y2="99" class="arr" marker-end="url(#arrow)"/>
+<line x1="340" y1="153" x2="340" y2="162" class="arr" marker-end="url(#arrow)"/>
+<line x1="340" y1="216" x2="340" y2="225" class="arr" marker-end="url(#arrow)"/>
+<line x1="340" y1="279" x2="340" y2="288" class="arr" marker-end="url(#arrow)"/>
+<line x1="340" y1="342" x2="340" y2="351" class="arr" marker-end="url(#arrow)"/>
+</svg>

@@ -220,6 +220,21 @@ const server = http.createServer((req, res) => {
   }
 
   // ── POST /api/save ───────────────────────────────────────────────
+  // Persist admin click-bot page edits so they replay on refresh.
+  if (req.method === 'POST' && req.url === '/api/save-page-edits') {
+    collectBody(req).then(raw => {
+      const edits = JSON.parse(raw);
+      const safeEdits = Array.isArray(edits) ? edits : [];
+      fs.writeFileSync(path.join(ROOT, 'page_edits.json'), JSON.stringify(safeEdits, null, 2), 'utf8');
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: true, total: safeEdits.length}));
+    }).catch(e => {
+      res.writeHead(500, {'Content-Type':'application/json'});
+      res.end(JSON.stringify({ok: false, error: e.message}));
+    });
+    return;
+  }
+
   if (req.method === 'POST' && req.url === '/api/save') {
     collectBody(req)
       .then(raw => {

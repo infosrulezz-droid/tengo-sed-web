@@ -348,7 +348,7 @@
     position: relative; overflow: hidden;
     user-select: none;
     /* min-height so hero shows even before JS loads */
-    min-height: 420px;
+    min-height: 520px;
   }
 
   .hero-track {
@@ -358,7 +358,7 @@
   }
 
   .hslide {
-    min-width: 100%; height: 420px;
+    min-width: 100%; height: 520px;
     position: relative; display: flex;
     align-items: center; overflow: hidden; flex-shrink: 0;
   }
@@ -460,9 +460,9 @@
   .hpromo-grad {
     position: absolute; inset: 0; z-index: 1;
     background: linear-gradient(to top,
-      rgba(0,0,0,.82) 0%,
-      rgba(0,0,0,.40) 28%,
-      rgba(0,0,0,.0)  55%);
+      rgba(0,0,0,.38) 0%,
+      rgba(0,0,0,.18) 28%,
+      rgba(0,0,0,.0)  62%);
     pointer-events: none;
   }
   /* Right-side variant — gradient comes from the right */
@@ -478,7 +478,7 @@
   /* Promo content anchors above MINSAL bar (bar = ~18% height = ~75px at 420px) */
   .hslide-promo .hcontent {
     position: absolute;
-    bottom: 96px; left: 36px;
+    bottom: 120px; left: 36px;
     top: auto; max-width: 480px;
     padding: 0;
     animation: slideInL .6s var(--ease-out) .1s both;
@@ -494,12 +494,9 @@
   .hslide-promo .htitle { display: none; }
   .hslide-promo .hsub   { display: none; }
   /* Keep price badge + CTA visible */
-  .hslide-promo .hprice-badge {
-    margin-bottom: 14px;
-    display: inline-block;
-  }
+  .hslide-promo .hprice-badge,
   .hslide-promo .hcta {
-    display: inline-flex;
+    display: none;
   }
 
   .hprice-badge {
@@ -1093,7 +1090,8 @@
 
   /* ── RESPONSIVE ────────────────────────────────────────── */
   @media(max-width:768px){
-    .hslide { height: 300px; }
+    .hero { min-height: 360px; }
+    .hslide { height: 360px; }
     .hcontent { padding: 0 22px; max-width: 100%; }
     .htitle { font-size: 28px; }
     .hprev { display: none; }
@@ -1638,6 +1636,7 @@ Promise.all([
   buildSecs();
   if(IS_ADMIN){ ceoInit(); buildHeroAdminBtns(); }
   loadHeroConfig();
+  loadPageEdits();
   setTimeout(function(){
     var l = document.getElementById('loader');
     l.classList.add('out');
@@ -2454,6 +2453,7 @@ function renderCEO(report, ok, warn, err){
 
 var uNoteTarget = null;
 var NOTE_SKIP  = '#notePanel,#edit-toolbar,#prodModal,.hslide-admin,.admin-bar,#ceo-widget,.fab-group,.save-badge,.toast-box,#fabTop,#fabWA,.np,.pmod-overlay,.loading-screen,.nc,.cpill,.hcta,.harr,.hdot,.fab-btn,#navCats,#srch,.cart-btn,.nav-row2';
+var pageEdits  = [];
 
 /* ── Universal click → edit panel (no toggle needed) ───── */
 if(IS_ADMIN){
@@ -2712,6 +2712,19 @@ function ceoNoteChain(pending, allNotes, idx){
 function ceoSimpleParse(note){
   var ins = note.instruction;
   var low = ins.toLowerCase();
+  var colorMap = {
+    rojo:'#E11D48', red:'#E11D48', naranja:'#F97316', orange:'#F97316',
+    amarillo:'#FACC15', yellow:'#FACC15', verde:'#22C55E', green:'#22C55E',
+    azul:'#0EA5E9', blue:'#0EA5E9', negro:'#0F172A', black:'#0F172A',
+    blanco:'#FFFFFF', white:'#FFFFFF', dorado:'#F5C451', gold:'#F5C451',
+    rosado:'#EC4899', pink:'#EC4899', morado:'#8B5CF6', purple:'#8B5CF6'
+  };
+  function pickColor(fallback){
+    var hex = ins.match(/#[0-9a-fA-F]{3,6}/);
+    if(hex) return hex[0];
+    for(var k in colorMap){ if(low.indexOf(k) >= 0) return colorMap[k]; }
+    return fallback;
+  }
   /* Price */
   if(/precio|price/i.test(low)){
     var p = ins.match(/\d[\d.,]*/);
@@ -2723,16 +2736,13 @@ function ceoSimpleParse(note){
     return {action:'update_text', value: m2 ? m2[1] : ins};
   }
   /* Delete */
-  if(/borra|elimin|quita|remov|delet/i.test(low)) return {action:'delete_element'};
+  if(/borra|elimin|quita|remov|delet|oculta|hide/i.test(low)) return {action:'delete_element'};
+  if(/fondo|background|bg/i.test(low)){
+    return {action:'change_bg', value: pickColor('#0F172A')};
+  }
   /* Color */
   if(/color/i.test(low)){
-    var col = ins.match(/#[0-9a-fA-F]{3,6}/);
-    return {action:'change_color', value: col ? col[0] : '#0096C7'};
-  }
-  /* Background */
-  if(/fondo|background|bg/i.test(low)){
-    var bg = ins.match(/#[0-9a-fA-F]{3,6}/);
-    return {action:'change_bg', value: bg ? bg[0] : '#0F172A'};
+    return {action:'change_color', value: pickColor('#0096C7')};
   }
   return {action:'manual', note: ins};
 }
@@ -2748,6 +2758,7 @@ function executeCEOAction(note, action, allNotes){
       if(tgt){
         var inner = tgt.querySelector('h1,h2,h3,h4,h5,p,span,.htitle,.hsub,.hey,.pc-name') || tgt;
         inner.textContent = action.value;
+        rememberPageEdit(inner, {action:'update_text', value:action.value});
         msg = 'Texto → "' + String(action.value).slice(0,30) + '"';
         toast('🤖 CEO: ' + msg);
       } else { msg = 'Elemento no encontrado'; toast('⚠️ CEO: '+msg); }
@@ -2764,14 +2775,14 @@ function executeCEOAction(note, action, allNotes){
       } else { msg='Producto no encontrado'; toast('⚠️ CEO: '+msg); }
       break;
     case 'delete_element':
-      if(el){ el.remove(); msg='Elemento eliminado'; toast('🤖 CEO: eliminado'); }
+      if(el){ rememberPageEdit(el, {action:'delete_element'}); el.remove(); msg='Elemento eliminado'; toast('🤖 CEO: eliminado'); }
       else { msg='Ya no existe'; }
       break;
     case 'change_color':
-      if(el){ el.style.color=action.value; msg='Color → '+action.value; toast('🤖 CEO: color cambiado'); }
+      if(el){ el.style.color=action.value; rememberPageEdit(el, {action:'change_color', value:action.value}); msg='Color → '+action.value; toast('🤖 CEO: color cambiado'); }
       break;
     case 'change_bg':
-      if(el){ el.style.background=action.value; msg='Fondo → '+action.value; toast('🤖 CEO: fondo cambiado'); }
+      if(el){ el.style.background=action.value; rememberPageEdit(el, {action:'change_bg', value:action.value}); msg='Fondo → '+action.value; toast('🤖 CEO: fondo cambiado'); }
       break;
     case 'manual':
       msg = (action.note||'').slice(0,60);
@@ -2792,6 +2803,57 @@ function findElByContent(txt){
     if((all[i].textContent||'').toLowerCase().includes(needle)) return all[i];
   }
   return null;
+}
+
+function loadPageEdits(){
+  var local = [];
+  try{ local = JSON.parse(localStorage.getItem('ts_page_edits') || '[]'); }catch(e){}
+  fetch('/page_edits.json?' + Date.now(), {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : local; })
+    .then(function(edits){
+      pageEdits = Array.isArray(edits) ? edits : [];
+      if(!pageEdits.length && local.length) pageEdits = local;
+      pageEdits.forEach(applyPageEdit);
+    })
+    .catch(function(){
+      pageEdits = local;
+      pageEdits.forEach(applyPageEdit);
+    });
+}
+
+function applyPageEdit(edit){
+  if(!edit || !edit.selector || !edit.action) return;
+  var el = null;
+  try{ el = document.querySelector(edit.selector); }catch(e){}
+  if(!el) return;
+  if(edit.action === 'update_text') el.textContent = edit.value || '';
+  if(edit.action === 'change_color') el.style.color = edit.value || '';
+  if(edit.action === 'change_bg') el.style.background = edit.value || '';
+  if(edit.action === 'delete_element') el.remove();
+}
+
+function rememberPageEdit(el, action){
+  if(!el || !action || action.action === 'manual') return;
+  var edit = {
+    selector: getElSelector(el),
+    action: action.action,
+    value: action.value || '',
+    saved: new Date().toISOString()
+  };
+  pageEdits = pageEdits.filter(function(e){
+    return !(e.selector === edit.selector && e.action === edit.action);
+  });
+  pageEdits.push(edit);
+  try{ localStorage.setItem('ts_page_edits', JSON.stringify(pageEdits)); }catch(e){}
+  fetch('/api/save-page-edits', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(pageEdits)
+  }).then(function(r){
+    if(r.ok) showSaveBadge('Cambio guardado en la pagina');
+  }).catch(function(){
+    showSaveBadge('Cambio guardado en este navegador');
+  });
 }
 
 function markNoteDone(note, allNotes, result){

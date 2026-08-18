@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="508" viewBox="0 0 680 508">
+<style>
+  svg { background:#ffffff; font-family:-apple-system,Segoe UI,Roboto,sans-serif; }
+  .th { font-size:13px; font-weight:600; fill:#1e293b; }
+  .ts { font-size:11px; fill:#64748b; }
+  .arr { stroke:#94a3b8; stroke-width:1.5; fill:none; }
+  .c-gray  rect { fill:#f1f5f9; stroke:#94a3b8; }
+  .c-teal  rect { fill:#ccfbf1; stroke:#14b8a6; }
+  .c-purple rect{ fill:#ede9fe; stroke:#8b5cf6; }
+  .c-coral rect { fill:#ffe4e6; stroke:#fb7185; }
+</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="0" y="0" width="680" height="508" fill="#ffffff"/>
+<g class="c-gray"><rect x="190" y="40" width="200" height="56" rx="8"/><text class="th" x="290" y="64" text-anchor="middle">Telegram trigger</text><text class="ts" x="290" y="82" text-anchor="middle">listens for commands</text></g>
+<g class="c-teal"><rect x="190" y="136" width="200" height="56" rx="8"/><text class="th" x="290" y="160" text-anchor="middle">Switch</text><text class="ts" x="290" y="178" text-anchor="middle">routes by command</text></g>
+<g class="c-teal"><rect x="190" y="232" width="200" height="44" rx="8"/><text class="th" x="290" y="258" text-anchor="middle">Query data</text></g>
+<g class="c-purple"><rect x="190" y="316" width="200" height="56" rx="8"/><text class="th" x="290" y="340" text-anchor="middle">AI agent</text><text class="ts" x="290" y="358" text-anchor="middle">formats the answer</text></g>
+<g class="c-purple"><rect x="190" y="412" width="200" height="56" rx="8"/><text class="th" x="290" y="436" text-anchor="middle">Reply</text><text class="ts" x="290" y="454" text-anchor="middle">sends to Telegram</text></g>
+<line x1="290" y1="100" x2="290" y2="132" class="arr" marker-end="url(#arrow)"/>
+<line x1="290" y1="196" x2="290" y2="228" class="arr" marker-end="url(#arrow)"/>
+<line x1="290" y1="280" x2="290" y2="312" class="arr" marker-end="url(#arrow)"/>
+<line x1="290" y1="376" x2="290" y2="408" class="arr" marker-end="url(#arrow)"/>
+</svg>

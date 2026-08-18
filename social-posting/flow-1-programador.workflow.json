@@ -1,0 +1,146 @@
+{
+  "name": "Social — Programador",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "5 12 * * 1-6"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "30 13 * * 1-6"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "5 13 * * 0"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "30 14 * * 0"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "23 15 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "0 16 * * 5,6"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "0 19 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "30 20 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "20 21 * * *"
+            },
+            {
+              "field": "cronExpression",
+              "expression": "0 23 * * 5,6"
+            }
+          ]
+        }
+      },
+      "id": "horarios-tengo-sed",
+      "name": "Horarios Tengo Sed",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -420,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Stamps which slot fired, so the publisher and the ledger agree on \"when\".\nconst now = new Date();\nconst santiago = new Intl.DateTimeFormat('es-CL', {\n  timeZone: 'America/Santiago',\n  weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false,\n}).format(now);\n\nreturn [{ json: {\n  slot: santiago,\n  firedAt: now.toISOString(),\n} }];"
+      },
+      "id": "marcar-el-slot",
+      "name": "Marcar el slot",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "REPLACE_PUBLICADOR_WORKFLOW_ID",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": []
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "publicar",
+      "name": "Publicar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Flow 1 — the clock\n\n10 cron rules covering all 46 weekly slots:\n\n- `5 12 * * 1-6`  Mon-Sat 12:05\n- `30 13 * * 1-6`  Mon-Sat 13:30\n- `5 13 * * 0`  Sun 13:05\n- `30 14 * * 0`  Sun 14:30\n- `23 15 * * *`  daily 15:23\n- `0 16 * * 5,6`  Fri-Sat 16:00\n- `0 19 * * *`  daily 19:00\n- `30 20 * * *`  daily 20:30\n- `20 21 * * *`  daily 21:20\n- `0 23 * * 5,6`  Fri-Sat 23:00\n\n**Timezone is set on the workflow** (Settings -> Timezone = America/Santiago). If that is wrong every slot lands 4 hours off.\n\nSet **Publicar -> Workflow** to the \"Social — Publicador\" workflow after you import it.",
+        "width": 520,
+        "height": 400,
+        "color": 2
+      },
+      "id": "note-tz1o",
+      "name": "Note tz1o",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -430,
+        -60
+      ]
+    }
+  ],
+  "connections": {
+    "Horarios Tengo Sed": {
+      "main": [
+        [
+          {
+            "node": "Marcar el slot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar el slot": {
+      "main": [
+        [
+          {
+            "node": "Publicar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Santiago",
+    "saveManualExecutions": true
+  },
+  "pinData": {}
+}

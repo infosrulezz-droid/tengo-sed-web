@@ -4,6 +4,16 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Tengo Sed — Licores Premium en Iquique 🍺⚽</title>
+<meta name="description" content="Botillería en Iquique con delivery express 30–60 min. Cervezas, whisky, pisco, vinos y promos. Pedí por WhatsApp al +56 9 9238 0324. 3 sucursales."/>
+<meta name="theme-color" content="#023E8A"/>
+<link rel="canonical" href="https://tengo-sed.cl/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Tengo Sed"/>
+<meta property="og:title" content="Tengo Sed — Licores Premium en Iquique"/>
+<meta property="og:description" content="Delivery de licores en Iquique en 30–60 min. Pedí por WhatsApp."/>
+<meta property="og:image" content="https://tengo-sed.cl/logo.png"/>
+<meta property="og:locale" content="es_CL"/>
+<meta name="twitter:card" content="summary_large_image"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -17,7 +27,7 @@
   --border:   #E2E8F0;
   --border2:  #CBD5E1;
   --text:     #1E293B;
-  --muted:    #64748B;
+  --muted:    #5A677A;
   --dim:      #94A3B8;
   --blue:     #023E8A;
   --cyan:     #0096C7;
@@ -30,6 +40,9 @@
   --wc-red:   #D4001A;
   --wc-blue:  #003087;
   --navy:     #0F172A;
+  /* WCAG AA text variants — the bright brand tones fail 4.5:1 as text */
+  --cyan-text:#00769D;   /* 5.15:1 on white  (was #0096C7 @ 3.39) */
+  --green-text:#15803d;  /* 5.02:1 on white  (was #16a34a @ 3.30) */
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -61,7 +74,7 @@ button{cursor:pointer;font-family:inherit}
 .btn-wa:hover{background:#1ebe5d;transform:translateY(-2px)}
 .section-label{
   display:inline-block;font-size:11px;font-weight:800;letter-spacing:3px;
-  text-transform:uppercase;color:var(--cyan);margin-bottom:12px;
+  text-transform:uppercase;color:var(--cyan-text);margin-bottom:12px;
 }
 .section-title{
   font-family:'Anton',sans-serif;font-size:clamp(32px,5vw,56px);
@@ -141,7 +154,7 @@ button{cursor:pointer;font-family:inherit}
   padding:32px 28px;max-width:420px;width:100%;position:relative;
   box-shadow:0 24px 64px rgba(0,0,0,.2);
 }
-.pm-close{
+.pm-close{min-width:44px;min-height:44px;
   position:absolute;top:16px;right:16px;
   background:var(--bg3);border:1px solid var(--border);color:var(--muted);
   width:32px;height:32px;border-radius:50%;font-size:16px;
@@ -170,8 +183,9 @@ button{cursor:pointer;font-family:inherit}
 }
 .pm-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(34,197,94,.4)}
 .pm-skip{
-  display:block;text-align:center;font-size:12px;color:var(--dim);
+  display:block;text-align:center;font-size:13px;color:var(--muted);
   margin-top:12px;cursor:pointer;transition:.15s;
+  min-height:44px;line-height:44px;
 }
 .pm-skip:hover{color:var(--muted)}
 
@@ -208,7 +222,7 @@ button{cursor:pointer;font-family:inherit}
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   box-shadow:0 1px 3px rgba(0,0,0,.06);
 }
-.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-logo{display:flex;align-items:center;gap:8px;min-height:44px}
 .nav-logo img{height:38px;width:auto}
 .nav-links{display:flex;gap:4px}
 .nav-links a{
@@ -457,8 +471,8 @@ button{cursor:pointer;font-family:inherit}
 }
 .suc-card:hover{border-color:var(--cyan2);box-shadow:0 8px 24px rgba(0,150,199,.12);transform:translateY(-4px)}
 .suc-tag{
-  display:inline-block;font-size:9px;font-weight:900;letter-spacing:2px;
-  text-transform:uppercase;color:var(--cyan);
+  display:inline-block;font-size:11px;font-weight:900;letter-spacing:2px;
+  text-transform:uppercase;color:var(--cyan-text);
   background:rgba(0,150,199,.1);border:1px solid rgba(0,150,199,.25);
   padding:3px 10px;border-radius:50px;margin-bottom:16px;
 }
@@ -510,10 +524,10 @@ button{cursor:pointer;font-family:inherit}
   display:flex;align-items:center;gap:6px;flex-shrink:0;
   background:#ffffff;border:1.5px solid var(--border);
   color:var(--muted);padding:8px 16px;border-radius:50px;
-  font-size:13px;font-weight:700;transition:.15s;
+  font-size:13px;font-weight:700;transition:.15s;min-height:44px;
   box-shadow:0 1px 2px rgba(0,0,0,.04);
 }
-.cat-btn:hover{border-color:var(--cyan2);color:var(--cyan)}
+.cat-btn:hover{border-color:var(--cyan2);color:var(--cyan-text)}
 .cat-btn.active{
   background:linear-gradient(135deg,var(--blue),var(--cyan));
   border-color:transparent;color:#fff;
@@ -544,7 +558,7 @@ button{cursor:pointer;font-family:inherit}
   line-height:1.3;margin-bottom:6px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
-.prod-price{font-size:16px;font-weight:900;color:var(--cyan)}
+.prod-price{font-size:16px;font-weight:900;color:var(--cyan-text)}
 .prod-price.locked{
   filter:blur(8px);user-select:none;
   background:linear-gradient(90deg,#94a3b8,#cbd5e1,#94a3b8);
@@ -563,16 +577,18 @@ button{cursor:pointer;font-family:inherit}
 .prod-wa-btn{
   display:flex;align-items:center;justify-content:center;gap:6px;
   background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);
-  color:#16a34a;border-radius:8px;padding:8px;
-  font-size:11px;font-weight:800;transition:.15s;margin-top:8px;width:100%;
+  color:var(--green-text);border-radius:8px;padding:8px;
+  font-size:12px;font-weight:800;transition:.15s;margin-top:8px;width:100%;
+  min-height:44px;
 }
-.prod-wa-btn:hover{background:rgba(37,211,102,.15);color:#15803d}
+.prod-wa-btn:hover{background:rgba(37,211,102,.15);color:#166534}
 .section-header-row{
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:20px;
 }
 .view-all{
-  font-size:13px;font-weight:700;color:var(--cyan);
+  font-size:13px;font-weight:700;color:var(--cyan-text);
+  min-height:44px;display:inline-flex;align-items:center;gap:6px;
   background:rgba(0,150,199,.08);border:1.5px solid rgba(0,150,199,.25);
   padding:7px 16px;border-radius:50px;transition:.15s;
 }
@@ -699,11 +715,11 @@ footer::after{
 }
 .social-btn:hover{color:#fff;background:linear-gradient(135deg,#833AB4,#FD1D1D,#FCAF45);border-color:transparent;transform:translateY(-2px)}
 .social-btn.wa:hover{background:#25D366;border-color:transparent}
-.footer-col h5{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan2);margin-bottom:16px;opacity:.8}
+.footer-col h3,.footer-col h5{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan2);margin-bottom:16px;opacity:.8}
 .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
 .footer-col a{font-size:13px;color:rgba(255,255,255,.5);transition:.15s}
 .footer-col a:hover{color:#fff;padding-left:4px}
-.footer-hours h5{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan2);margin-bottom:16px;opacity:.8}
+.footer-hours h3,.footer-hours h5{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--cyan2);margin-bottom:16px;opacity:.8}
 .hours-row{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;line-height:1.6}
 .hours-row strong{color:#fff}
 .footer-bottom{
@@ -916,6 +932,23 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
   padding:14px 0;
 }
 .search-input::placeholder{color:var(--dim)}
+/* a11y: the inputs kill their own outline, so the wrapper shows focus */
+.search-row:focus-within{
+  border-color:var(--cyan-text);
+  box-shadow:0 0 0 3px rgba(0,118,157,.28);
+}
+.phone-row:focus-within{
+  box-shadow:0 0 0 3px rgba(0,118,157,.28);
+}
+.np-textarea:focus-visible{
+  outline:3px solid var(--cyan-text);outline-offset:2px;
+}
+/* every interactive element gets a visible keyboard ring */
+a:focus-visible,button:focus-visible,
+input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--cyan-text);
+  outline-offset:2px;border-radius:4px;
+}
 .search-clear{
   background:none;border:none;color:var(--dim);font-size:14px;
   padding:4px 6px;cursor:pointer;border-radius:6px;transition:.15s;display:none;
@@ -934,7 +967,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
 .express-step-link{cursor:pointer;border-color:var(--cyan2)!important}
 .express-step-link:hover{background:linear-gradient(135deg,rgba(0,150,199,.04),rgba(0,180,216,.02))!important}
 .step-hint{
-  font-size:11px;font-weight:700;color:var(--cyan);
+  font-size:12px;font-weight:700;color:var(--cyan-text);
   margin-top:8px;opacity:.8;
 }
 
@@ -1055,17 +1088,74 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
 }
 .mob-menu.open{right:0}
 .mob-overlay.open{display:block}
-.mob-close{
+.mob-close{min-width:44px;min-height:44px;
   background:var(--bg3);border:1px solid var(--border);color:var(--muted);
   width:36px;height:36px;border-radius:10px;font-size:18px;
   display:flex;align-items:center;justify-content:center;align-self:flex-end;margin-bottom:16px;
 }
-.mob-link{
+.mob-link{min-height:44px;
   display:flex;align-items:center;gap:10px;
   padding:12px 16px;border-radius:12px;color:var(--muted);font-weight:600;font-size:14px;
   transition:.15s;
 }
 .mob-link:hover{background:var(--bg3);color:var(--text)}
+
+/* ═══════════════════════════════════════════════════
+   CANVA-STYLE INLINE EDITOR  (admin only)
+   Every rule below is scoped to body.admin-mode so
+   nothing here can reach a customer's browser.
+════════════════════════════════════════════════════ */
+
+body.admin-mode.editing [data-ts-editable]:hover{
+  outline:2px dashed rgba(0,150,199,.85);
+  outline-offset:3px;border-radius:4px;cursor:text;
+  background:rgba(0,150,199,.06);
+}
+body.admin-mode [data-ts-editing]{
+  outline:2px solid var(--cyan) !important;
+  outline-offset:3px;border-radius:4px;
+  background:rgba(0,150,199,.09);cursor:text;
+}
+
+.edit-banner{
+  display:none;position:fixed;left:50%;transform:translateX(-50%);
+  top:8px;z-index:1200;background:var(--navy);color:#fff;
+  padding:8px 16px;border-radius:50px;font-size:12px;font-weight:700;
+  align-items:center;gap:10px;box-shadow:0 6px 24px rgba(0,0,0,.28);
+}
+body.admin-mode.editing .edit-banner{display:inline-flex}
+.edit-banner kbd{
+  background:rgba(255,255,255,.16);border-radius:4px;
+  padding:2px 6px;font-family:ui-monospace,Menlo,monospace;font-size:11px;
+}
+
+.save-badge{
+  position:fixed;right:16px;bottom:96px;z-index:1200;
+  background:var(--navy);color:#fff;padding:11px 18px;border-radius:50px;
+  font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;
+  box-shadow:0 6px 24px rgba(0,0,0,.28);
+  opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .2s ease-out,transform .2s ease-out;
+}
+.save-badge.show{opacity:1;transform:translateY(0)}
+.save-badge.err{background:#b91c1c}
+
+.admin-bar .ab-btn{min-height:44px}
+.admin-bar .ab-btn:focus-visible,
+.np-save:focus-visible,.np-cancel:focus-visible,.np-close:focus-visible{
+  outline:3px solid var(--gold);outline-offset:2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .ticker-track{animation:none !important}
+  .slide-bg{transition:none !important}
+}
 </style>
 </head>
 <body>
@@ -1074,7 +1164,11 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
 <div class="admin-bar" id="adminBar">
   <div class="ab-left">
     <span class="ab-badge">🔐 Admin Mode</span>
-    <button class="ab-btn" id="btnAnnotate" onclick="toggleAnnotate()">✏️ Anotar</button>
+    <button class="ab-btn" id="btnEdit" onclick="toggleEditMode()" aria-pressed="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      Editar texto
+    </button>
+    <button class="ab-btn" id="btnAnnotate" onclick="toggleAnnotate()" aria-pressed="false">✏️ Anotar</button>
     <button class="ab-btn" id="btnNotes" onclick="toggleNotesPanel()">
       📋 Notas <span class="ab-count" id="notesCount">0</span>
     </button>
@@ -1092,7 +1186,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
     <button class="np-close" onclick="closePopover()">✕</button>
   </div>
   <div class="np-target" id="npTarget">sección seleccionada</div>
-  <textarea class="np-textarea" id="npTextarea" placeholder="Describe el cambio que necesitas en esta sección..."></textarea>
+  <textarea class="np-textarea" id="npTextarea" aria-label="Describe el cambio que necesitas en esta sección" placeholder="Describe el cambio que necesitas en esta sección..."></textarea>
   <div class="np-colors">
     <span class="np-color-label">Color:</span>
     <div class="np-color selected" data-color="#0096C7" style="background:#0096C7" onclick="selectColor(this)"></div>
@@ -1123,6 +1217,14 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
 <!-- Annotate toast -->
 <div class="annotate-toast" id="annotateToast"></div>
 
+<!-- Canva editor chrome (admin only — CSS keeps these hidden otherwise) -->
+<div class="edit-banner" id="editBanner" role="status">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+  <span>Modo edicion — clic en cualquier texto</span>
+  <kbd>Enter</kbd> guarda · <kbd>Esc</kbd> cancela
+</div>
+<div class="save-badge" id="saveBadge" role="status" aria-live="polite"></div>
+
 <!-- ═══════ AGE GATE ═══════════════════════════════ -->
 <div id="ageGate">
   <div class="age-bg"></div>
@@ -1149,7 +1251,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
     <p class="pm-sub">Ingresa tu número de WhatsApp para ver todos los precios y recibir ofertas exclusivas 🔥</p>
     <div class="phone-row">
       <span class="phone-flag">🇨🇱 +56</span>
-      <input class="phone-input" id="phoneInput" type="tel" placeholder="9 XXXX XXXX" maxlength="9"/>
+      <input class="phone-input" id="phoneInput" type="tel" inputmode="numeric" autocomplete="tel-national" aria-label="Tu número de WhatsApp, 9 dígitos" placeholder="9 XXXX XXXX" maxlength="9"/>
     </div>
     <button class="pm-submit" onclick="unlockPrices()">
       Desbloquear Precios 🔓
@@ -1392,7 +1494,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
     <!-- BUSCADOR -->
     <div class="search-row">
       <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="search" class="search-input" id="searchInput" placeholder="Buscar producto, marca o categoría..."
+      <input type="search" class="search-input" id="searchInput" aria-label="Buscar producto, marca o categoría" placeholder="Buscar producto, marca o categoría..."
         oninput="filterSearch(this.value)" autocomplete="off"/>
       <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Limpiar">✕</button>
     </div>
@@ -1629,7 +1731,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
       </div>
     </div>
     <nav>
-      <h5>Navegación</h5>
+      <h3>Navegación</h3>
       <ul>
         <li><a href="#">Inicio</a></li>
         <li><a href="#productos">Productos</a></li>
@@ -1639,7 +1741,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
       </ul>
     </nav>
     <nav>
-      <h5>Categorías</h5>
+      <h3>Categorías</h3>
       <ul>
         <li><a href="#" onclick="filterCat('cerveza',null);return false">🍺 Cerveza</a></li>
         <li><a href="#" onclick="filterCat('whisky',null);return false">🥃 Whisky</a></li>
@@ -1649,7 +1751,7 @@ body.annotating *:hover:not(script):not(style):not(.admin-bar):not(.admin-bar *)
       </ul>
     </nav>
     <div class="footer-hours">
-      <h5>Atención</h5>
+      <h3>Atención</h3>
       <div class="hours-row"><strong>Dom–Jue:</strong> 12:00 PM – 1:00 AM</div>
       <div class="hours-row"><strong>Vie–Sáb:</strong> 12:00 PM – 3:00 AM</div>
       <div class="hours-row" style="margin-top:16px">
@@ -1968,6 +2070,7 @@ let notes = [];
   if(p.get('admin')==='1' || p.get('admin')==='true'){
     document.body.classList.add('admin-mode');
     loadNotes();
+    loadPageEdits();
     renderNoteMarkers();
     updateCount();
     // Skip age gate in admin mode
@@ -2106,6 +2209,7 @@ function saveNote(){
   };
   notes.push(note);
   saveNotes();
+  pushNoteToCEO(note);
   closePopover();
   showToast('✅ Nota guardada (#' + notes.length + ')');
 }
@@ -2189,6 +2293,193 @@ function exportNotes(){
   document.body.appendChild(a); a.click();
   setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1000);
   showToast('📤 Notas exportadas!');
+}
+
+
+/* ═══════════════════════════════════════════════════
+   CANVA-STYLE INLINE EDITOR + CEO AGENT BRIDGE
+   ---------------------------------------------------
+   Hard rule: every entry point below returns early
+   unless body.admin-mode is present. Nothing in this
+   block can fire for a normal visitor.
+════════════════════════════════════════════════════ */
+
+const EDITS_KEY = 'ts_page_edits';
+let editing   = false;
+let pageEdits = [];
+
+function isAdmin(){ return document.body.classList.contains('admin-mode'); }
+
+const EDIT_SKIP = '.admin-bar,.note-popover,.notes-panel,.note-marker,' +
+                  '.edit-banner,.save-badge,.annotate-toast,#ageGate,' +
+                  '#phoneModal,#prodModal,.mob-menu,.mob-overlay,script,style';
+
+const EDIT_OK = 'h1,h2,h3,h4,h5,h6,p,span,a,li,strong,em,b,label,div';
+
+function getElSelector(el){
+  if(!el || el === document.body) return 'body';
+  if(el.id) return '#' + CSS.escape(el.id);
+  const parts = [];
+  let cur = el;
+  while(cur && cur !== document.body && parts.length < 6){
+    const first = (cur.className && typeof cur.className === 'string')
+      ? cur.className.trim().split(/\s+/).filter(function(c){ return !c.startsWith('u-') && c !== 'reveal' && c !== 'visible'; })[0]
+      : '';
+    const cls = first ? '.' + CSS.escape(first) : '';
+    const idx = cur.parentElement
+      ? Array.prototype.indexOf.call(cur.parentElement.children, cur) + 1 : 1;
+    parts.unshift(cur.tagName.toLowerCase() + cls + ':nth-child(' + idx + ')');
+    cur = cur.parentElement;
+  }
+  return parts.join(' > ');
+}
+
+function toggleEditMode(){
+  if(!isAdmin()) return;
+  editing = !editing;
+  document.body.classList.toggle('editing', editing);
+  const btn = document.getElementById('btnEdit');
+  if(btn){
+    btn.classList.toggle('active', editing);
+    btn.setAttribute('aria-pressed', editing ? 'true' : 'false');
+  }
+  if(editing && annotating) toggleAnnotate();
+  if(editing){ markEditable(); } else { unmarkEditable(); }
+  showToast(editing
+    ? 'Modo edicion activo - clic en cualquier texto para cambiarlo'
+    : 'Modo edicion desactivado');
+}
+
+function markEditable(){
+  document.querySelectorAll(EDIT_OK).forEach(function(el){
+    if(el.closest(EDIT_SKIP)) return;
+    const own = Array.from(el.childNodes)
+      .filter(function(n){ return n.nodeType === 3; })
+      .map(function(n){ return n.textContent; }).join('').trim();
+    if(!own) return;
+    const r = el.getBoundingClientRect();
+    if(r.width < 8 || r.height < 8) return;
+    el.setAttribute('data-ts-editable','');
+  });
+}
+function unmarkEditable(){
+  document.querySelectorAll('[data-ts-editable]').forEach(function(el){
+    el.removeAttribute('data-ts-editable');
+  });
+}
+
+document.addEventListener('click', function(e){
+  if(!isAdmin() || !editing) return;
+  const el = e.target.closest('[data-ts-editable]');
+  if(!el || el.closest(EDIT_SKIP)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  beginEdit(el);
+}, true);
+
+function beginEdit(el){
+  if(!isAdmin()) return;
+  if(el.hasAttribute('data-ts-editing')) return;
+  const original = el.textContent;
+  el.setAttribute('data-ts-editing','');
+  el.setAttribute('contenteditable','true');
+  el.setAttribute('spellcheck','false');
+  el.focus();
+  try{
+    const rng = document.createRange();
+    rng.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(rng);
+  }catch(err){}
+
+  function finish(commit){
+    el.removeEventListener('keydown', onKey);
+    el.removeEventListener('blur', onBlur);
+    el.removeAttribute('contenteditable');
+    el.removeAttribute('data-ts-editing');
+    el.removeAttribute('spellcheck');
+    const next = el.textContent.trim();
+    if(!commit){ el.textContent = original; return; }
+    if(next === original.trim()) return;
+    if(!next){ el.textContent = original; showSaveBadge('Texto vacio - se revirtio', true); return; }
+    rememberEdit(el, next);
+  }
+  function onKey(ev){
+    if(ev.key === 'Enter' && !ev.shiftKey){ ev.preventDefault(); finish(true); el.blur(); }
+    else if(ev.key === 'Escape'){ ev.preventDefault(); finish(false); el.blur(); }
+  }
+  function onBlur(){ finish(true); }
+  el.addEventListener('keydown', onKey);
+  el.addEventListener('blur', onBlur);
+}
+
+function rememberEdit(el, value){
+  const edit = {
+    selector: getElSelector(el),
+    action:   'update_text',
+    value:    value,
+    saved:    new Date().toISOString()
+  };
+  pageEdits = pageEdits.filter(function(x){
+    return !(x.selector === edit.selector && x.action === edit.action);
+  });
+  pageEdits.push(edit);
+  try{ localStorage.setItem(EDITS_KEY, JSON.stringify(pageEdits)); }catch(err){}
+
+  fetch('/api/save-page-edits', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(pageEdits)
+  }).then(function(r){
+    showSaveBadge(r.ok ? 'Cambio guardado' : 'Guardado solo en este navegador', !r.ok);
+  }).catch(function(){ showSaveBadge('Sin conexion - guardado local', true); });
+}
+
+function loadPageEdits(){
+  if(!isAdmin()) return;
+  let local = [];
+  try{ local = JSON.parse(localStorage.getItem(EDITS_KEY) || '[]'); }catch(err){}
+  fetch('/page_edits.json?' + Date.now(), {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : local; })
+    .then(function(edits){
+      pageEdits = (Array.isArray(edits) && edits.length) ? edits : local;
+      pageEdits.forEach(applyPageEdit);
+    })
+    .catch(function(){ pageEdits = local; pageEdits.forEach(applyPageEdit); });
+}
+
+function applyPageEdit(edit){
+  if(!edit || !edit.selector || edit.action !== 'update_text') return;
+  let el = null;
+  try{ el = document.querySelector(edit.selector); }catch(err){ return; }
+  if(el && !el.closest(EDIT_SKIP)) el.textContent = edit.value || '';
+}
+
+let badgeTimer = null;
+function showSaveBadge(msg, isErr){
+  const b = document.getElementById('saveBadge');
+  if(!b) return;
+  b.textContent = msg;
+  b.classList.toggle('err', !!isErr);
+  b.classList.add('show');
+  clearTimeout(badgeTimer);
+  badgeTimer = setTimeout(function(){ b.classList.remove('show'); }, 2600);
+}
+
+function pushNoteToCEO(note){
+  if(!isAdmin()) return;
+  fetch('/api/save-note', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      timestamp: new Date().toISOString(),
+      selection: note.target,
+      note:      note.text,
+      status:    'pending'
+    })
+  }).then(function(r){
+    showSaveBadge(r.ok ? 'Nota enviada al agente CEO' : 'Nota guardada solo local', !r.ok);
+  }).catch(function(){ showSaveBadge('Sin conexion - nota guardada local', true); });
 }
 
 function escapeHtml(s){

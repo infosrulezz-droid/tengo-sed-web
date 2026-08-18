@@ -1,0 +1,321 @@
+{
+  "name": "Tessa — Flow B — Telegram commands",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "tg-trigger",
+      "name": "Telegram trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -620,
+        300
+      ],
+      "webhookId": "tessa-telegram-commands"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "stock.csv",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "REPLACE_WITH_DRIVE_FOLDER_ID"
+          }
+        },
+        "options": {}
+      },
+      "id": "find-stock-csv",
+      "name": "Find stock.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -400,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "dl-Get-stock-csv",
+      "name": "Get stock.csv",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -180,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "binaryPropertyName": "data",
+        "options": {
+          "delimiter": ";",
+          "headerRow": true
+        }
+      },
+      "id": "csv-CSV-stock",
+      "name": "CSV stock",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        40,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// ======== EDIT THIS BLOCK — everything else is generic ========================\nconst CONFIG = {\n  // Candidate column names for the product key. The first one found in the CSV\n  // header wins. Add the real ControlVentas column name at the front.\n  skuColumns: ['sku', 'codigo', 'código', 'codigo_barras', 'código de barras',\n               'cod_barra', 'barcode', 'ean'],\n\n  // Candidate column names for the other fields we need.\n  nameColumns:  ['nombre', 'descripcion', 'descripción', 'producto', 'name'],\n  stockColumns: ['stock', 'existencia', 'existencias', 'cantidad', 'saldo'],\n  countColumns: ['conteo', 'fisico', 'físico', 'contado', 'cantidad_contada'],\n  soldColumns:  ['vendido', 'ventas', 'cantidad_vendida', 'unidades'],\n  priceColumns: ['precio', 'precio_venta', 'pvp', 'valor'],\n  minColumns:   ['minimo', 'mínimo', 'stock_minimo', 'punto_reorden'],\n  storeColumns: ['local', 'sucursal', 'tienda', 'store', 'bodega'],\n\n  // Reorder rule. 'fixed'    -> reorder when stock <= minimo column (or minDefault)\n  //              'velocity'  -> reorder when stock < avg daily sales * coverDays\n  reorderRule: 'fixed',\n  minDefault: 6,\n  coverDays: 7,\n\n  // Flag a variance only when it is at least this many units (noise filter).\n  varianceThreshold: 1,\n\n  // Flag a price as suspicious when it is 0/blank or moved more than this ratio.\n  priceJumpRatio: 0.25,\n\n  // Stores -> Telegram chat id. Keys must match the values in the store column.\n  // Use one chat id for all three if you want a single group.\n  stores: {\n    'LOCAL 1': 'REPLACE_CHAT_ID_1',\n    'LOCAL 2': 'REPLACE_CHAT_ID_2',\n    'LOCAL 3': 'REPLACE_CHAT_ID_3',\n  },\n\n  // Fallback chat when a row has no recognizable store.\n  fallbackChatId: 'REPLACE_CHAT_ID_1',\n\n  // Cycle count: how many SKUs to dispatch per store per day.\n  cycleCountPerDay: 5,\n};\n// =============================================================================\n\n// ---- helpers ---------------------------------------------------------------\nfunction pick(row, candidates) {\n  const keys = Object.keys(row);\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase() === cand);\n    if (hit !== undefined) return hit;\n  }\n  // second pass: contains\n  for (const cand of candidates) {\n    const hit = keys.find(k => k.trim().toLowerCase().includes(cand));\n    if (hit !== undefined) return hit;\n  }\n  return null;\n}\n\nfunction num(v) {\n  if (v === null || v === undefined || v === '') return 0;\n  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;\n\n  let s = String(v).replace(/\\s/g, '').replace(/[$\\u00a0]/g, '');\n  if (!s) return 0;\n\n  const negative = /^\\(.*\\)$/.test(s) || s.startsWith('-');\n  s = s.replace(/^[-(]/, '').replace(/\\)$/, '');\n\n  let normalized;\n  if (s.includes(',')) {\n    // 1.234,56 — dots are thousands separators, comma is the decimal mark.\n    normalized = s.replace(/\\./g, '').replace(',', '.');\n  } else if (/^\\d{1,3}(\\.\\d{3})+$/.test(s)) {\n    // 1.290 / 12.990 / 1.234.567 — every group after the first is exactly three\n    // digits, so these are thousands separators, NOT a decimal point.\n    normalized = s.replace(/\\./g, '');\n  } else {\n    normalized = s;\n  }\n\n  const n = Number(normalized);\n  if (!Number.isFinite(n)) return 0;\n  return negative ? -n : n;\n}\n\nfunction key(v) {\n  return String(v ?? '').trim().toUpperCase();\n}\n\nfunction clp(n) {\n  return '$' + Math.round(n).toLocaleString('es-CL');\n}\n\n\nconst trigger = $('Telegram trigger').first().json;\nconst msg = trigger.message ?? trigger.channel_post ?? {};\nconst text = String(msg.text ?? '').trim();\nconst chatId = msg.chat?.id ?? CONFIG.fallbackChatId;\n\nconst [rawCmd, ...args] = text.split(/\\s+/);\nconst cmd = rawCmd.replace(/@.*$/, '').toLowerCase();\nconst arg = args.join(' ').trim();\n\nconst stockRows = $('CSV stock').all().map(i => i.json).filter(r => r && Object.keys(r).length);\nconst sample = stockRows[0] ?? {};\nconst COL = {\n  sku:   pick(sample, CONFIG.skuColumns),\n  name:  pick(sample, CONFIG.nameColumns),\n  stock: pick(sample, CONFIG.stockColumns),\n  price: pick(sample, CONFIG.priceColumns),\n  min:   pick(sample, CONFIG.minColumns),\n  store: pick(sample, CONFIG.storeColumns),\n};\n\nconst matches = (q) => {\n  const needle = q.toLowerCase();\n  return stockRows.filter(r => {\n    const sku = String(r[COL.sku] ?? '').toLowerCase();\n    const name = COL.name ? String(r[COL.name] ?? '').toLowerCase() : '';\n    return sku === needle || sku.includes(needle) || name.includes(needle);\n  });\n};\n\nconst describe = (r) => {\n  const parts = [String(r[COL.sku]).trim()];\n  if (COL.name) parts.push(String(r[COL.name]).trim());\n  if (COL.store) parts.push('[' + String(r[COL.store]).trim() + ']');\n  if (COL.stock) parts.push('stock ' + num(r[COL.stock]));\n  if (COL.price) parts.push(clp(num(r[COL.price])));\n  return '  ' + parts.join(' | ');\n};\n\nconst HELP = [\n  'Comandos disponibles:',\n  '  /inventario <sku o nombre>  - stock actual por local',\n  '  /precio <sku o nombre>      - precio de lista',\n  '  /bajos                      - productos bajo el minimo',\n  '  /resumen                    - totales por local',\n  '  /ayuda                      - esta lista',\n  '',\n  'Para registrar el conteo del dia, responder con una linea por producto:',\n  '  SKU cantidad',\n].join('\\n');\n\n// ---- count replies ----------------------------------------------------------\n// A message that is not a command but looks like \"SKU cantidad\" lines is the store\n// reporting its physical count. Parse it here; the rows get written to the Data\n// Table and Flow A picks them up as the conteo source the next morning.\nfunction parseCountReply(raw) {\n  const lines = raw.split(/\\r?\\n/).map(l => l.trim()).filter(Boolean);\n  if (!lines.length) return null;\n\n  const rows = [];\n  const bad = [];\n  for (const line of lines) {\n    // \"7801 24\", \"7801: 24\", \"7801 - 24\", \"7801,24\"\n    const m = line.match(/^([A-Za-z0-9._\\-]+)\\s*[:,\\-]?\\s+(\\d+(?:[.,]\\d+)?)$/);\n    if (!m) { bad.push(line); continue; }\n    rows.push({ sku: key(m[1]), qty: num(m[2]) });\n  }\n  // Require the message to be mostly counts, so ordinary chat is not swallowed.\n  if (!rows.length || bad.length > rows.length) return null;\n  return { rows, bad };\n}\n\nlet reply;\n\nswitch (cmd) {\n  case '/start':\n  case '/ayuda':\n  case '/help':\n    reply = HELP;\n    break;\n\n  case '/inventario': {\n    if (!arg) { reply = 'Uso: /inventario <sku o nombre>'; break; }\n    const hits = matches(arg);\n    reply = hits.length\n      ? 'Inventario para \"' + arg + '\":\\n' + hits.slice(0, 20).map(describe).join('\\n') +\n        (hits.length > 20 ? '\\n  ... y ' + (hits.length - 20) + ' mas' : '')\n      : 'No encontre nada para \"' + arg + '\".';\n    break;\n  }\n\n  case '/precio': {\n    if (!arg) { reply = 'Uso: /precio <sku o nombre>'; break; }\n    if (!COL.price) { reply = 'El export no trae columna de precio.'; break; }\n    const hits = matches(arg);\n    reply = hits.length\n      ? 'Precios para \"' + arg + '\":\\n' + hits.slice(0, 20).map(r =>\n          '  ' + String(r[COL.sku]).trim() + ' ' +\n          (COL.name ? String(r[COL.name]).trim() + ' ' : '') + clp(num(r[COL.price]))\n        ).join('\\n')\n      : 'No encontre nada para \"' + arg + '\".';\n    break;\n  }\n\n  case '/bajos': {\n    const low = stockRows.filter(r => {\n      const s = num(r[COL.stock]);\n      const min = COL.min ? (num(r[COL.min]) || CONFIG.minDefault) : CONFIG.minDefault;\n      return s <= min;\n    });\n    low.sort((a, b) => num(a[COL.stock]) - num(b[COL.stock]));\n    reply = low.length\n      ? 'Bajo el minimo (' + low.length + '):\\n' + low.slice(0, 30).map(describe).join('\\n') +\n        (low.length > 30 ? '\\n  ... y ' + (low.length - 30) + ' mas' : '')\n      : 'Nada bajo el minimo.';\n    break;\n  }\n\n  case '/resumen': {\n    const totals = new Map();\n    for (const r of stockRows) {\n      const store = COL.store ? key(r[COL.store]) : 'TOTAL';\n      const t = totals.get(store) ?? { skus: 0, units: 0, value: 0 };\n      t.skus++;\n      t.units += num(r[COL.stock]);\n      if (COL.price) t.value += num(r[COL.stock]) * num(r[COL.price]);\n      totals.set(store, t);\n    }\n    const lines = ['Resumen de inventario:'];\n    for (const [store, t] of totals) {\n      lines.push('  ' + store + ': ' + t.skus + ' SKUs, ' + t.units + ' unidades' +\n                 (COL.price ? ', ' + clp(t.value) : ''));\n    }\n    reply = lines.join('\\n');\n    break;\n  }\n\n  default: {\n    if (text.startsWith('/')) {\n      reply = 'No conozco el comando ' + cmd + '.\\n\\n' + HELP;\n      break;\n    }\n    const parsed = parseCountReply(text);\n    if (parsed) {\n      const store = key(msg.chat?.title ?? '');\n      const who = [msg.from?.first_name, msg.from?.last_name].filter(Boolean).join(' ') ||\n                  msg.from?.username || 'desconocido';\n      const stamp = new Date().toISOString();\n\n      // Resolve the store from the chat id when possible, so the count lands on the\n      // right local even if the group title does not match CONFIG.stores.\n      let resolved = store;\n      for (const [nameKey, id] of Object.entries(CONFIG.stores)) {\n        if (String(id) === String(chatId)) { resolved = nameKey; break; }\n      }\n\n      const known = new Set(stockRows.map(r => key(r[COL.sku])));\n      const unknown = parsed.rows.filter(r => known.size && !known.has(r.sku));\n\n      const lines = ['Conteo recibido: ' + parsed.rows.length + ' producto(s).'];\n      parsed.rows.forEach(r => lines.push('  ' + r.sku + ' -> ' + r.qty));\n      if (unknown.length) {\n        lines.push('');\n        lines.push('Ojo, estos SKU no estan en el stock: ' + unknown.map(r => r.sku).join(', '));\n      }\n      if (parsed.bad.length) {\n        lines.push('');\n        lines.push('No pude leer estas lineas:');\n        parsed.bad.forEach(b => lines.push('  ' + b));\n      }\n      lines.push('');\n      lines.push('Queda guardado. La diferencia sale en el reporte de manana.');\n\n      let confirm = lines.join('\\n');\n      if (confirm.length > 3900) confirm = confirm.slice(0, 3890) + '\\n... (truncado)';\n\n      // One item per row: the Data Table insert node maps these fields to columns\n      // by name. chat_id / reply ride along so the confirmation can be sent after.\n      return parsed.rows.map((r, i) => ({\n        json: {\n          is_count: true,\n          sku: r.sku,\n          store: resolved,\n          qty: r.qty,\n          counted_at: stamp,\n          reported_by: who,\n          chat_id: chatId,\n          reply: i === 0 ? confirm : '',\n        },\n      }));\n    }\n    reply = HELP;\n  }\n}\n\nif (reply.length > 3900) reply = reply.slice(0, 3890) + '\\n... (truncado)';\n\nreturn [{ json: { is_count: false, chat_id: chatId, command: cmd, arg, reply } }];\n"
+      },
+      "id": "code-Command-router",
+      "name": "Command router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "is-count",
+              "leftValue": "={{ $json.is_count }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "if-count",
+      "name": "Is a count reply?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ZWzp8b3WkpfVMbGh"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": null,
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "dt-Save-counts",
+      "name": "Save counts",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n// The insert node emits one item per saved row; collapse back to a single\n// confirmation so the store gets one message, not one per product.\nconst items = $input.all().map(i => i.json);\nconst first = $('Command router').all().map(i => i.json).find(r => r.reply);\nreturn [{ json: { chat_id: first?.chat_id, reply: first?.reply ?? ('Conteo guardado: ' + items.length + ' producto(s).') } }];\n"
+      },
+      "id": "code-One-confirmation",
+      "name": "One confirmation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.reply }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "tg-reply",
+      "name": "Telegram reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1140,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Flow B — command listener\n\nCommands:\n`/inventario <sku>` `/precio <sku>` `/bajos` `/resumen` `/ayuda`\n\n**Count replies:** any non-command message shaped like\n`SKU cantidad` (one per line) is saved to the **conteos**\nData Table and confirmed back. Flow A reads that table as\nthe conteo source, so nobody re-types counts by hand.\n\nSame setup as Flow A: Drive folder id in \"Find stock.csv\",\nand the `CONFIG` block inside **Command router**.\n\nThis flow must be **activated** (toggle top right) for the\nTelegram webhook to register.",
+        "height": 380,
+        "width": 520,
+        "color": 6
+      },
+      "id": "note-diap9s8e",
+      "name": "Note pqwf",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -630,
+        -140
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram trigger": {
+      "main": [
+        [
+          {
+            "node": "Find stock.csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find stock.csv": {
+      "main": [
+        [
+          {
+            "node": "Get stock.csv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get stock.csv": {
+      "main": [
+        [
+          {
+            "node": "CSV stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSV stock": {
+      "main": [
+        [
+          {
+            "node": "Command router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Command router": {
+      "main": [
+        [
+          {
+            "node": "Is a count reply?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is a count reply?": {
+      "main": [
+        [
+          {
+            "node": "Save counts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save counts": {
+      "main": [
+        [
+          {
+            "node": "One confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "One confirmation": {
+      "main": [
+        [
+          {
+            "node": "Telegram reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

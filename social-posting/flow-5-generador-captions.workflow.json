@@ -1,0 +1,390 @@
+{
+  "name": "Social — Generador de captions",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10 * * *"
+            }
+          ]
+        }
+      },
+      "id": "cada-manana-10-00",
+      "name": "Cada manana 10:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -860,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "o-a-mano",
+      "name": "O a mano",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Q1Z46f1FZ7DWGuaFPTWKWeGn1tdxkBNdTFyNwyv4zus",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "leer-la-cola",
+      "name": "Leer la cola",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -620,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Picks the rows the owner left as \"borrador\" — a filename, maybe a one-line\n// note, and nothing else. Anything already \"listo\", \"pausa\" or \"publicado\" is\n// left alone, so re-running this flow can never overwrite a written caption.\n\nconst MAX = 12;\nconst PROMPT = \"Eres el redactor de redes sociales de \\\"Tengo Sed\\\", una botilleria de barrio en\\nIquique, Chile.\\n\\nEscribe los textos de UNA publicacion.\\n\\nArchivo: {{ARCHIVO}}\\nIndicacion del dueno: {{BRIEF}}\\n\\nReglas que no se rompen:\\n- Espanol de Chile, cercano y directo. Nada de lenguaje corporativo ni de agencia.\\n- NO inventes precios, descuentos, marcas ni stock que no esten en la indicacion.\\n- NO escribas el aviso del MINSAL. El sistema lo agrega solo al final.\\n- Nunca sugieras consumo excesivo, ni menores de edad, ni manejar despues de beber.\\n- Sin promesas de salud ni de efectos del alcohol.\\n\\nFormato de cada texto:\\n- caption_ig: 1 o 2 frases con gancho + 3 a 6 hashtags locales\\n  (por ejemplo #Iquique #TengoSed #Botilleria).\\n- caption_fb: 2 o 3 frases, un poco mas informativo, sin hashtags.\\n- caption_wa: UNA frase muy corta para el Estado de WhatsApp, invitando a pasar\\n  por el local.\\n\\nResponde SOLO con este JSON, sin texto alrededor:\\n{\\\"caption_ig\\\":\\\"...\\\",\\\"caption_fb\\\":\\\"...\\\",\\\"caption_wa\\\":\\\"...\\\"}\";\n\nconst rows = $input.all().map(i => i.json);\n\nconst drafts = rows.filter(r => {\n  const estado = String(r.estado || \"\").trim().toLowerCase();\n  const archivo = String(r.archivo || \"\").trim();\n  return estado === \"borrador\" && archivo !== \"\";\n});\n\nif (drafts.length === 0) {\n  return [{ json: { empty: true, reason: 'No hay filas en estado \"borrador\".' } }];\n}\n\n// The free tier is capped per day, so a runaway sheet cannot drain it.\nreturn drafts.slice(0, MAX).map(r => {\n  const archivo = String(r.archivo).trim();\n  const brief = String(r.nota || r.brief || \"\").trim() ||\n    \"(sin indicacion, guiate por el nombre del archivo)\";\n\n  return {\n    json: {\n      empty: false,\n      rowId: r.id,\n      archivo,\n      brief,\n      prompt: PROMPT.replace(\"{{ARCHIVO}}\", archivo).replace(\"{{BRIEF}}\", brief),\n    },\n  };\n});"
+      },
+      "id": "elegir-borradores",
+      "name": "Elegir borradores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hay-borradores",
+              "leftValue": "={{ $json.empty }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "hay-borradores",
+      "name": "Hay borradores",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "uno-por-uno",
+      "name": "Uno por uno",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ contents: [ { parts: [ { text: $json.prompt } ] } ], generationConfig: { temperature: 0.9, responseMimeType: \"application/json\" } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": false
+            }
+          }
+        }
+      },
+      "id": "escribir-con-gemini",
+      "name": "Escribir con Gemini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Gemini returns the JSON as a string inside candidates[0].content.parts[0].text.\n// responseMimeType \"application/json\" makes that string valid JSON, but a refusal\n// or a safety block comes back shaped differently — so this never assumes, and a\n// bad row is reported instead of poisoning the sheet.\n\nconst src = $(\"Uno por uno\").item.json;\nconst raw = $json && $json.candidates && $json.candidates[0] &&\n  $json.candidates[0].content && $json.candidates[0].content.parts &&\n  $json.candidates[0].content.parts[0]\n    ? $json.candidates[0].content.parts[0].text || \"\" : \"\";\n\nlet out;\ntry {\n  out = JSON.parse(raw);\n} catch (e) {\n  return { json: { ok: false, rowId: src.rowId, archivo: src.archivo,\n    error: \"Gemini no devolvio JSON valido: \" + String(raw).slice(0, 200) } };\n}\n\nconst clean = v => String(v || \"\").trim();\n\nconst ig = clean(out.caption_ig);\nconst fb = clean(out.caption_fb);\nconst wa = clean(out.caption_wa);\n\nif (!ig || !fb || !wa) {\n  return { json: { ok: false, rowId: src.rowId, archivo: src.archivo,\n    error: \"Falta alguno de los tres captions.\" } };\n}\n\nreturn { json: {\n  ok: true,\n  rowId: src.rowId,\n  archivo: src.archivo,\n  caption_ig: ig,\n  caption_fb: fb,\n  caption_wa: wa,\n} };"
+      },
+      "id": "leer-la-respuesta",
+      "name": "Leer la respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q1Z46f1FZ7DWGuaFPTWKWeGn1tdxkBNdTFyNwyv4zus",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "value": {
+            "id": "={{ $json.rowId }}",
+            "caption_ig": "={{ $json.caption_ig }}",
+            "caption_fb": "={{ $json.caption_fb }}",
+            "caption_wa": "={{ $json.caption_wa }}",
+            "estado": "={{ $json.ok ? \"listo\" : \"borrador\" }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "guardar-en-la-cola",
+      "name": "Guardar en la cola",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        740,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "respirar",
+      "name": "Respirar",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "REPLACE_OWNER_CHAT_ID",
+        "text": "={{ \"Captions listos: \" + $items().length + \" publicacion(es).\\n\\n\" + $items().map(i => (i.json.ok ? \"OK  \" : \"FALLO  \") + i.json.archivo).join(\"\\n\") }}",
+        "additionalFields": {}
+      },
+      "id": "avisar-al-dueno",
+      "name": "Avisar al dueno",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        300,
+        180
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "F6I0NPw13xUehqey",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Flow 5 — el redactor\n\nCorre solo cada dia a las **10:00** (o dale a Execute cuando quieras).\n\n**Como se usa:**\n1. Subi la imagen a *1 Por publicar*\n2. Agrega la fila con **solo** `archivo` y `estado` = `borrador`\n3. Opcional: escribi una `nota` (\"promo del finde\", \"llego cerveza artesanal\")\n4. Este flujo escribe los 3 captions y pasa la fila a `listo`\n\n**Nunca pisa** una fila que ya este en `listo`, `pausa` o `publicado`.\nPodes editar el texto a mano despues — Flow 2 usa lo que quede en la fila.",
+        "width": 520,
+        "height": 380,
+        "color": 2
+      },
+      "id": "note-ect4",
+      "name": "Note ect4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## La credencial\n\n**Header Auth** llamada `Gemini`:\n\n- Name: `x-goog-api-key`\n- Value: la key de https://aistudio.google.com/apikey\n\nModelo: `gemini-2.5-flash-lite` — free tier, **15 por minuto / 1000 por dia**.\nPor eso *Respirar* espera 5s y solo se procesan 12 filas por corrida.\n\nEl aviso del MINSAL **no** se pide aca — Flow 2 lo agrega solo, para que haya una sola fuente de esa frase.",
+        "width": 500,
+        "height": 380,
+        "color": 4
+      },
+      "id": "note-eg5o",
+      "name": "Note eg5o",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        -180
+      ]
+    }
+  ],
+  "connections": {
+    "Cada manana 10:00": {
+      "main": [
+        [
+          {
+            "node": "Leer la cola",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "O a mano": {
+      "main": [
+        [
+          {
+            "node": "Leer la cola",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer la cola": {
+      "main": [
+        [
+          {
+            "node": "Elegir borradores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Elegir borradores": {
+      "main": [
+        [
+          {
+            "node": "Hay borradores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hay borradores": {
+      "main": [
+        [
+          {
+            "node": "Uno por uno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Uno por uno": {
+      "main": [
+        [
+          {
+            "node": "Avisar al dueno",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Escribir con Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escribir con Gemini": {
+      "main": [
+        [
+          {
+            "node": "Leer la respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer la respuesta": {
+      "main": [
+        [
+          {
+            "node": "Guardar en la cola",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en la cola": {
+      "main": [
+        [
+          {
+            "node": "Respirar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respirar": {
+      "main": [
+        [
+          {
+            "node": "Uno por uno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Santiago",
+    "saveManualExecutions": true
+  },
+  "pinData": {}
+}
