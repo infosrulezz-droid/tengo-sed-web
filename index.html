@@ -1120,6 +1120,139 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
   .ticker-track{animation:none !important}
   .slide-bg{transition:none !important}
 }
+
+/* ═══════════════════════════════════════════════════
+   CARRITO → WHATSAPP
+   El cliente arma el pedido y se va a WhatsApp con
+   todo escrito. No hay checkout ni pago en el sitio.
+════════════════════════════════════════════════════ */
+
+/* Botón + / − dentro de la tarjeta */
+.prod-add{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;min-height:44px;margin-top:8px;
+  background:var(--blue);color:#fff;border:none;border-radius:8px;
+  font-size:12px;font-weight:800;font-family:inherit;
+  transition:background .15s ease,transform .1s ease;
+}
+.prod-add:hover{background:#012d66}
+.prod-add:active{transform:scale(.97)}
+.prod-add:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.prod-qty{
+  display:flex;align-items:center;gap:0;width:100%;margin-top:8px;
+  border:1.5px solid var(--blue);border-radius:8px;overflow:hidden;
+}
+.prod-qty button{
+  width:44px;min-height:44px;flex-shrink:0;
+  background:var(--blue);color:#fff;border:none;
+  font-size:19px;font-weight:800;line-height:1;font-family:inherit;
+}
+.prod-qty button:hover{background:#012d66}
+.prod-qty button:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+.prod-qty span{
+  flex:1;text-align:center;font-size:14px;font-weight:900;color:var(--blue);
+  font-variant-numeric:tabular-nums;
+}
+
+/* Barra fija inferior */
+.cart-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:600;
+  background:var(--navy);color:#fff;
+  padding:10px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 -4px 24px rgba(0,0,0,.3);
+  transform:translateY(110%);
+  transition:transform .28s cubic-bezier(.16,1,.3,1);
+  padding-bottom:calc(10px + env(safe-area-inset-bottom));
+}
+.cart-bar.on{transform:translateY(0)}
+.cart-bar-info{flex:1;min-width:0;line-height:1.25}
+.cart-bar-count{font-size:12px;color:rgba(255,255,255,.72);font-weight:600}
+.cart-bar-total{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
+.cart-bar-view{
+  background:none;border:1px solid rgba(255,255,255,.3);color:#fff;
+  border-radius:50px;padding:0 14px;min-height:44px;
+  font-size:12px;font-weight:700;font-family:inherit;flex-shrink:0;
+}
+.cart-bar-view:hover{background:rgba(255,255,255,.12)}
+.cart-bar-go{
+  display:inline-flex;align-items:center;gap:8px;flex-shrink:0;
+  background:#128C7E;color:#fff;text-decoration:none;
+  border-radius:50px;padding:0 20px;min-height:44px;
+  font-size:15px;font-weight:800;
+}
+.cart-bar-go:hover{background:#0d6d62}
+.cart-bar-view:focus-visible,.cart-bar-go:focus-visible{
+  outline:3px solid var(--gold);outline-offset:2px;
+}
+
+/* Panel de revisión */
+.cart-sheet{
+  position:fixed;inset:0;z-index:700;
+  background:rgba(15,23,42,.55);backdrop-filter:blur(3px);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.cart-sheet.on{display:flex}
+.cart-box{
+  background:var(--card);width:100%;max-width:520px;
+  border-radius:20px 20px 0 0;
+  max-height:82vh;display:flex;flex-direction:column;
+  animation:cartUp .3s cubic-bezier(.16,1,.3,1);
+}
+@keyframes cartUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.cart-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px 12px;border-bottom:1px solid var(--border);
+}
+.cart-head h3{font-family:'Anton',sans-serif;font-size:22px;color:var(--navy);letter-spacing:.3px}
+.cart-close{
+  background:var(--bg3);border:none;border-radius:50%;
+  width:44px;height:44px;font-size:17px;color:var(--muted);font-family:inherit;
+}
+.cart-close:hover{background:var(--border)}
+.cart-close:focus-visible{outline:3px solid var(--cyan-text);outline-offset:2px}
+.cart-list{overflow-y:auto;padding:8px 20px;flex:1}
+.cart-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--bg3);
+}
+.cart-row:last-child{border-bottom:none}
+.cart-row img{width:48px;height:48px;object-fit:contain;background:var(--bg3);border-radius:6px;flex-shrink:0}
+.cart-row-info{flex:1;min-width:0}
+.cart-row-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.cart-row-price{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cart-row-qty{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.cart-row-qty button{
+  width:36px;height:36px;border-radius:6px;border:1px solid var(--border);
+  background:#fff;color:var(--blue);font-size:17px;font-weight:800;font-family:inherit;
+}
+.cart-row-qty button:hover{background:var(--bg3)}
+.cart-row-qty span{min-width:26px;text-align:center;font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+.cart-foot{padding:16px 20px;border-top:1px solid var(--border);background:var(--bg)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.cart-total-row span:first-child{font-size:14px;color:var(--muted);font-weight:600}
+.cart-total-row span:last-child{font-family:'Anton',sans-serif;font-size:27px;color:var(--navy);font-variant-numeric:tabular-nums}
+.cart-send{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;min-height:52px;background:#128C7E;color:#fff;
+  text-decoration:none;border-radius:12px;font-size:16px;font-weight:800;
+}
+.cart-send:hover{background:#0d6d62}
+.cart-send:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.cart-note{
+  text-align:center;font-size:11px;color:var(--muted);
+  margin-top:10px;line-height:1.5;
+}
+.cart-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+
+@media(max-width:520px){
+  .cart-bar{padding:8px 12px;gap:8px}
+  .cart-bar-view{display:none}
+  .cart-bar-total{font-size:17px}
+  .cart-bar-go{padding:0 16px;font-size:14px}
+  .cart-box{max-height:88vh}
+}
 </style>
 <!--SEO-JSONLD-->
 <script type="application/ld+json">
@@ -1708,6 +1841,37 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
   </div>
 </div>
 
+<!-- ═══════ CARRITO ═══════════════════════════════ -->
+<div class="cart-bar" id="cartBar" role="region" aria-label="Tu pedido">
+  <div class="cart-bar-info">
+    <div class="cart-bar-count" id="cartCount">0 productos</div>
+    <div class="cart-bar-total" id="cartTotal">$0</div>
+  </div>
+  <button class="cart-bar-view" onclick="openCart()">Ver pedido</button>
+  <a class="cart-bar-go" id="cartGo" href="#" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Pedir
+  </a>
+</div>
+
+<div class="cart-sheet" id="cartSheet" onclick="if(event.target===this)closeCart()">
+  <div class="cart-box" role="dialog" aria-modal="true" aria-label="Tu pedido">
+    <div class="cart-head">
+      <h3>TU PEDIDO</h3>
+      <button class="cart-close" onclick="closeCart()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="cart-list" id="cartList"></div>
+    <div class="cart-foot">
+      <div class="cart-total-row"><span>Total</span><span id="cartSheetTotal">$0</span></div>
+      <a class="cart-send" id="cartSend" href="#" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Enviar pedido por WhatsApp
+      </a>
+      <p class="cart-note">Te confirmamos stock, total y tiempo de entrega por WhatsApp.<br/>Delivery solo en Iquique · 30–60 min</p>
+    </div>
+  </div>
+</div>
+
 <!-- WhatsApp FAB -->
 <a href="https://wa.me/56992380324" target="_blank" rel="noopener" class="fab" aria-label="Pedir por WhatsApp">
   <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
@@ -1835,6 +1999,7 @@ function renderProducts(list){
       <div class="prod-info">
         <div class="prod-name">${esc(p.name)}</div>
         ${priceEl}
+        ${cartControlHTML(p.name)}
         <a href="https://wa.me/${WA}?text=Hola!%20Quiero%20${encodeURIComponent(p.name)}" target="_blank" rel="noopener" class="prod-wa-btn" onclick="event.stopPropagation()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Pedir
@@ -1952,6 +2117,7 @@ document.addEventListener('keydown',e=>{
     allProducts=await pRes.json();
     imgMap=await mRes.json();
     renderProducts(allProducts);
+    loadCart();
   }catch(e){
     document.getElementById('productsGrid').innerHTML=`
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">
@@ -2391,6 +2557,146 @@ function pushNoteToCEO(note){
     showSaveBadge(r.ok ? 'Nota enviada al agente CEO' : 'Nota guardada solo local', !r.ok);
   }).catch(function(){ showSaveBadge('Sin conexion - nota guardada local', true); });
 }
+
+
+/* ═══════════════════════════════════════════════════
+   CARRITO → WHATSAPP
+   No hay checkout ni pago acá. El carrito arma el
+   mensaje y el pedido se cierra por WhatsApp, que es
+   como Tengo Sed vende de verdad.
+════════════════════════════════════════════════════ */
+
+const CART_KEY = 'ts_cart';
+let cart = {};                 // { "nombre del producto": cantidad }
+
+function loadCart(){
+  try{ cart = JSON.parse(localStorage.getItem(CART_KEY) || '{}'); }
+  catch(e){ cart = {}; }
+  // descartar productos que ya no existen en el inventario
+  const valid = new Set(allProducts.map(p => p.name));
+  Object.keys(cart).forEach(k => { if(!valid.has(k)) delete cart[k]; });
+  syncCart();
+}
+
+function persistCart(){
+  try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }catch(e){}
+}
+
+function cartAdd(name, delta){
+  const qty = (cart[name] || 0) + delta;
+  if(qty <= 0) delete cart[name]; else cart[name] = qty;
+  persistCart();
+  syncCart();
+  refreshCardControls(name);
+  if(document.getElementById('cartSheet').classList.contains('on')) renderCartList();
+}
+
+/* Redibuja solo los controles de esa tarjeta, sin re-renderizar la grilla
+   entera (que perdería el scroll del cliente). */
+function refreshCardControls(name){
+  document.querySelectorAll('[data-cart-for]').forEach(el => {
+    if(el.getAttribute('data-cart-for') !== name) return;
+    el.outerHTML = cartControlHTML(name);
+  });
+}
+
+function cartControlHTML(name){
+  const q = cart[name] || 0;
+  const safe = esc(name).replace(/'/g, '&#39;');
+  if(!q){
+    return '<button class="prod-add" data-cart-for="' + esc(name) + '"' +
+           ' onclick="event.stopPropagation();cartAdd(\'' + safe + '\',1)"' +
+           ' aria-label="Agregar ' + esc(name) + ' al pedido">+ Agregar</button>';
+  }
+  return '<div class="prod-qty" data-cart-for="' + esc(name) + '">' +
+         '<button onclick="event.stopPropagation();cartAdd(\'' + safe + '\',-1)" aria-label="Quitar uno">−</button>' +
+         '<span aria-live="polite">' + q + '</span>' +
+         '<button onclick="event.stopPropagation();cartAdd(\'' + safe + '\',1)" aria-label="Agregar uno">+</button>' +
+         '</div>';
+}
+
+function cartTotals(){
+  let items = 0, total = 0;
+  const lines = [];
+  Object.keys(cart).forEach(name => {
+    const p = allProducts.find(x => x.name === name);
+    if(!p) return;
+    const q = cart[name];
+    items += q;
+    total += (p.price || 0) * q;
+    lines.push({name, qty: q, price: p.price || 0, img: imgMap[name]});
+  });
+  return {items, total, lines};
+}
+
+function buildWaLink(){
+  const {total, lines} = cartTotals();
+  if(!lines.length) return 'https://wa.me/' + WA;
+  let msg = '¡Hola Tengo Sed! Quiero hacer un pedido:\n\n';
+  lines.forEach(l => { msg += '• ' + l.qty + 'x ' + l.name + '\n'; });
+  msg += '\nTotal aprox: ' + fmt(total);
+  msg += '\n\nMi dirección en Iquique es: ';
+  return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg);
+}
+
+function syncCart(){
+  const {items, total} = cartTotals();
+  const bar = document.getElementById('cartBar');
+  if(!bar) return;
+  if(items > 0){
+    bar.classList.add('on');
+    document.getElementById('cartCount').textContent =
+      items + (items === 1 ? ' producto' : ' productos');
+    document.getElementById('cartTotal').textContent = fmt(total);
+    document.getElementById('cartGo').href = buildWaLink();
+    document.body.style.paddingBottom = '86px';
+  } else {
+    bar.classList.remove('on');
+    document.body.style.paddingBottom = '';
+    closeCart();
+  }
+}
+
+function renderCartList(){
+  const {total, lines} = cartTotals();
+  const wrap = document.getElementById('cartList');
+  if(!lines.length){
+    wrap.innerHTML = '<div class="cart-empty">Tu pedido está vacío.<br/>Agregá productos del catálogo.</div>';
+  } else {
+    wrap.innerHTML = lines.map(l => {
+      const safe = esc(l.name).replace(/'/g, '&#39;');
+      const img = l.img
+        ? '<img src="' + BASE + '/products/' + l.img + '" alt="" loading="lazy"/>'
+        : '<div style="width:48px;height:48px;background:var(--bg3);border-radius:6px;flex-shrink:0"></div>';
+      return '<div class="cart-row">' + img +
+        '<div class="cart-row-info">' +
+          '<div class="cart-row-name">' + esc(l.name) + '</div>' +
+          '<div class="cart-row-price">' + fmt(l.price) + ' c/u · ' + fmt(l.price * l.qty) + '</div>' +
+        '</div>' +
+        '<div class="cart-row-qty">' +
+          '<button onclick="cartAdd(\'' + safe + '\',-1)" aria-label="Quitar uno">−</button>' +
+          '<span>' + l.qty + '</span>' +
+          '<button onclick="cartAdd(\'' + safe + '\',1)" aria-label="Agregar uno">+</button>' +
+        '</div></div>';
+    }).join('');
+  }
+  document.getElementById('cartSheetTotal').textContent = fmt(total);
+  document.getElementById('cartSend').href = buildWaLink();
+}
+
+function openCart(){
+  renderCartList();
+  document.getElementById('cartSheet').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart(){
+  const sh = document.getElementById('cartSheet');
+  if(sh) sh.classList.remove('on');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeCart();
+});
 
 function escapeHtml(s){
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
