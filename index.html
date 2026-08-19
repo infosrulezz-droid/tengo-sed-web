@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Tengo Sed — Licores Premium en Iquique 🍺⚽</title>
-<meta name="description" content="Botillería en Iquique con delivery express 30–60 min. Cervezas, whisky, pisco, vinos y promos. Pedí por WhatsApp al +56 9 9238 0324. 3 sucursales."/>
+<title>Tengo Sed — Licores Premium en Iquique 🇨🇱🍺</title>
+<meta name="description" content="Botillería en Iquique con delivery express 30–60 min. Promos de Fiestas Patrias: pisco, cerveza, ron, vinos y cócteles. Pedí por WhatsApp al +56 9 9238 0324. 3 sucursales."/>
 <meta name="theme-color" content="#023E8A"/>
 <link rel="preload" as="image" href="hero_slides/slide_0.webp" type="image/webp" fetchpriority="high"/>
 <link rel="canonical" href="https://tengo-sed.cl/"/>
@@ -38,8 +38,8 @@
   --gold:     #F59E0B;
   --gold2:    #FCD34D;
   --red:      #ef4444;
-  --wc-red:   #D4001A;
-  --wc-blue:  #003087;
+  --fp-red:   #D52B1E;   /* bandera chilena */
+  --fp-blue:  #0039A6;   /* bandera chilena */
   --navy:     #0F172A;
   /* WCAG AA text variants — the bright brand tones fail 4.5:1 as text */
   --cyan-text:#00769D;   /* 5.15:1 on white  (was #0096C7 @ 3.39) */
@@ -191,10 +191,10 @@ button{cursor:pointer;font-family:inherit}
 .pm-skip:hover{color:var(--muted)}
 
 /* ═══════════════════════════════════════════════════
-   WORLD CUP TICKER
+   TICKER FIESTAS PATRIAS
 ════════════════════════════════════════════════════ */
 .wc-ticker{
-  background:linear-gradient(90deg,var(--wc-red),#b80016,var(--wc-blue),#001f6b,var(--wc-red));
+  background:linear-gradient(90deg,var(--fp-red),#b80016,var(--fp-blue),#001f6b,var(--fp-red));
   background-size:300% 100%;
   animation:wc-gradient 6s ease infinite;
   overflow:hidden;padding:8px 0;
@@ -601,7 +601,7 @@ button{cursor:pointer;font-family:inherit}
 @media(max-width:600px){.insta-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* ═══════════════════════════════════════════════════
-   WORLD CUP PROMO BAND
+   PROMO BAND (CSS sin usar - no hay markup que la renderice)
 ════════════════════════════════════════════════════ */
 .wc-band{
   padding:64px 24px;
@@ -609,7 +609,7 @@ button{cursor:pointer;font-family:inherit}
   text-align:center;position:relative;overflow:hidden;
 }
 .wc-band::before{
-  content:'⚽';position:absolute;font-size:300px;
+  content:'🇨🇱';position:absolute;font-size:300px;
   opacity:.06;top:-60px;left:-60px;
   animation:ballSpin 30s linear infinite;
 }
@@ -1197,7 +1197,7 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
 <!-- ═══════ AGE GATE ═══════════════════════════════ -->
 <div id="ageGate">
   <div class="age-bg"></div>
-  <div class="age-ball">⚽</div>
+  <div class="age-ball">🇨🇱</div>
   <div class="age-box">
     <div class="age-logo">TENGO<span>SED</span>.CL</div>
     <div class="age-badge">🍾</div>
@@ -1260,16 +1260,16 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
   </div>
 </nav>
 
-<!-- ═══════ WORLD CUP TICKER ═══════════════════════ -->
+<!-- ═══════ TICKER FIESTAS PATRIAS ═════════════════ -->
 <div class="wc-ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span class="ticker-item">⚽ COPA MUNDIAL 2026</span>
+    <span class="ticker-item">🇨🇱 FIESTAS PATRIAS 2026</span>
     <span class="ticker-item">🍺 CERVEZA IMPORTADA 2×$11.000</span>
     <span class="ticker-item">🥃 JACK HONEY + MR BIG $26.990</span>
     <span class="ticker-item">🌵 PROMO MISTRAL 35° $10.990</span>
     <span class="ticker-item">🚚 DELIVERY EXPRESS IQQ</span>
     <span class="ticker-item">📲 PIDE POR WHATSAPP</span>
-    <span class="ticker-item">⚽ COPA MUNDIAL 2026</span>
+    <span class="ticker-item">🇨🇱 FIESTAS PATRIAS 2026</span>
     <span class="ticker-item">🍺 CERVEZA IMPORTADA 2×$11.000</span>
     <span class="ticker-item">🥃 JACK HONEY + MR BIG $26.990</span>
     <span class="ticker-item">🌵 PROMO MISTRAL 35° $10.990</span>
@@ -1299,11 +1299,11 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
     </div>
     <div class="slide" id="slide-1">
       <div class="slide-bg" style="background-image:url('hero_slides/slide_1.webp')" aria-hidden="true"></div>
-      <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20Pack%20Mundial%20%2426.990" target="_blank" rel="noopener">
+      <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20el%20Pack%20Dieciochero%20%2426.990" target="_blank" rel="noopener">
         <picture>
         <source srcset="hero_slides/slide_1.webp" type="image/webp"/>
         <img class="slide-banner" src="hero_slides/slide_1.png" width="1600" height="560"
-             alt="Pack Mundial - Jack Daniels Honey mas bebida energetica mas hielo premium a $26.990" loading="lazy"/>
+             alt="Pack Dieciochero - Jack Daniels Honey mas bebida energetica mas hielo premium a $26.990" loading="lazy"/>
       </picture>
       </a>
     </div>
@@ -1383,9 +1383,9 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
     </div>
   </div>
   <div class="ts-item">
-    <span class="ts-icon">⚽</span>
+    <span class="ts-icon">🇨🇱</span>
     <div>
-      <div class="ts-label">Promo Copa 2026</div>
+      <div class="ts-label">Promo 18 de Septiembre</div>
       <div class="ts-sub">Cervezas 2×$11.000</div>
     </div>
   </div>
