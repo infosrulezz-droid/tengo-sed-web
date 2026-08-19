@@ -6,6 +6,7 @@
 <title>Tengo Sed — Licores Premium en Iquique 🍺⚽</title>
 <meta name="description" content="Botillería en Iquique con delivery express 30–60 min. Cervezas, whisky, pisco, vinos y promos. Pedí por WhatsApp al +56 9 9238 0324. 3 sucursales."/>
 <meta name="theme-color" content="#023E8A"/>
+<link rel="preload" as="image" href="hero_slides/slide_0.webp" type="image/webp" fetchpriority="high"/>
 <link rel="canonical" href="https://tengo-sed.cl/"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="Tengo Sed"/>
@@ -266,6 +267,7 @@ button{cursor:pointer;font-family:inherit}
 .slide-link{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
 }
+.slide-link picture{display:block;width:100%;height:100%}
 .slide-link:focus-visible{outline:3px solid var(--gold);outline-offset:-6px}
 .slide-banner{
   width:100%;height:100%;
@@ -1231,7 +1233,7 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
   <a class="mob-link" href="#express" onclick="closeMobMenu()">⚡ Compra Express</a>
   <a class="mob-link" href="#sucursales" onclick="closeMobMenu()">📍 Sucursales</a>
   <a class="mob-link" href="#instagram" onclick="closeMobMenu()">📸 Instagram</a>
-  <a class="mob-link" href="https://wa.me/56992380324" target="_blank" style="color:#25D366;font-weight:800">💬 WhatsApp</a>
+  <a class="mob-link" href="https://wa.me/56992380324" target="_blank" rel="noopener" style="color:#25D366;font-weight:800">💬 WhatsApp</a>
 </div>
 
 
@@ -1248,7 +1250,7 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
     <a href="#instagram">Instagram</a>
   </div>
   <div class="nav-right">
-    <a href="https://wa.me/56992380324" target="_blank" class="nav-cta">📲 Pedir Ahora</a>
+    <a href="https://wa.me/56992380324" target="_blank" rel="noopener" class="nav-cta">📲 Pedir Ahora</a>
     <button class="hamburger" onclick="openMobMenu()">☰</button>
   </div>
 </nav>
@@ -1281,38 +1283,53 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
          that was what produced the duplicated $10.990 on every slide.
          object-fit:contain guarantees the ADVERTENCIA strip is never cropped. -->
     <div class="slide active" id="slide-0">
-      <div class="slide-bg" style="background-image:url('hero_slides/slide_0.png')" aria-hidden="true"></div>
+      <div class="slide-bg" style="background-image:url('hero_slides/slide_0.webp')" aria-hidden="true"></div>
       <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20Volvio%20la%20oferta%20Corona%20y%20Sol" target="_blank" rel="noopener">
+        <picture>
+        <source srcset="hero_slides/slide_0.webp" type="image/webp"/>
         <img class="slide-banner" src="hero_slides/slide_0.png" width="1600" height="560"
              alt="Volvio la oferta - Corona y Sol 6 pack a 2 x $10.000 y otras marcas seleccionadas" fetchpriority="high"/>
+      </picture>
       </a>
     </div>
     <div class="slide" id="slide-1">
-      <div class="slide-bg" style="background-image:url('hero_slides/slide_1.png')" aria-hidden="true"></div>
+      <div class="slide-bg" style="background-image:url('hero_slides/slide_1.webp')" aria-hidden="true"></div>
       <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20Pack%20Mundial%20%2426.990" target="_blank" rel="noopener">
+        <picture>
+        <source srcset="hero_slides/slide_1.webp" type="image/webp"/>
         <img class="slide-banner" src="hero_slides/slide_1.png" width="1600" height="560"
              alt="Pack Mundial - Jack Daniels Honey mas bebida energetica mas hielo premium a $26.990" loading="lazy"/>
+      </picture>
       </a>
     </div>
     <div class="slide" id="slide-2">
-      <div class="slide-bg" style="background-image:url('hero_slides/slide_2.png')" aria-hidden="true"></div>
+      <div class="slide-bg" style="background-image:url('hero_slides/slide_2.webp')" aria-hidden="true"></div>
       <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20Delivery%20Express%20Iquique" target="_blank" rel="noopener">
+        <picture>
+        <source srcset="hero_slides/slide_2.webp" type="image/webp"/>
         <img class="slide-banner" src="hero_slides/slide_2.png" width="1600" height="560"
              alt="Delivery Express - bebidas frias directo a tu puerta, hoy en Iquique" loading="lazy"/>
+      </picture>
       </a>
     </div>
     <div class="slide" id="slide-3">
-      <div class="slide-bg" style="background-image:url('hero_slides/slide_3.png')" aria-hidden="true"></div>
+      <div class="slide-bg" style="background-image:url('hero_slides/slide_3.webp')" aria-hidden="true"></div>
       <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20Noche%20Premium%20desde%20%248.990" target="_blank" rel="noopener">
+        <picture>
+        <source srcset="hero_slides/slide_3.webp" type="image/webp"/>
         <img class="slide-banner" src="hero_slides/slide_3.png" width="1600" height="560"
              alt="Noche Premium - whisky, gin, ron y tequila desde $8.990" loading="lazy"/>
+      </picture>
       </a>
     </div>
     <div class="slide" id="slide-4">
-      <div class="slide-bg" style="background-image:url('hero_slides/slide_4.png')" aria-hidden="true"></div>
+      <div class="slide-bg" style="background-image:url('hero_slides/slide_4.webp')" aria-hidden="true"></div>
       <a class="slide-link" href="https://wa.me/56992380324?text=Hola!%20Quiero%20Vinos%20y%20Picoteo" target="_blank" rel="noopener">
+        <picture>
+        <source srcset="hero_slides/slide_4.webp" type="image/webp"/>
         <img class="slide-banner" src="hero_slides/slide_4.png" width="1600" height="560"
              alt="Vinos y picoteo - arma la previa con un solo pedido, promos activas" loading="lazy"/>
+      </picture>
       </a>
     </div>
   </div>
@@ -1486,7 +1503,7 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
       </div>
     </div>
     <div class="express-cta">
-      <a href="https://wa.me/56992380324?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" class="btn-wa">
+      <a href="https://wa.me/56992380324?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" rel="noopener" class="btn-wa">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         Hacer Pedido Ahora
       </a>
@@ -1610,10 +1627,10 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
       <div class="footer-brand-name">TENGO<span>SED</span>.CL</div>
       <p class="footer-desc">Delivery de licores en Iquique con más de 500 clientes satisfechos. Pedidos por WhatsApp, entrega en 30–60 min y garantía de producto original.</p>
       <div class="footer-socials">
-        <a href="https://www.instagram.com/tengosed.iqq" target="_blank" class="social-btn" aria-label="Instagram">
+        <a href="https://www.instagram.com/tengosed.iqq" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         </a>
-        <a href="https://wa.me/56992380324" target="_blank" class="social-btn" aria-label="WhatsApp">
+        <a href="https://wa.me/56992380324" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         </a>
       </div>
@@ -1643,7 +1660,7 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
       <div class="hours-row"><strong>Dom–Jue:</strong> 12:00 PM – 1:00 AM</div>
       <div class="hours-row"><strong>Vie–Sáb:</strong> 12:00 PM – 3:00 AM</div>
       <div class="hours-row" style="margin-top:16px">
-        <a href="https://wa.me/56992380324" target="_blank" class="btn-wa" style="padding:10px 20px;font-size:13px">
+        <a href="https://wa.me/56992380324" target="_blank" rel="noopener" class="btn-wa" style="padding:10px 20px;font-size:13px">
           💬 WhatsApp
         </a>
       </div>
@@ -1687,7 +1704,7 @@ body.admin-mode.editing .edit-banner{display:inline-flex}
 </div>
 
 <!-- WhatsApp FAB -->
-<a href="https://wa.me/56992380324" target="_blank" class="fab" aria-label="Pedir por WhatsApp">
+<a href="https://wa.me/56992380324" target="_blank" rel="noopener" class="fab" aria-label="Pedir por WhatsApp">
   <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
 </a>
 
@@ -1813,7 +1830,7 @@ function renderProducts(list){
       <div class="prod-info">
         <div class="prod-name">${esc(p.name)}</div>
         ${priceEl}
-        <a href="https://wa.me/${WA}?text=Hola!%20Quiero%20${encodeURIComponent(p.name)}" target="_blank" class="prod-wa-btn" onclick="event.stopPropagation()">
+        <a href="https://wa.me/${WA}?text=Hola!%20Quiero%20${encodeURIComponent(p.name)}" target="_blank" rel="noopener" class="prod-wa-btn" onclick="event.stopPropagation()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Pedir
         </a>
@@ -1892,7 +1909,7 @@ function openProdModal(p){
   // Actions
   document.getElementById('pmActions').innerHTML=`
     <a href="https://wa.me/${WA}?text=Hola!%20Quiero%20${encodeURIComponent(p.name)}%20(${encodeURIComponent(fmt(p.price))})"
-       target="_blank" class="pm-detail-wa">
+       target="_blank" rel="noopener" class="pm-detail-wa">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.112.547 4.094 1.504 5.818L.057 23.428a.5.5 0 0 0 .61.61l5.61-1.447A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.782-.533-5.35-1.456l-.383-.228-3.98 1.026 1.053-3.87-.249-.4A9.952 9.952 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
       Pedir por WhatsApp
     </a>`;
