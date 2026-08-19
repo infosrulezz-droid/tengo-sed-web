@@ -532,5 +532,5 @@ server.on('error', e => console.error('[SERVER ERROR]', e.message));
 server.listen(PORT, () => {
   console.log('\nTengo-Sed catalog server running:\n');
   console.log('  Clientes : http://localhost:' + PORT + '/catalog.html');
-  console.log('  Admin    : http://localhost:' + PORT + '/catalog.html?admin=tengosed2024\n');
+  console.log('  Admin    : http://localhost:' + PORT + '/catalog.html?admin=tessa1234\n');
 });
