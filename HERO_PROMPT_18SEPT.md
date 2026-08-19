@@ -1,147 +1,162 @@
-# Hero carousel — Fiestas Patrias 2026 (18 de septiembre)
+# Hero carousel — 6 category slides, Fiestas Patrias 2026
 
-Replaces the Copa Mundial theme. Five slides, `hero_slides/slide_0.png` … `slide_4.png`.
+Replaces the Copa Mundial theme. Six slides → `hero_slides/slide_0.png` … `slide_5.png`.
+
+| # | File | Category |
+|---|---|---|
+| 0 | `slide_0.png` | Cerveza — promoción |
+| 1 | `slide_1.png` | Pisco |
+| 2 | `slide_2.png` | Whisky |
+| 3 | `slide_3.png` | Ron |
+| 4 | `slide_4.png` | Vinos |
+| 5 | `slide_5.png` | Mojitos y cócteles |
 
 ---
 
-## 1. Technical spec (non-negotiable)
+## 1. Technical spec — exact, not approximate
 
 | Property | Value |
 |---|---|
 | Canvas | **1600 × 560 px** |
 | Ratio | 20:7 (2.857:1) |
-| Format | PNG (I convert to WebP — 88% smaller, verified lossless to the eye) |
+| Format | PNG (WebP conversion happens after) |
 | Colour | sRGB |
 
-**Layout zones**, measured from your current slides:
+The CSS uses `aspect-ratio:1600/560` with `object-fit:contain`. Off-ratio images
+get black letterbox bars — so hit 1600×560 exactly, or generate at the same 20:7
+ratio and downscale. **Never upscale.**
+
+### Layout zones
 
 ```
-y    0 ─────────────────────────────────────────────  ← top
-     │  LEFT COLUMN (x 80–700)      RIGHT (x 700–1600)
-     │  • eyebrow "TENGO SED IQUIQUE"                 │
-     │  • headline (big)             product collage  │
-     │  • one-line subtitle          / hero bottle    │
-     │  • price                                       │
-     │  • green WhatsApp button                       │
-y  462 ─────────────────────────────────────────────  ← SAFE-ZONE FLOOR
-     │  MINSAL warning box — 18+ · ADVERTENCIA text   │
-y  545 ─────────────────────────────────────────────
-     │  flag bar (blue / white / red)                 │
-y  560 ─────────────────────────────────────────────  ← bottom
+y    0 ────────────────────────────────────────────────
+     │ LEFT 40%  (x 0–640)        RIGHT 60% (x 640–1600)
+     │ Keep CALM and DARKER.      Product hero shot.
+     │ Headline + price + CTA     Bottles lit, labels
+     │ are stamped here.          facing camera, sharp.
+y  462 ──────────────────────────────────────────────── SAFE FLOOR
+     │ MINSAL warning box — stamped afterwards
+y  545 ────────────────────────────────────────────────
+     │ flag bar (blue / white / red)
+y  560 ────────────────────────────────────────────────
 ```
 
-**Nothing important below y=462.** The site uses `object-fit: contain`, so the full
-canvas always shows and nothing is cropped — but only at exactly 1600×560.
+**Nothing important below y=462. Leave the bottom 100 px a plain dark band** —
+`stamp_hero.ps1` draws the logo and the MINSAL warning over it.
 
-**Leave the bottom 100 px as a plain dark band.** `stamp_hero.ps1` draws the logo
-(top-left) and the MINSAL warning bar over it afterwards. Do not ask the generator
-to render the ADVERTENCIA text — image models mangle Spanish legal text, and that
-text is legally required to be exact.
+**Do not ask the generator to render any text.** Image models mangle Spanish, and
+the ADVERTENCIA wording is legally mandated in Chile. Text is stamped afterwards.
 
 ---
 
-## 2. Master prompt
+## 2. Master prompt — shared by all six
 
-> Wide cinematic banner, 1600×560 pixels, ultra-wide 20:7 aspect ratio, for a
-> Chilean liquor delivery store during Fiestas Patrias (18 de septiembre).
+> Wide cinematic banner, 1600×560 pixels, ultra-wide 20:7 aspect ratio, premium
+> product advertising photography for a Chilean liquor store during Fiestas
+> Patrias (18 de septiembre).
 >
-> Scene: a warm night-time *fonda* / *ramada* — wooden posts, straw roof, strings
-> of Chilean flag bunting (blue, white, red) crossing the top of the frame, warm
-> golden string lights, soft bokeh. Faint Andes cordillera silhouette on the
-> horizon. Confetti and paper streamers in the national colours.
+> Setting: a warm night-time *fonda* / *ramada* — wooden posts, straw roof,
+> strings of Chilean flag bunting in blue, white and red crossing the upper
+> frame, warm golden string lights, soft bokeh, faint Andes cordillera on the
+> horizon, confetti in the national colours.
 >
-> Composition: the LEFT 40% must stay visually calm and darker — a clean area for
-> text overlay, no busy detail, no faces, no objects. The RIGHT 60% holds the
-> product hero shot, dramatically lit, sharp, product labels facing camera.
+> Composition: the LEFT 40% of the frame stays dark, calm and uncluttered — no
+> objects, no faces, no detail there. The RIGHT 60% holds the product, sharply
+> lit and centred, labels facing camera.
 >
-> Lighting: warm amber key light from the upper right, deep shadows, high contrast,
-> premium advertising photography, glossy highlights on glass bottles.
+> Lighting: warm amber key from the upper right, deep shadows, high contrast,
+> glossy highlights on glass.
 >
-> Bottom 100 pixels: a plain dark band, no detail, reserved for a legal notice.
+> Bottom 100 pixels: plain dark band, no detail.
 >
-> Style: photoreal product advertising, rich saturated colour, festive but
-> premium — not cartoonish, not flat vector. 4K detail, sharp focus.
+> Style: photoreal, rich saturated colour, festive but premium. 4K detail.
 >
 > No text, no lettering, no words, no logos, no watermarks.
 
 ---
 
-## 3. The five slides
+## 3. The six product lines
 
-Swap the **product line** into the master prompt. Keep everything else identical
-so the set feels like one campaign.
+Paste the master prompt, then swap this paragraph in.
 
-**slide_0 — Pack Dieciochero**
-> Product: a bottle of Chilean pisco, a bottle of red wine, and a cold beer
-> six-pack arranged together on a rustic wooden table with empanadas and a
-> Chilean flag folded beside them.
+**slide_0 — CERVEZA (promoción)**
+> Product: ice-cold beer bottles and cans in a galvanised tub overflowing with
+> ice, condensation beading on the glass, a six-pack carton beside it, water
+> droplets frozen mid-splash.
 
-**slide_1 — Terremoto**
-> Product: a tall glass of *terremoto* — pale yellow pipeño wine with a scoop of
-> pineapple ice cream on top and a straw — condensation on the glass, with a
-> pipeño bottle behind it.
+**slide_1 — PISCO**
+> Product: a clear bottle of Chilean pisco beside a tall highball of piscola with
+> ice and cola, plus a frothy pisco sour in a coupe glass with a lime wheel,
+> lime halves and ice scattered on the wood.
 
-**slide_2 — Piscola**
-> Product: a bottle of Chilean pisco beside a tall highball glass of piscola with
-> ice and cola, lime wedge, ice cubes scattered, splash frozen mid-air.
+**slide_2 — WHISKY**
+> Product: an amber whisky bottle beside a heavy crystal tumbler holding a large
+> clear ice sphere, warm amber liquid catching the light, subtle smoke haze in
+> the background.
 
-**slide_3 — Asado y Cerveza**
-> Product: ice-cold beer bottles and cans in a tub of ice, grill embers glowing
-> warm orange behind, anticuchos on a grill out of focus in the background.
+**slide_3 — RON**
+> Product: a dark rum bottle with a cane-sugar and tropical feel — sugar cane
+> stalks, a cut lime, and a rocks glass of rum over ice on rustic wood.
 
-**slide_4 — Vino y Chicha**
-> Product: a bottle of Chilean red wine and a clay jug of chicha on a wooden
-> table, copihue flowers (red bell-shaped, Chile's national flower) at the edge,
-> harvest grapes.
+**slide_4 — VINOS**
+> Product: a bottle of Chilean red wine with two filled wine glasses, dark
+> grapes and vine leaves on the table, deep ruby tones catching warm backlight.
+
+**slide_5 — MOJITOS Y CÓCTELES**
+> Product: a tall mojito in a highball glass — crushed ice, fresh mint sprigs,
+> lime wedges, condensation — beside a colourful terremoto (pale yellow wine
+> with pineapple ice cream) and a shaker, mint and citrus scattered around.
 
 ---
 
-## 4. Negative prompt
+## 4. Negative prompt — use on every slide
 
 > text, words, letters, typography, watermark, logo, signature, distorted bottle
-> labels, extra limbs, deformed hands, people's faces, blurry product, low
-> resolution, flat vector art, cartoon, clipart, cluttered left side, busy
-> background on left third, Mexican sombrero, mariachi, Cinco de Mayo, tacos,
-> Peruvian flag, world cup, football, soccer ball, stadium
+> labels, deformed hands, people's faces, blurry product, low resolution, flat
+> vector art, cartoon, clipart, cluttered left side, busy detail on the left
+> third, sombrero, mariachi, Cinco de Mayo, tacos, Mexican flag, Peruvian flag,
+> world cup, football, soccer ball, stadium, trophy
 
-**On that last group:** the previous set was Copa Mundial, so explicitly excluding
-football imagery stops the model drifting back. And Chilean Fiestas Patrias is
-routinely confused with Mexican independence by image models — excluding sombrero,
-mariachi and Cinco de Mayo is what prevents that.
-
----
-
-## 5. Workflow
-
-1. Generate 5 images at 1600×560 (or generate larger at the same 20:7 ratio and
-   downscale — never upscale).
-2. Save into `Downloads/`.
-3. Update the `$sources` list at the top of `stamp_hero.ps1` to point at the new
-   filenames, and change each `lbl` to the new slide names above.
-4. Run `stamp_hero.ps1` — it writes `hero_slides/slide_0..4.png` with the logo and
-   MINSAL bar applied.
-5. Tell me, and I'll run the WebP conversion and update `<picture>` sources.
+**Why those exclusions specifically:**
+- `sombrero / mariachi / Cinco de Mayo / Mexican flag` — image models routinely
+  render Mexican independence when asked for Latin American patriotic imagery.
+  This is the single most common failure for this brief.
+- `world cup / football / trophy` — the previous slide set was Copa Mundial and
+  models drift back toward it.
+- `Peruvian flag` — pisco is claimed by both Chile and Peru; without this you get
+  Peruvian branding on a Chilean pisco slide.
 
 ---
 
-## 6. Fix while regenerating
+## 5. After you generate
 
-Three flaws are baked into the *current* slides:
+1. Save the 6 files to `Downloads/`.
+2. Edit the `$sources` block at the top of `stamp_hero.ps1` — point each entry at
+   your new filename, set `out` to `slide_0.png` … `slide_5.png`, and update each
+   `lbl` to the category name.
+3. Run `stamp_hero.ps1` — it applies the logo and MINSAL bar.
+4. Tell Claude. Code changes still needed on this side:
+   - `totalSlides` in `index.html` is currently **5** and must become **6**
+   - a sixth `.slide` block must be added to the carousel markup
+   - WebP conversion for all six
+   - alt text per slide
 
-1. `slide_0` — the headline "VOLVIO LA OFERTA" is clipped by the collage panel.
-   Cause: text placed too far right, into the collage zone. Keep headlines inside
-   x < 700.
+---
+
+## 6. Fix these flaws from the current set
+
+1. `slide_0` — headline "VOLVIO LA OFERTA" is clipped by the product panel
+   overlapping it. Cause: artwork intruding into the left text zone.
 2. `slide_2`, `slide_3`, `slide_4` — the Gato wine bottle has an **un-removed
-   white rectangle** behind it. That cutout needs a transparent background.
-3. Those same three reuse an identical right-side collage, so 3 of 5 slides look
-   the same. Give each slide its own product shot — the five above are
-   deliberately distinct.
+   white rectangle** behind it instead of a clean cutout.
+3. Those same three reuse an identical right-side collage, so half the carousel
+   looks the same. The six product lines above are deliberately distinct.
 
 ---
 
-## 7. Alcohol-advertising notes (Chile)
+## 7. Chilean alcohol-advertising constraints
 
-- The MINSAL warning is mandatory; `stamp_hero.ps1` applies it. Never crop it.
-- No minors, and no one who reads as under 25, in the imagery.
-- Don't depict driving, workplaces, or excessive consumption.
-- Keep the 18+ badge legible — it sits in the bottom band.
+- MINSAL warning is mandatory and is stamped into the bottom band. Never crop it.
+- No minors, and nobody who reads as under 25, anywhere in the imagery.
+- No driving, no workplaces, no depiction of excessive drinking.
+- The 18+ badge sits in the bottom band — keep that area clear.
