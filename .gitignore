@@ -22,3 +22,6 @@ problemas_inventario_*.xlsx
 *-key.json
 n8n-social-key.json
 dist/
+firebase-debug.log
+.firebase/
+firebase-debug.*.log
