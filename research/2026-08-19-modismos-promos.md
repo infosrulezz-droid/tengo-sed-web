@@ -152,3 +152,23 @@ El naming "Tsunami" de Tienda Valdivieso para la versión "extendida" del terrem
 - El formato que propusiste (pack armado + modismo + vocal estirada) **no tiene precedente confirmado en el mercado chileno de licores** — ni a favor ni en contra. La parte del pack + modismo (piscola, terremoto, la previa) sí está validada por múltiples competidores con nombre, precio y link. La parte de la vocal estirada es terreno propio de Tengo Sed si se hace.
 - Tengo Sed ya tiene, sin saberlo, un pack de pisco ("Promo Mistral 35°") mejor parado en litros que el pack más citado de la competencia (Booz), al mismo precio.
 - Falta en inventario un kit real de Terremoto para el 18 — es la brecha de producto más clara que salió de este research, y tiene fecha límite.
+
+---
+
+## Actualización de Suresh — 2026-08-19
+
+Sobre el gap de Terremoto identificado arriba:
+
+- **Hoy sí hay**: `120 Terremoto Bot 1.5 lt` ($4.500) — es **vino**, con esa marca.
+  Sirve como producto de temporada por nombre, no como kit para preparar el trago.
+- **Vienen en camino**: **pipeño**, **chicha** y otros. Suresh actualiza el
+  inventario apenas lleguen.
+- Por ahora, cualquier copy de Terremoto se apoya en el **120 Terremoto vino**.
+  No prometer un kit armado (pipeño + granadina + helado de piña) hasta que el
+  stock esté cargado en `products_inventory.json`.
+
+**Para content-agent:** la regla de no inventar producto aplica acá con
+particular fuerza. Escribir "armá tu terremoto" cuando falta la granadina y el
+helado genera un pedido por WhatsApp que no se puede cumplir. Hasta que llegue
+el stock, el ángulo del 18 se apoya en lo que sí hay: pisco, cerveza, ron, vinos
+y el 120 Terremoto.
