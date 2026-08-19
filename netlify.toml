@@ -1,0 +1,74 @@
+# Static deploy config for tengo-sed.cl
+#
+# No build step: the site is plain HTML/CSS/JS. server.js is NOT run here —
+# which is deliberate. Serving statically means the unauthenticated /api/*
+# write endpoints simply do not exist in production.
+
+[build]
+  publish = "."
+  command = ""
+
+# ── Security headers ──────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options   = "nosniff"
+    X-Frame-Options          = "DENY"
+    Referrer-Policy          = "strict-origin-when-cross-origin"
+    Permissions-Policy       = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Product images and hero slides are immutable once published
+[[headers]]
+  for = "/products/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/hero_slides/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The page itself must revalidate so price changes go live promptly
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ── Keep non-public files off the web ─────────────────────────────
+# Static hosting would otherwise happily serve these.
+[[redirects]]
+  from = "/server.js"
+  to   = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/catalog-editor.html"
+  to   = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/stamp-agent.html"
+  to   = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/notes.json"
+  to   = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/page_edits.json"
+  to   = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/package.json"
+  to   = "/404.html"
+  status = 404
+  force = true
