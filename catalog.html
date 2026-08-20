@@ -572,12 +572,13 @@
     var PER_PAGE      = 20;
 
     // ── admin ────────────────────────────────────────────────────────
-    var ADMIN_PASS = 'tessa1234';
+    /* Admin solo desde localhost - ver nota en store.html */
+    var IS_LOCAL = ['localhost','127.0.0.1','::1',''].indexOf(location.hostname) !== -1;
     var isAdmin    = false;
 
     (function init(){
       var p = new URLSearchParams(window.location.search);
-      if (p.get('admin') === ADMIN_PASS) {
+      if (IS_LOCAL && p.get('admin') !== null) {
         isAdmin = true;
         document.body.classList.add('admin-mode');
       }

@@ -7,8 +7,8 @@ node server.js
 ```
 Then open:
 - **Storefront** : http://localhost:8000/
-- **Admin store** : http://localhost:8000/store.html?admin=tengosed2024
-- **Old catalog** : http://localhost:8000/catalog.html?admin=tengosed2024
+- **Admin store** : http://localhost:8000/store.html?admin=1
+- **Old catalog** : http://localhost:8000/catalog.html?admin=1
 - **PDF print**   : http://localhost:8000/catalog-print
 
 **Shortcut:** Double-click `INICIAR-TENGO-SED.bat` on the Desktop.
@@ -120,7 +120,7 @@ tengo-sed-FINAL/
 ---
 
 ## Admin password / URLs
-- Admin param: `?admin=tengosed2024`
+- Admin param: `?admin=1`
 - WhatsApp: +56 9 9238 0324
 
 ## Fixes applied (2026-06-23)

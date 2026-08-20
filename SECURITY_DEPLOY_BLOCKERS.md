@@ -34,8 +34,14 @@ like. On `localhost` this is harmless. On a public domain it is not.
 if(p.get('admin')==='1' || p.get('admin')==='true'){ ... }
 ```
 
-`store.html` at least checks a password (`?admin=tengosed2024`), though that
-password ships in client-side JavaScript. `index.html` checks nothing.
+**Resolved 2026-08-19.** `store.html` and `catalog.html` previously compared
+`?admin=` against a password hardcoded in client-side JavaScript, which anyone
+could read in view-source. Both now gate on `location.hostname` instead — admin
+only works from localhost, and there is no secret in the shipped code to leak.
+
+`index.html` still enables its inline editor on bare `?admin=1`. Harmless on
+static hosting (no `/api/*` backend exists to persist to, and edits render only
+in admin mode), but it does show an admin toolbar to anyone who guesses it.
 
 ## BLOCKER 3 — Source code is publicly downloadable
 

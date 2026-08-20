@@ -1316,7 +1316,7 @@
       <button class="cart-btn" id="cartBtn" onclick="scrollBar()">
         🛒 Carrito <span class="cart-c" id="cc">0</span>
       </button>
-      <a href="/catalog.html?admin=tessa1234" class="admin-pill">⚙ Admin</a>
+      <a href="/catalog.html?admin=1" class="admin-pill">⚙ Admin</a>
     </div>
   </div>
 </header>
@@ -1595,7 +1595,11 @@
 'use strict';
 
 /* ── ADMIN DETECTION ────────────────────────────────────── */
-var IS_ADMIN = new URLSearchParams(location.search).get('admin') === 'tessa1234';
+/* Admin solo desde localhost. Una clave en JS del cliente no protege nada:
+   cualquiera la lee en ver-codigo-fuente. Esto no se puede falsificar desde
+   fuera del computador. */
+var IS_LOCAL = ['localhost','127.0.0.1','::1',''].indexOf(location.hostname) !== -1;
+var IS_ADMIN = IS_LOCAL && new URLSearchParams(location.search).get('admin') !== null;
 if(IS_ADMIN){ document.body.classList.add('admin'); }
 
 /* ── STATE ──────────────────────────────────────────────── */
@@ -2168,7 +2172,7 @@ function showSaveBadge(msg){
 }
 
 /* ── ADMIN HELPERS ──────────────────────────────────────── */
-function openCatalog(){ window.open('/catalog.html?admin=tessa1234', '_blank'); }
+function openCatalog(){ window.open('/catalog.html?admin=1', '_blank'); }
 function openPrint()  { window.open('/catalog-print', '_blank'); }
 
 /* ── PRODUCT EDIT MODAL (Phase 3) ───────────────────────── */
